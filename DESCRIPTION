@@ -1,0 +1,12 @@
+Package: mvbutils
+Version: 2.9.15
+Author: Mark V. Bravington <markb2@summerinsouth.net>
+Maintainer: Mark V. Bravington <markb2@summerinsouth.net>
+Depends: R (>= 3.3)
+Imports: utils, tools, stats, grDevices, graphics
+Suggests: doParallel, foreach
+Title: General utilities, workspace organization, code and docu editing, live package maintenance, etc
+NeedsCompilation: no
+ByteCompile: no
+Description: Hierarchical workspace tree, code editing and backup, easy package prep, editing of packages while loaded, per-object lazy-loading, easy documentation, macro functions, and miscellaneous utilities. Needed by debug package.
+License: GPL (>=2)

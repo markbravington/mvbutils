@@ -1,0 +1,91 @@
+# This file is designed to be read in by 'source.mvb'-- see 'flatdocdemo.r'
+
+structure( function( topic, doc) {
+  # "doc" might point to another object. Start by looping til we have a character "doc".
+  current.topic <- topic
+  if( missing( doc)) { # TRUE unless this is being used as a pager
+    doc <- 0 
+    while( !is.character( doc) && exists( current.topic) && 
+        length( doc <- attr( get( current.topic), 'doc'))) 
+      if( is.list( doc))
+        current.topic <- doc[[1]] # unwrap list 
+  }
+
+  if( has.doc <- is.character( doc)) {
+    fff <- tempfile() 
+    on.exit( rm( fff))
+    
+    doc <- doc[ regexpr( '^%', doc) < 0] # drop "%" lines
+    doc <- strsplit( doc, '\n')
+    doc[ !sapply( doc, length)] <- ''
+    doc <- strwrap( unlist( doc), simplify=FALSE)
+    doc[ !sapply( doc, length)] <- ''
+    #   writeLines( paste( unlist( doc), collapse='\n'), con=fff) # writelines seems to zap empty lines
+    cat( paste( unlist( doc), collapse='\n'), file=fff)
+    file.show( fff) 
+  } 
+  
+  invisible( has.doc)
+}
+,doc=flatdoc())
+dochelp        package:mvbutils
+
+Documentation
+
+DESCRIPTION
+
+'dochelp(topic)' will be invoked by the replacement 'help' if conventional 'help' fails to find documentation for topic 'topic'. If 'topic' has a 'doc' attribute, the latter will be formatted and displayed by 'file.show'. 'dochelp' is not usually called directly. 
+
+USAGE
+
+dochelp( topic, doc) # doc usually not set
+
+
+ARGUMENTS
+
+ topic: (character) name of the object to look for help on.
+ doc: (character or list)-- normally not set, but deduced by default from 'topic'; see DETAILS.
+ 
+
+DETAILS
+
+'dochelp' will only be called if the original 'help' call was a simple 'help(topic=X,...)' form, with X not a call and with no 'try.all.packages' or 'type' or 'lib.loc' arguments (the other 'help' options are OK). 
+
+The 'doc' argument defaults to the 'doc' attribute of 'get("topic")'. The only reason to supply a non-default argument would be to use 'dochelp' as a pager; this might have some value, since 'dochelp' does reformat character vectors to fit nicely in the system pager window, one paragraph per element, using 'strwrap' (qv). Elements starting with a "%" symbol are not displayed.
+
+To work with 'dochelp', a 'doc' attribute should be either:
+
+ - a character vector, of length >=1. New elements get line breaks in the pager. Or:
+ - a length-one list, containing the name of another object with a 'doc' attribute. 'dochelp' will then use the 'doc' attribute of that object instead. This referencing can be iterated.
+
+If the documentation is very informal, start it with a blank line to prevent 'find.documented( Rdformat=TRUE)' from finding it.
+
+The file will be re-formatted to fit the pager; each paragraph should be a single element in the character vector. Elements starting with a % will be dropped (but may still be useful for 'doc2Rd').
+
+'flatdoc' (qv) offers an easy way to incorporate plain-text (flat-format) documentation-- formal or informal-- in the same text file as a function definition, allowing easy maintenance.
+
+
+SEE.ALSO
+
+'flatdoc', 'doc2Rd', 'find.documented', 'strwrap'
+
+
+EXAMPLES
+
+myfun <- structure( function() 1, 
+  doc="Here is some informal documentation for myfun\n")
+dochelp( "myfun")
+
+
+AUTHOR
+
+Mark Bravington
+
+
+KEYWORDS
+
+documentation
+
+<<end of doc>>
+
+

@@ -1,0 +1,19 @@
+12/2021, 2.3.383: added 'eclone()'; added 'recursive' argument to 'lsize()'.
+
+11/12/2021, 2.3,384: added health warnings to 'mlazy' doco re 'environment' objects
+
+14/1/2022, 2.8.387: 'mdeparse' for better deparsing of ':=' and '?'; workaround for bug in 'utils::isS3method' that was blowing up 'update_loaded_packages'
+
+2/2/2023: probably lots of accumulated minor tweaks--- most recently to 'make_dull' and adding an 'undull', to cope better with implicit classes and the S3wamp.
+
+5/2/2023: patches to 'pre.install' to workaround 'Rd2roxygen' not dealing properly with S3
+
+27/7/2023: added 'mvb_session_env()' and dottonym to ultimately replace the 'mvb.session.info' search-path environment. I'll gradually change stuff in 'mvbutils' to refer to this instead.
+
+3/3/2024: finally moved 'numvbderiv' and 'numvbderiv_parallel' in here (and changed names) out of 'handy2'. Thus added 2 parallel-related packages to 'Suggests'.
+
+2.8.509 (7/7/2024): added utils 'xsub', 'xgsub', 'undent', and 'REPORTO' (the latter mainly for 'offarray'). Decided to use version numbers in here!
+
+2.8.510 (9/7/2024): Doco bug fixes; added 'Imports: grDevices' ('graphics' already imported, so no cost).
+
+

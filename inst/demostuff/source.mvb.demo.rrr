@@ -1,0 +1,49 @@
+# Example showing interspersed code and data
+
+if( current.source() %is.a% 'try-error')  # not 100% safe but...
+  stop( "Must use 'source.mvb' rather than 'source' to run this demo file")  
+
+# Note cumbersome format of "file" argument to "read.table" below.
+# Unfortunately, 'textConnection' does not currently allow creation of an unopened connection. This
+# means there's no way to zap the connection automatically at close of 'read.table'.
+
+print( current.source())
+
+cat( 'Press <ENTER> to read first dataset: ')
+readline()
+
+my.data1 <- read.table( file = ( tcon <- textConnection( readLines.mvb( current.source(), EOF="---- end of data ----"))), 
+    header=TRUE, row.names=NULL)
+a b
+1 'cat'
+3 'dog'
+5 'armadillo'
+---- end of data ----
+
+close (tcon) # but at least it works!
+
+cat( 'Press <ENTER> to read second dataset: ')
+readline()
+
+# Alternative approach: get the data before calling "read.table"
+
+my.data2.text <- readLines.mvb( current.source(), EOF='---- end of data 2 ----')
+a b
+1 'bandicoot'
+3 'bilby'
+5 'bison'
+---- end of data 2 ----
+
+tcon <- textConnection( my.data2.text, open='r')
+my.data2 <- read.table( tcon, header=TRUE, row.names=NULL)
+close( tcon)
+
+cat( 'Press <ENTER> to read third dataset: ')
+readline()
+
+# Simplest, but will leave a tempfile around if 'read.table' crashes
+
+my.data3 <- read.table( from.here( EOF='--EOF3--'), header=TRUE, row.names=NULL)
+a b
+'short' 'sweet'
+--EOF3--

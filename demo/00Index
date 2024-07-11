@@ -1,0 +1,3 @@
+doc2Rd.demo	Show example of flat-format documentation, and conversion to Rd format
+flatdoc.demo	Reading in combined code & documentation, and showing help
+source.mvb.demo	Interspersed code & data in a single document

@@ -1,0 +1,39 @@
+This file was reset in November 2009 after 4 years of neglect.
+
+17/11/2009: Release of major new version with package-building and package-maintenance tools
+
+19/11/2009: Bugfix in 'patch.install' to prevent file removal
+
+19/11/2009: Bugfix in '%that.dont.match%'
+
+19/11/2009: Changed '%that.match%' and '%that.dont.match%' to balk if 0-length patterns are used (like 'grep')
+
+13/8/2010: Bugfix in 'move' when moving mlazies to task that doesn't yet have mlazies
+
+13/8/2010: Changed 'patch.installed' DLL treatment to only copy DLLs if *different* as well as newer
+
+25/8/2010: New subsection structuring in 'doc2Rd', and a few changes to other doco as a result. Fixed buggy doco of 'subset.with.warning'.
+
+15/11/2010: fixed bug with history not staying fixed under 'cd'.
+
+21/12/2010: fixed bug with class order of POSIXt/POSIXct following changes in R 2.12
+
+31/12/2010: changes to the modified POSIXt methods to support arrays of POSIXct. See package doco.
+
+5/1/2011: fixed buglets that weren't bugs until R 2.12...
+
+19/10/2011: ditto for R 2.14. Added 'install.pkg' etc, removed 'as.data.frame.I', tweaked documentation.
+
+14/10/2012: Version 2.6.1 now handles "srcref" (sigh). Much better handling of scriptlets (scripts-as-expressions). 'nicetime' functions moved to separate package. Minor bugfixes and doco tweaks.
+
+1/2/2013: Version 2.7 is really 2.6.1 for public release. Cleans up redeclaration of 'rbind.data.frame' and 'print.function', rudimentary vignette support, doco tweaks, minor bugfixes.
+
+7/8/2013: Version 2.8 improves folder structure for built/source packages, helping package maintainers cope with the ever-changing moods of R.
+
+2/11/2015: Version 2.8.100 fixes bug in 'mvbutils:::rbind.data.frame' (columns were sometimes renamed-- reported by Tim Hesterberg)
+
+5/11/2015: fixes NBC base-R change, whereby the "source" attribute of non-parsable function code would now get printed (most unhelpfully). Added a patch that tests for R-version and fixes it, to 'mvbutils:::print.function'.
+
+19/4/2016: fixed the 'isF' function to be as strict as 'isT'
+
+22/11/2017: improvements to 'unpackage' and 'help2flatdoc'. Methods such as 'print.docattr' are now registered in base as well as mvbutils, fixing some autoprint problems.
