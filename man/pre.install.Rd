@@ -25,23 +25,23 @@ Vignettes have to built "manually" (it's easy!), using \code{\link{vignette.pkg}
  # Your own hook: pre.install.hook.<<mypack>>( default.list, <<myspecialargs>>, ...)
  pre.install(
      pkg,
-     character.only=FALSE,
-     force.all.docs=FALSE,
-     rewrap.forcibly=FALSE,
-     dir.above.source="+",
-     autoversion=getOption("mvb.autoversion", TRUE),
-     click.version=TRUE,
-     R.target.version=getRversion(),
-     Roxygen=NULL,
+     character.only= FALSE,
+     force.all.docs= FALSE,
+     rewrap.forcibly= TRUE,
+     dir.above.source= "+",
+     autoversion= getOption("mvb.autoversion", TRUE),
+     click.version= TRUE,
+     R.target.version= getRversion(),
+     Roxygen= NULL,
      timeout_Roxygen= getOption( 'mvb.timeout_Roxgyen', 0), # seconds
      vignette.build= TRUE,
-     silent=FALSE,
+     silent= FALSE,
      ...)
  patch.installed(
      pkg,
      character.only= FALSE,
      force.all.docs= FALSE,
-     rewrap.forcibly= FALSE,
+     rewrap.forcibly= TRUE,
      help.patch= TRUE,
      DLLs.only= FALSE,
      update.installed.cache= getOption("mvb.update.installed.cache", TRUE),
