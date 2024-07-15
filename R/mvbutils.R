@@ -10762,6 +10762,36 @@ stopifnot( all( present))
 }
 
 
+"RENEWS" <-
+function( 
+  pkg, 
+  character.only= FALSE
+){
+## Markdownize and reverse NEWS charvec
+  set.pkg.and.dir( FALSE)
+  mp <- maintained.packages[[ pkg]]
+  NEWS <- mp[[ pkg %&% '.NEWS']]
+  if( is.null( NEWS)){
+stop( sprintf( "No news found for '%s'; not changing anything", pkg))
+  }
+  
+  NEWS <- gsub( '^ +$', '', NEWS) %such.that% nzchar(.)
+  NEWS <- rev( NEWS) |>
+    xsub( '^[0-9]+/[0-9]+(/[0-9]+)? *(,)?', '') |>
+    xsub( '^ *[vV]?', '') |>
+    xsub( ':', '\n -')
+  
+  NEWS <- c( t( cbind( NEWS, '\n'))) |>
+    strsplit( '\n', fixed=TRUE) |>
+    unlist( use.names=FALSE)
+    
+  nc <- nchar( NEWS)
+  NEWS <- NEWS[ (nc > 0) | (c( nc[-1], 0) > 0) ]
+
+return( as.cat( NEWS))
+}
+
+
 "replace_function_by_sourcecode" <-
 function( ff, all){
   sc <- ff
