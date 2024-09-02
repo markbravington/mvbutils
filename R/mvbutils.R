@@ -12680,6 +12680,23 @@ return( builts)
 }
 
 
+"visify" <-
+function( exprs, local=parent.frame(), ...){
+  exprs <- substitute( exprs)
+stopifnot( exprs %is.a% '{')
+  for( i in 2 %upto% length( exprs)){
+    if( (exprs[[ i]] %is.not.a% 'call') || 
+        (exprs[[i]][[1]] != as.name( '{'))){
+      exprs[[ i]] <- call( '(', exprs[[ i]])
+    }
+  }
+  
+  # Remove the call to curlybrace, and make an expression() obj
+  exprs <- as.expression( as.list( exprs)[-1])
+  withAutoprint( exprs, evaluated=TRUE, local=local,  ...)
+}
+
+
 "warn.and.subset" <-
 function( x, cond, 
     mess.head=deparse( substitute( x), width.cutoff=20, control=NULL, nlines=1), 
