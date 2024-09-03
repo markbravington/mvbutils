@@ -2,11 +2,11 @@
 \alias{visify}
 \title{Make a function autoprint all its doings}
 \description{
-Occasionally you want a function to do a whole bunch of things, and print the results; you might be thinking about executing its code directly in a "script", but you don't want to be cluttering up the workspace. Then you can wrap the body of your function in a call to \code{visify}, and R{} will act as if you \code{source} the corresponding script.
+Occasionally you want a function to do a whole bunch of things, and print the results; you might be thinking about executing its code directly in a "script", but you don't want to be cluttering up the workspace. Then you can wrap the body of your function in a call to \code{visify}, and R{} will act as if you \code{source} the corresponding script. The output isn't particularly beautiful, but it's jolly handy for eg routine diagnostics when fitting a series of models.
 
-You can also use \code{visify} inside a function, to just display certain bits. (Well, no; as of 2.9.18, the first part before \code{visify} \emph{always} seems to be shown. But at least you can hide the return value.) For example, it's sometimes useful to not visify the entire return-value of a function, even though you want to "show the rest of your working". In that case, you can just not return the value within the \code{visify} block, but separately afterwards; see \bold{Examples}.
+You can also use \code{visify} inside a function, to just display certain bits. (Well, not entirely; as of 2.9.18, any code before \code{visify} \emph{always} seems to be shown. But at least you can hide the return value.) For example, it's sometimes useful to not visify the entire return-value of a function, even though you want to "show the rest of your working". In that case, you can just not return the value within the \code{visify} block, but separately afterwards; see \bold{Examples}.
 
-The output isn't particularly beautiful, but it's jolly handy for eg routine diagnostics when fitting a series of models. \code{visify} is experimental as of package \pkg{mvbutils} v2.9.18, and I might add features over time, eg to make output look prettier and give better options for hiding things.
+\code{visify} is experimental as of package \pkg{mvbutils} v2.9.18, and I might add features over time, eg to make output look prettier and give better options for hiding things. It would be nice to properly hide multi-line code blocks, bits of code prior to \code{visify}, etc etc. But I don't yet understand how all the options to \code{source} and \code{withAutoprint} work, and this is really a convenience function rather than something intended for producing report-quality output.
 }
 \usage{
 # Never use it like this...
@@ -14,7 +14,7 @@ visify(exprs, local = parent.frame(), prompt.echo='', ...)
 # ... always like this, for an entire function:
 # my_autoprinting_function <- function(<args>) visify( \{<body>\})
 # ... or just as part of one:
-# my_part_apf <- function( <args>)\{ <hide>; visify(\{<shown>\}); <returns>\}
+# my_part_apf <- function( <args>)\{ visify(\{<shown>\}); <posthoc-and-returns>\}
 }
 \arguments{
 \item{ exprs}{The body of your function}
@@ -25,9 +25,9 @@ visify(exprs, local = parent.frame(), prompt.echo='', ...)
 \details{
 Compound statements, such as \code{if} and \code{for}, are not printed "internally", only the final outcome (which is NULL for \code{for}). Their code is still printed, though; you could try adding the argument \code{max.deparse.length=100} or similar to prune it; see \bold{Examples}.
 
-If you want certain statements in your function to execute without autoprinting their output (eg because it is an enormous and cluttery intermediate calculation), wrap it or them in \code{{ <dontshowthisbit>; NULL}}. Again, their code will still be printed regardless.
+If you want certain statements in your function to execute without autoprinting their output (eg because it is an enormous and cluttery intermediate calculation), wrap it or them in curlies, a la \code{{ <dont; show; these; outputss>; NULL}}. Again, their code will still be printed regardless.
 
-The trick behind \code{visify} is to use \code{\link{withAutoprint}}, but it's not obvious exactly how to. I was encouraged by:
+The trick behind \code{visify} is to use \code{\link{withAutoprint}}, but it's not obvious exactly how to do so. I was encouraged by:
 
 \code{https://stackoverflow.com/questions/58285497}
 
