@@ -12681,7 +12681,12 @@ return( builts)
 
 
 "visify" <-
-function( exprs, local=parent.frame(), ...){
+function( 
+  exprs, 
+  local=parent.frame(), 
+  prompt.echo='', 
+  ...
+){
   exprs <- substitute( exprs)
 stopifnot( exprs %is.a% '{')
   for( i in 2 %upto% length( exprs)){
@@ -12693,7 +12698,8 @@ stopifnot( exprs %is.a% '{')
   
   # Remove the call to curlybrace, and make an expression() obj
   exprs <- as.expression( as.list( exprs)[-1])
-  withAutoprint( exprs, evaluated=TRUE, local=local,  ...)
+  withAutoprint( exprs, evaluated=TRUE, local=local,  
+      prompt.echo=prompt.echo, ...)
 }
 
 
