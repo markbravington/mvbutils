@@ -61,7 +61,7 @@ a \%such.that\% b         # does NOT strip attributes--- see *Value*
 a \%SUCH.THAT\% b         # does NOT strip attributes--- see *Value*
 from \%upto\% to
 from \%downto\% to
-x \%where\% cond
+x \%where\% cond          # also equiv mwhere(x,cond)
 x \%where.warn\% cond
 a \%<-\% value # really e.g. \{x;y\} \%<-\% list( 'yes', sqrt(pi)) to create x & y
 }
@@ -108,7 +108,7 @@ a \%<-\% value # really e.g. \{x;y\} \%<-\% list( 'yes', sqrt(pi)) to create x &
 
 \code{\%where\%}, \code{\%where.warn\%} x: data.frame
 
-\code{\%where\%}, \code{\%where.warn\%} cond: unquoted expression to be \code{eval}ed in context of \code{x}, then in the calling frame of \code{\%where\%} (or \code{.GlobalEnv}). Should evaluate to logical (or maybe numeric or character); NA is treated as FALSE. Wrap \code{cond} in parentheses to avoid trouble with operator precedence.
+\code{\%where\%}, \code{\%where.warn\%} cond: unquoted expression to be \code{eval}ed in context of \code{x}, then in the calling frame of \code{\%where\%} (or \code{.GlobalEnv}). Should evaluate to logical (or maybe numeric or character); NA is treated as FALSE. Wrap \code{cond} in parentheses to avoid trouble with operator precedence. NB \code{\%where\%} is equivalent to \code{\link{mwhere}}, which can be handily used in base-R pipes.
 
 \code{\%without.name\%} x: object with \code{names} attribute
 
@@ -117,7 +117,7 @@ a \%<-\% value # really e.g. \{x;y\} \%<-\% list( 'yes', sqrt(pi)) to create x &
 \code{\%<-\%} a, value: \code{value} should be a list, and \code{a} should be e.g. \code{{x;y;z}} with as many elements as \code{value} has. The elements of \code{value} are assigned, in order, to the objects named in \code{a}, which are created / overwritten in the calling environment.
 }
 \author{Mark Bravington}
-\seealso{bquote
+\seealso{bquote, mwhere
 }
 \examples{
 "a" \%&\% "b" # "ab"

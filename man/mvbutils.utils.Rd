@@ -28,6 +28,7 @@
 \alias{masking}
 \alias{mkdir}
 \alias{most.recent}
+\alias{mwhere}
 \alias{my.all.equal}
 \alias{named}
 \alias{nscat}
@@ -77,6 +78,7 @@ masked( pos)
 masking( pos=1)
 mkdir( dirlist)
 most.recent( lvec)
+mwhere( x, cond)
 my.all.equal( x, y, ...)
 named( x)
 nscat( fmt, ..., sep='\\n', file='')
@@ -95,7 +97,7 @@ xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
 }
-\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, q, s, min, max, pattern, replacement, perl, fixed}{see "Arguments by function"}
+\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, q, s, min, max, pattern, replacement, perl, fixed}{see "Arguments by function"}
 }
 \details{
 \code{as.cat} makes a character vector print as if it was \code{cat}ted rather than \code{\link{print}}ed (one element per line, no extra quotes or backslashes, no [1] etc prefixes).
@@ -147,6 +149,8 @@ yes.no( prompt, default)
 \code{mkdir} makes directories; unlike \code{dir.create}, it can do several levels at once.
 
 \code{most.recent} returns the highest-so-far position of TRUE within a logical vector, or 0 if TRUE has not occurred yet; \code{most.recent( c(F,T,F,T))} returns c(0,2,2,4).
+
+\code{mwhere} subsets a \code{data.frame} by row, just like \code{\%where\%} (qv); it's for use in pipes, as per \bold{Examples}.
 
 \code{my.all.equal} is like \code{all.equal}, except that it returns FALSE in cases where \code{all.equal} returns a non-logical-mode result.
 
@@ -332,6 +336,14 @@ sapply( c( FALSE, NA, TRUE), isT)
 # [1] FALSE FALSE  TRUE
 legal.filename( "a:b\\\\c/d&f") # "a.b.c.d&f"
 most.recent( c( FALSE,TRUE,FALSE,TRUE)) # c( 0, 2, 2, 4)
+# mwhere for subsetting: find vowels whose alphetic position is a multiple of 5
+df <- data.frame( x=1:10, y=LETTERS[ 1:10])
+# Base-R pipes may not exist for the R version being used here
+# So, try to parse the expression first...
+pp <- try( parse( text=
+ 'df |> mwhere( x \%\% 5 == 0) |> mwhere( y \%in\% cq( A,E,I,O,U))'
+))
+if( pp \%is.not.a\% 'try-error') eval( pp[[1]]) # just E-row
 sapply( named( cq( alpha, beta)), nchar)  # c( alpha=5, beta=4)
 pos( cq( quick, lazy), "the quick brown fox jumped over the lazy dog")
 # matrix( c( 5, 37), nrow=2)

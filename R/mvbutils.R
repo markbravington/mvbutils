@@ -7771,6 +7771,15 @@ stop("only a single element should be replaced")
 }
 
 
+"mwhere" <-
+function( x, cond){
+  # Don't eval args prematurely...
+  mc <- match.call()
+  mc[[1]] <- as.name( '%where%')
+  eval.parent( mc)
+}
+
+
 "my.all.equal" <-
 function (x, y, ...) {
   # This *really* shouldn't be needed--- but is :/
@@ -12698,8 +12707,13 @@ stopifnot( exprs %is.a% '{')
   
   # Remove the call to curlybrace, and make an expression() obj
   exprs <- as.expression( as.list( exprs)[-1])
-  withAutoprint( exprs, evaluated=TRUE, local=local,  
-      prompt.echo=prompt.echo, ...)
+  flubadub <- capture.output(
+      res <- withAutoprint( exprs, evaluated=TRUE, local=local,  
+          prompt.echo=prompt.echo, ...)
+    )
+  flubadub <- flubadub[ !startsWith( flubadub, '+ ')]
+  print( as.cat( flubadub))
+invisible( res)
 }
 
 
