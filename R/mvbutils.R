@@ -12888,7 +12888,7 @@ function( x, con, append=FALSE, print.name=FALSE, doc.special=TRUE, xn=NULL) {
 
 
 "xgsub" <-
-function( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...) gsub( pattern, replacement, x, perl=perl, ...)
+function( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...) gsub( pattern, replacement, x, perl=perl, fixed=fixed, ...)
 
 
 "xsave" <-
@@ -12905,7 +12905,7 @@ function( list, file, envir, ...){
 
 
 "xsub" <-
-function( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...) sub( pattern, replacement, x, perl=perl, ...)
+function( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...) sub( pattern, replacement, x, perl=perl, fixed=fixed, ...)
 
 
 "yes.no" <-
