@@ -43,6 +43,7 @@
 \alias{scatn}
 \alias{to.regexpr}
 \alias{undent}
+\alias{unsource}
 \alias{xgsub}
 \alias{xsub}
 \alias{yes.no}
@@ -93,11 +94,12 @@ scatn( fmt, ..., sep='\\n', file='', append=FALSE)
 sqr( x)
 to.regexpr( x)
 undent( s)
+unsource( f, fname=deparse1( substitute( f)))
 xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
 }
-\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, q, s, min, max, pattern, replacement, perl, fixed}{see "Arguments by function"}
+\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, q, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
 }
 \details{
 \code{as.cat} makes a character vector print as if it was \code{cat}ted rather than \code{\link{print}}ed (one element per line, no extra quotes or backslashes, no [1] etc prefixes).
@@ -176,6 +178,8 @@ yes.no( prompt, default)
 
 \code{undent} is handy when you want a slab of multi-line text inside some function you are writing. Raw-string syntax helps a lot (see the final examples of \code{?Quotes}), but indentation is horrible and the first line is out-of-step with the rest. You ideally want your text to appear indented at whatever looks nice inside your \emph{code}, but for the actual string not to be indented. So, start your raw string with a newline, and wrap the string in \code{undent}, and all will be well.
 
+\code{unsource} takes a function and returns a character vector which, when printed with \code{\link{print}} or \code{writeLines}, will \emph{probably} be amenable to \code{source}. It will \emph{strip} the "<environment:gsd907897gsd>" and "<bytecode:097a0sdg>" verbiage which otherwise often prevents \code{source} from working, and frequently annoy me a lot (though note that the bytecode really is totally unimportant, but the environment might not be). But it will try to \emph{keep} other attributes, such as useful "constants" accessed from within the function's code via eg \code{environment(sys.function())$<usefulconst>}. \code{unsource} may be more generally useful than the similar \code{\link{write.sourceable.function}} because the latter is geared up to dealing directly with the \code{mvbutils} function-documentation system, and also actually writes to a file--- whereas \code{unsource} returns a character vector (of class \code{cat}) which it's up to you to write or whatever.
+
 \code{xsub} and \code{xgsub} are for pipes. They are just like \code{sub} and \code{gsub}, except that the \code{x} argument comes first, and that there is a default of \code{perl=TRUE} (unless you set \code{fixed=TRUE}). So you can write eg \code{str |> xsub( "old", "new")} rather than \code{str |> sub( "old", "new", x=_)} or \code{sub( "old", "new", str)}. It's just better.
 
 \code{yes.no} \code{cat}s its "prompt" argument and waits for user input. if the user input \code{pmatch}es "yes" or "YES", then \code{yes.no} returns \code{TRUE}; if the input \code{pmatch}es \code{no} or \code{NO} then \code{yes.no} returns \code{FALSE}; if the input is '' and \code{default} is set, then \code{yes.no} returns \code{default}; otherwise it repeats the question. You probably want to put a space at the end of \code{prompt}.
@@ -213,6 +217,7 @@ yes.no( prompt, default)
 \item{  scatn}{NULL}
 \item{  to.regexpr}{character}
 \item{  undent}{string}
+\item{  unsource}{character (class \code{cat} to print nicely)}
 \item{  xgsub}{character}
 \item{  xsub}{character}
 \item{  yes.no}{TRUE or FALSE}
@@ -262,6 +267,8 @@ yes.no( prompt, default)
 \item{scatn, nscat}{fmt, ...: as per \code{sprintf}; file, sep, append: as per \code{cat}}
 \item{to.regexpr}{x: character vector}
 \item{undent}{s: string, presumably a "raw string".}
+\item{unsource}{f: an actual function object}
+\item{unsource}{fname: what name should the function be assigned to, if the result is fed to \code{source}? Default is the name of \code{f} itself, which is usually fine.}
 \item{xgsub}{x, pattern, replacement, perl=!fixed, fixed= FALSE, ...: as per \code{gsub}}
 \item{xsub}{as per \code{xgsub}}
 \item{yes.no}{prompt: string to put before asking for input}
@@ -371,6 +378,12 @@ to.regexpr( "a{{") # "a\\\\\{\\\\\{"
         New paragraph!
       }--")
 as.cat( test)
+glurp <- function( x) const + x
+attr( glurp, 'const') <- 44
+unsource( glurp)
+oglurp <- glurp
+eval( parse( text= unsource( klunge))) # will overwrite klunge
+identical( klunge, oklunge) # yes
 longstring <- 'Bollocks, then the good stuff, then more bollocks'
 longstring |> xsub( ',[^,]*$', '') |> xsub( '.*, *', '')
 # "then the good stuff"
