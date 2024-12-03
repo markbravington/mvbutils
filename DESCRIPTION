@@ -9,4 +9,4 @@ NeedsCompilation: no
 ByteCompile: no
 Description: Hierarchical workspace tree, code editing and backup, easy package prep, editing of packages while loaded, per-object lazy-loading, easy documentation, macro functions, and miscellaneous utilities. Needed by debug package.
 License: GPL (>=2)
-Version: 2.9.30
+Version: 2.9.31

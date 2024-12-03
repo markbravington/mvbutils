@@ -39,11 +39,11 @@
 \alias{rename.els}
 \alias{returnList}
 \alias{safe.rbind}
-\alias{sqr}
 \alias{scatn}
+\alias{sourceable}
+\alias{sqr}
 \alias{to.regexpr}
 \alias{undent}
-\alias{unsource}
 \alias{xgsub}
 \alias{xsub}
 \alias{yes.no}
@@ -91,10 +91,10 @@ rename.els( ..., ignore.missing=FALSE)
 returnList( ...)
 safe.rbind( df1, df2) # Deprecated in 2013
 scatn( fmt, ..., sep='\\n', file='', append=FALSE)
+sourceable( f, fname=deparse1( substitute( f)))
 sqr( x)
 to.regexpr( x)
 undent( s)
-unsource( f, fname=deparse1( substitute( f)))
 xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
@@ -178,7 +178,7 @@ yes.no( prompt, default)
 
 \code{undent} is handy when you want a slab of multi-line text inside some function you are writing. Raw-string syntax helps a lot (see the final examples of \code{?Quotes}), but indentation is horrible and the first line is out-of-step with the rest. You ideally want your text to appear indented at whatever looks nice inside your \emph{code}, but for the actual string not to be indented. So, start your raw string with a newline, and wrap the string in \code{undent}, and all will be well.
 
-\code{unsource} takes a function and returns a character vector which, when printed with \code{\link{print}} or \code{writeLines}, will \emph{probably} be amenable to \code{source}. It will \emph{strip} the "<environment:gsd907897gsd>" and "<bytecode:097a0sdg>" verbiage which otherwise often prevents \code{source} from working, and frequently annoy me a lot (though note that the bytecode really is totally unimportant, but the environment might not be). But it will try to \emph{keep} other attributes, such as useful "constants" accessed from within the function's code via eg \code{environment(sys.function())$<usefulconst>}. \code{unsource} may be more generally useful than the similar \code{\link{write.sourceable.function}} because the latter is geared up to dealing directly with the \code{mvbutils} function-documentation system, and also actually writes to a file--- whereas \code{unsource} returns a character vector (of class \code{cat}) which it's up to you to write or whatever.
+\code{sourceable} takes a function and returns a character vector which, when printed with \code{\link{print}} or \code{writeLines}, will \emph{probably} be amenable to \code{source}. Unlike \code{deparse}, it keeps the original source text, including comments. It will \emph{strip} the "<environment:gsd907897gsd>" and "<bytecode:097a0sdg>" verbiage which otherwise often prevents \code{source} from working, and which frequently annoy me. But it will try to \emph{keep} other attributes, such as useful "constants" accessed from within the function's code via eg \code{environment(sys.function())$<usefulconst>}. \code{sourceable} may be more generally useful than the similar \code{\link{write.sourceable.function}} because the latter is geared up to dealing directly with the \code{mvbutils} function-documentation system, and also actually writes to a file--- whereas \code{sourceable} returns a character vector (of class \code{cat}) which it's up to you to write or whatever.
 
 \code{xsub} and \code{xgsub} are for pipes. They are just like \code{sub} and \code{gsub}, except that the \code{x} argument comes first, and that there is a default of \code{perl=TRUE} (unless you set \code{fixed=TRUE}). So you can write eg \code{str |> xsub( "old", "new")} rather than \code{str |> sub( "old", "new", x=_)} or \code{sub( "old", "new", str)}. It's just better.
 
@@ -215,9 +215,10 @@ yes.no( prompt, default)
 \item{  returnList}{list or single object}
 \item{  safe.rbind}{\code{data.frame}}
 \item{  scatn}{NULL}
+\item{  sourceable}{character (class \code{cat} to print nicely)}
+\item{  sqr}{as per input}
 \item{  to.regexpr}{character}
 \item{  undent}{string}
-\item{  unsource}{character (class \code{cat} to print nicely)}
 \item{  xgsub}{character}
 \item{  xsub}{character}
 \item{  yes.no}{TRUE or FALSE}
@@ -265,10 +266,11 @@ yes.no( prompt, default)
 \item{returnList}{...: named or un-named arguments, just as for \code{return} before R{} 1.8.}
 \item{safe.rbind}{df1, df2: \code{data.frame} or \code{list}}
 \item{scatn, nscat}{fmt, ...: as per \code{sprintf}; file, sep, append: as per \code{cat}}
+\item{sourceable}{f: an actual function object}
+\item{sourceable}{fname: what name should the function be assigned to, if the result is fed to \code{source}? Default is the name of \code{f} itself, which is usually fine.}
+\item{sqr}{x: anything for which \code{*} is a valid op.}
 \item{to.regexpr}{x: character vector}
 \item{undent}{s: string, presumably a "raw string".}
-\item{unsource}{f: an actual function object}
-\item{unsource}{fname: what name should the function be assigned to, if the result is fed to \code{source}? Default is the name of \code{f} itself, which is usually fine.}
 \item{xgsub}{x, pattern, replacement, perl=!fixed, fixed= FALSE, ...: as per \code{gsub}}
 \item{xsub}{as per \code{xgsub}}
 \item{yes.no}{prompt: string to put before asking for input}
@@ -380,9 +382,11 @@ to.regexpr( "a{{") # "a\\\\\{\\\\\{"
 as.cat( test)
 glurp <- function( x) const + x
 attr( glurp, 'const') <- 44
-unsource( glurp)
+sourceable( glurp)
+# To avoid an intermediate file, use
+# ... eval(parse(text=<>))) in place of source
 oglurp <- glurp
-eval( parse( text= unsource( klunge))) # will overwrite klunge
+eval( parse( text= sourceable( klunge))) # will overwrite klunge
 identical( klunge, oklunge) # yes
 longstring <- 'Bollocks, then the good stuff, then more bollocks'
 longstring |> xsub( ',[^,]*$', '') |> xsub( '.*, *', '')

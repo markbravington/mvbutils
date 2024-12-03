@@ -11648,6 +11648,40 @@ invisible( NULL)
 }
 
 
+"sourceable" <-
+function( f, fname=deparse1( substitute( f))){
+  # Get something sourceable, sans <bytecode> and <environment> dags
+  # R makes this really bloody difficult
+stopifnot( f %is.a% 'function')
+  force( fname) # before changing f
+  
+  atts <- attributes( f)
+  sr <- atts$srcref
+  atts <- atts %without.name% 'srcref'
+  attributes( f) <- list()
+  
+  src <- if( is.null( sr)){
+    capture.output( print( f))
+  } else {
+    as.character( getSrcref( sr))
+  }
+  
+  if( length( atts)){
+    atts <- lapply( atts, deparse) # it might work
+    src[1] <- 'structure( ' %&% src[ 1]
+    for( l in names( atts)){
+      n <- length( src)
+      src[ n] <- src[ n] %&% ','
+      src <- c( src, sprintf( '"%s" =', l), atts[[ l]])
+    }
+    src <- c( src, ')')
+  }
+  
+  src[1] <- sprintf( '"%s" <- %s', fname, src[1])
+as.cat( src) # make it print nicely
+}
+
+
 "sourcepack_info" <-
 function( sourcedir) {
   files <- dir( sourcedir, recursive=TRUE, all.files=TRUE, full.names=TRUE)
@@ -12317,40 +12351,6 @@ stop( "Not overwriting")
         '...otherwise R won\'t be able to find task pkg for "%1$s" next time\n', x))
   }
 return( invisible( NULL))
-}
-
-
-"unsource" <-
-function( f, fname=deparse1( substitute( f))){
-  # Get something sourceable, sans <bytecode> and <environment> dags
-  # R makes this really bloody difficult
-stopifnot( f %is.a% 'function')
-  force( fname) # before changing f
-  
-  atts <- attributes( f)
-  sr <- atts$srcref
-  atts <- atts %without.name% 'srcref'
-  attributes( f) <- list()
-  
-  src <- if( is.null( sr)){
-    capture.output( print( f))
-  } else {
-    as.character( getSrcref( sr))
-  }
-  
-  if( length( atts)){
-    atts <- lapply( atts, deparse) # it might work
-    src[1] <- 'structure( ' %&% src[ 1]
-    for( l in names( atts)){
-      n <- length( src)
-      src[ n] <- src[ n] %&% ','
-      src <- c( src, sprintf( '"%s" =', l), atts[[ l]])
-    }
-    src <- c( src, ')')
-  }
-  
-  src[1] <- sprintf( '"%s" <- %s', fname, src[1])
-as.cat( src) # make it print nicely
 }
 
 
