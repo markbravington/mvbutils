@@ -301,7 +301,8 @@ compacto( x, extra='|', width=3) # similar to gap... yet different
 colnames( x) <- c( 'Gogol', 'Turgenev')
 compacto( x)
 x <- 6
-attr( x, 'massive') <- 1:1e5
+attr( x, 'massive') <- 1:1e3 # not that massive; used to have 1e5, but
+# ... CRAN checks prints bloody everything!
 x
 disatt( x)
 old_env <- new.env()
@@ -386,8 +387,8 @@ sourceable( glurp)
 # To avoid an intermediate file, use
 # ... eval(parse(text=<>))) in place of source
 oglurp <- glurp
-eval( parse( text= sourceable( klunge))) # will overwrite klunge
-identical( klunge, oklunge) # yes
+glurp <- eval( parse( text= sourceable( glurp))) # will overwrite klunge
+identical( glurp, oglurp) # yes
 longstring <- 'Bollocks, then the good stuff, then more bollocks'
 longstring |> xsub( ',[^,]*$', '') |> xsub( '.*, *', '')
 # "then the good stuff"
