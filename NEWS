@@ -1,3 +1,5 @@
+2.9.32: fixed CRAN-check bug in examples of 'mvbutils.utils'
+
 2.9.30: added 'sourceable'
 
 2.9.22: added 'mwhere'
