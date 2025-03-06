@@ -4,12 +4,12 @@
 \docType{package}
 \title{How to use the mvbutils package}
 \description{
-Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2024?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part only for interactive use.
+Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2025?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part only for interactive use.
 
 For now, \code{mvbutils} offers the following main features:
 
 \itemize{
-\item Miscellaneous goodies: local/nested functions (\code{\link{mlocal}}), display of what-calls-what (\code{\link{foodweb}}), multiple replacement (\code{\link{multirep}}), nicely-formatted latex tables (\code{xtable.mvb}), autoprinting of statements and outputs within a function (\code{\link{visify}}), universal-ish date convertor (\code{\link{autodate}}), parallel-processing numerical derivative (\code{\link{numvbderiv_parallel}}), numerous lower-level lower-level utility functions and operators (\code{\link{mvbutils.utils}}, \code{\link{mvbutils.operators}}, \code{\link{extract.named}}, \code{\link{mdeparse}}, \code{\link{mcut}}, \code{\link{search.for.regexpr}}, \code{\link{strip.missing}}, \code{\link{FOR}}). These functions mostly aren't spectacular in themselves, but many are used in other more spectacular packages.
+\item Miscellaneous goodies: local/nested functions (\code{\link{mlocal}}), display of what-calls-what (\code{\link{foodweb}}), multiple replacement (\code{\link{multirep}}), nicely-formatted latex tables (\code{xtable.mvb}), autoprinting of statements and outputs within a function (\code{\link{visify}}), universal-ish date convertor (\code{\link{autodate}}), parallel-processing numerical derivative (\code{\link{numvbderiv_parallel}}), matching multiple columns in dataframes/matrices (\code{\link{multimatch}}), nicely converting between arrays and dataframes (\code{\link{A2D}} and \code{\link{D2A}}), numerous lower-level lower-level utility functions and operators (\code{\link{mvbutils.utils}}, \code{\link{mvbutils.operators}}, \code{\link{extract.named}}, \code{\link{mdeparse}}, \code{\link{mcut}}, \code{\link{search.for.regexpr}}, \code{\link{strip.missing}}, \code{\link{FOR}}). These functions mostly aren't spectacular in themselves, but many are used in other more spectacular packages.
 }
 
 The interactive-only part has:

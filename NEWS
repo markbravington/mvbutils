@@ -1,3 +1,5 @@
+2.9.38: incorporated 'multimatch', 'A2D', and 'D2A' from package 'handy2' (the latter two with slight name and syntax changes). 'A2D' should eventually be made generic--- at present, it's hardwired to do the right thing on 'offarray' objects.
+
 2.9.32: fixed CRAN-check bug in examples of 'mvbutils.utils'
 
 2.9.30: added 'sourceable'

@@ -554,6 +554,27 @@ return( res)
 }
 
 
+"A2D" <-
+function( x, name.of.response= 'Value'){
+## Convert array to data.frame; like base::array2DF() but that fails to convert obvious "characters" into numbers. Since base::tapply() generates characters from numbers, that is highly annoying. So, use this instead.
+  if( x %is.an% 'offarray'){
+return( as.data.frame( 'x', name_of_response= name.of.response))
+  }
+
+  xx <- array2DF( x, responseName= name.of.response)
+  ndn <- names( dimnames( x))
+  if( !is.null( ndn)){
+    for( i in ndn){
+      testnum <- suppressWarnings( as.numeric( xx[[ i]]))
+      if( !any( is.na( testnum))){
+        xx[[ i]] <- testnum
+      }
+    }
+  }
+  xx
+}
+
+
 "add.flatdoc.to" <-
 function( x=NULL, char.x=NULL, pkg=NULL, env=NULL, convert.to.source=FALSE) {
   if( is.null( env))
@@ -2080,6 +2101,32 @@ function() {
     }
   }
 return( cs)  
+}
+
+
+"D2A" <-
+function( 
+  df,
+  data.col,
+  dim.cols=names( df) %except% data.col,
+  missing.value=NA
+){
+  ndims <- length( dim.cols)
+  df <- df[, c( dim.cols, data.col)]
+  df[ dim.cols] <- lapply( df[ dim.cols], xfactor)
+  na.rows <- is.na( matrix( as.numeric( unlist( df[ dim.cols], F)), ncol=ndims) %**% rep( 1, ndims))
+  df <- df[ !na.rows,]
+
+  dimnames <- lapply( df[ dim.cols], levels)
+  output <- array( missing.value, dim=sapply( dimnames, length), dimnames=dimnames)
+
+  df[ dim.cols] <- lapply( df[ dim.cols], as.numeric)
+  indices <- as.matrix( df[ dim.cols])
+  if( any( duplicated( indices))){
+warning( "Duplicated indices--- probably using last occurrence, but...")
+  }
+  output[ indices] <- df[[ data.col]]
+  output
 }
 
 
@@ -7306,6 +7353,68 @@ stop( 'environment has no path attribute')
   setup.mcache( refs=what, envir=envir)
 
   invisible( what)
+}
+
+
+"multimatch" <-
+function( df1, df2, nomatch=NA, char.force=FALSE, force.same.cols=TRUE) {
+  df1 <- as.data.frame( df1, row.names=NULL)
+  df2 <- as.data.frame( df2, row.names=NULL)
+  if( !nrow( df1))
+return( integer( 0))
+
+  if( !nrow( df2))
+return( as.integer( rep( nomatch, nrow( df1))))
+
+  if( !force.same.cols) {
+    in.both <- names( df1) %that.are.in% names( df2)
+    df1 <- df1[ in.both]
+    df2 <- df2[ in.both]
+  }
+
+  if( (n <- length( df1)) != length( df2))
+stop( '# columns must be equal for multimatch')
+  if( char.force) {
+    df1[] <- lapply( df1, as.character)
+    df2[] <- lapply( df2, as.character)
+  }
+
+  if( !all( (dc <- sapply( df1, data.class)) == sapply( df2, data.class)))
+stop( 'mismatch in data classes')
+  if( !all( do.on( df1, is.logical( .) || is.numeric( .) || is.factor( .) ||
+      is.character( .) || (. %is.a% 'POSIXct'))))
+stop( 'needs logical, numeric, factor, character, or POSIXct variables')
+  if( any( do.on( df1, is.array(.))))
+stop( "can't handle arrays (yet)")  
+
+  nr1 <- nrow( df1)
+  nr2 <- nrow( df2)
+  mdf1 <- matrix( 0, nr1, n)
+  mdf2 <- matrix( 0, nr2, n)
+
+  nu <- numeric( n) # used to be integer, but this can cope with more/bigger
+  for( i in 1:n) {
+    if( is.factor( df1[[ i]])) {
+      df1i <- xfactor( df1[[ i]], exclude=NULL)
+      df2i <- xfactor( df2[[ i]], exclude=NULL)
+      ul <- unique( c( levels( df1i), levels( df2i)))
+      ilev1 <- match( levels( df1i), ul)
+      mdf1[, i] <- ilev1[ as.numeric( df1i)]
+      ilev2 <- match( levels( df2i), ul)
+      mdf2[, i] <- ilev2[ as.numeric( df2i)]
+    } else { # numeric/logical
+      ul <- unique( c( df1[[ i]], df2[[ i]]))
+      mdf1[, i] <- match( df1[[ i]], ul)
+      mdf2[, i] <- match( df2[[ i]], ul)
+    }
+
+    nu[ i] <- length( ul)
+  }
+
+  nu <- c( 1, cumprod( nu)[ -n])
+  imdf1 <- mdf1 %**% nu
+  imdf2 <- mdf2 %**% nu
+  match( imdf1, imdf2, nomatch)
 }
 
 
