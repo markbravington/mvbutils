@@ -5902,7 +5902,7 @@ function( pkgname, pkgpath){
 
 
 "inv.logit" <-
-function( q) plogis( q)
+function( qq) plogis( qq)
 
 
 "is.dir" <-

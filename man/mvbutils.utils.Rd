@@ -68,7 +68,7 @@ find.funs(pos=1, ..., exclude.mcache = TRUE, mode="function")
 find.lurking.envs(obj, delve=FALSE, trace=FALSE)
 index( lvector)
 integ(expr, lo, hi, what = "x", ..., args.to.integrate = list())
-inv.logit( q)
+inv.logit( qq)
 is.dir( dir)
 isF( x)
 isT( x)
@@ -99,7 +99,7 @@ xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
 }
-\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, q, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
+\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, qq, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
 }
 \details{
 \code{as.cat} makes a character vector print as if it was \code{cat}ted rather than \code{\link{print}}ed (one element per line, no extra quotes or backslashes, no [1] etc prefixes).
