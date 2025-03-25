@@ -6,7 +6,7 @@
 \description{
 \code{D2A} makes an array out of one column in a dataframe, with (by default) the remaining columns forming the array dimensions, in order. Its (almost) inverse is \code{\link{A2D}}.
 
-You can choose which columns to use for the dimensions, and in which order, via the \code{dim.cols} argument. However, it often easier to subset the array by columns in the call, eg \code{D2A( x[ cq( Year, Len, Count), data.col="Count")}. Each unique value in an index column gets a "row" in the array. Combinations of indices that don't appear as rows in the input will become \code{missing.value} in the output.
+You can choose which columns to use for the dimensions, and in which order, via the \code{dim.cols} argument. However, it often easier to subset the array by columns in the call, eg \code{D2A( x[ cq( Year, Len, Count), data.col="Count")}. Each unique value in an index column gets a "row" in the array. Combinations of indices that don't appear as rows in the input will become \code{missing.value} in the output. If a row has missing values in any index column, it is ignored.
 
 Duplicated index rows in the \code{data.frame} are not advisable, and trigger a \code{warning}; I think the last value will be used, but I'm not sure.
 \subsection{Note}{

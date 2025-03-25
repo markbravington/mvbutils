@@ -557,6 +557,8 @@ return( res)
 "A2D" <-
 function( x, name.of.response= 'Value'){
 ## Convert array to data.frame; like base::array2DF() but that fails to convert obvious "characters" into numbers. Since base::tapply() generates characters from numbers, that is highly annoying. So, use this instead.
+
+# Inelegant special-case for 'offarray' objects from eponymous package. Theoretically, the Right Ssolution would be to make 'A2D' generic, and write a special method for it in 'offarray'...
   if( x %is.an% 'offarray'){
 return( as.data.frame( 'x', name_of_response= name.of.response))
   }
@@ -2113,7 +2115,7 @@ function(
 ){
   ndims <- length( dim.cols)
   df <- df[, c( dim.cols, data.col)]
-  df[ dim.cols] <- lapply( df[ dim.cols], xfactor)
+  df[ dim.cols] <- lapply( df[ dim.cols], factor) # used to be xfactor
   na.rows <- is.na( matrix( as.numeric( unlist( df[ dim.cols], F)), ncol=ndims) %**% rep( 1, ndims))
   df <- df[ !na.rows,]
 
@@ -7395,6 +7397,8 @@ stop( "can't handle arrays (yet)")
   nu <- numeric( n) # used to be integer, but this can cope with more/bigger
   for( i in 1:n) {
     if( is.factor( df1[[ i]])) {
+      # Match based on level strings (even if levels are not identical)
+      # NAs need to match too, hence xfactor()
       df1i <- xfactor( df1[[ i]], exclude=NULL)
       df2i <- xfactor( df2[[ i]], exclude=NULL)
       ul <- unique( c( levels( df1i), levels( df2i)))
@@ -13027,6 +13031,31 @@ function( x, con, append=FALSE, print.name=FALSE, doc.special=TRUE, xn=NULL) {
   }
 
   cat("\n")
+}
+
+
+"xfactor" <-
+function( 
+  x, 
+  exclude=if( is.factor( x) && any( is.na( levels( x)))) NULL else NA
+){
+## Ancient code: don't want to call this yourself. Used by D2A & a few other oldies
+# If x is a factor and exclude is _explicitly_ NULL, replace any NA's by level "\001"--- as in 'multimatch'. I'm not sure that 'exclude' would ever be NULL by default, although that may be the intention; it would require an illegal manual construction of 'levels'
+
+# If x is not a factor, turn it into one, with 'exclude' treated as normal, and just suck up the NAs...
+  if( is.factor( x)) {
+    if( is.null( exclude) && any( is.na( x))) {
+      ax <- attributes( x)
+      x <- unclass( x)
+      x[ is.na( x)] <- length( ax$levels)+1
+      ax$levels <- c( ax$levels, '\001')
+      # Bloody R nannies have made this hard
+      x <- factor( ax$levels[ x], levels=ax$levels)
+    }
+  } else {
+    x <- factor( x, exclude=exclude)
+  }
+return( x)
 }
 
 

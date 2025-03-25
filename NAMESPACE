@@ -225,6 +225,7 @@ export( "%!in%",
 "visify",
 "warn.and.subset",
 "write.NAMESPACE",
+"xfactor",
 "xgsub",
 "xsub",
 "yes.no")

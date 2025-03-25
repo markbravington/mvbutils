@@ -44,6 +44,7 @@
 \alias{sqr}
 \alias{to.regexpr}
 \alias{undent}
+\alias{xfactor}
 \alias{xgsub}
 \alias{xsub}
 \alias{yes.no}
@@ -95,6 +96,7 @@ sourceable( f, fname=deparse1( substitute( f)))
 sqr( x)
 to.regexpr( x)
 undent( s)
+xfactor( x, exclude=if( is.factor( x) && any( is.na( levels( x)))) NULL else NA)
 xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
@@ -179,6 +181,8 @@ yes.no( prompt, default)
 \code{undent} is handy when you want a slab of multi-line text inside some function you are writing. Raw-string syntax helps a lot (see the final examples of \code{?Quotes}), but indentation is horrible and the first line is out-of-step with the rest. You ideally want your text to appear indented at whatever looks nice inside your \emph{code}, but for the actual string not to be indented. So, start your raw string with a newline, and wrap the string in \code{undent}, and all will be well.
 
 \code{sourceable} takes a function and returns a character vector which, when printed with \code{\link{print}} or \code{writeLines}, will \emph{probably} be amenable to \code{source}. Unlike \code{deparse}, it keeps the original source text, including comments. It will \emph{strip} the "<environment:gsd907897gsd>" and "<bytecode:097a0sdg>" verbiage which otherwise often prevents \code{source} from working, and which frequently annoy me. But it will try to \emph{keep} other attributes, such as useful "constants" accessed from within the function's code via eg \code{environment(sys.function())$<usefulconst>}. \code{sourceable} may be more generally useful than the similar \code{\link{write.sourceable.function}} because the latter is geared up to dealing directly with the \code{mvbutils} function-documentation system, and also actually writes to a file--- whereas \code{sourceable} returns a character vector (of class \code{cat}) which it's up to you to write or whatever.
+
+\code{xfactor} either turns a non-factor \code{x} into a factor, honouring the \code{exclude} argument of \code{\link{factor}}; or, with a factor \code{x}, maps any NA levels to a non-NA level with label \code{"\\001"} (ASCII 1). ICNR why :)
 
 \code{xsub} and \code{xgsub} are for pipes. They are just like \code{sub} and \code{gsub}, except that the \code{x} argument comes first, and that there is a default of \code{perl=TRUE} (unless you set \code{fixed=TRUE}). So you can write eg \code{str |> xsub( "old", "new")} rather than \code{str |> sub( "old", "new", x=_)} or \code{sub( "old", "new", str)}. It's just better.
 
@@ -271,6 +275,7 @@ yes.no( prompt, default)
 \item{sqr}{x: anything for which \code{*} is a valid op.}
 \item{to.regexpr}{x: character vector}
 \item{undent}{s: string, presumably a "raw string".}
+\item{xfactor}{a factor.}
 \item{xgsub}{x, pattern, replacement, perl=!fixed, fixed= FALSE, ...: as per \code{gsub}}
 \item{xsub}{as per \code{xgsub}}
 \item{yes.no}{prompt: string to put before asking for input}

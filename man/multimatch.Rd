@@ -2,16 +2,18 @@
 \alias{multimatch}
 \title{Match rows of one dataframe to another using multiple columns}
 \description{
-Like \code{match}, but for more than one variable at a time--- and geared specifically to dataframes (or matrices).
+Like \code{match}, but for more than one variable at a time--- and geared specifically to dataframes (or matrices). NA values match only to NAs.
 
 So useful that I've finally moved it from secret package \pkg{handy2} into package \pkg{mvbutils}, and added documentation.
+
+Any \code{factor} fields (which I hardly ever use; characters are just Better) will be matched based on the strings they display as, so that (eg) arbitrary re-orderings \code{levels} won't matter.
 }
 \usage{multimatch(df1, df2, nomatch = NA, char.force = FALSE, force.same.cols = TRUE)
 }
 \arguments{
 \item{ df1,  df2}{two dataframes. Unless you set \code{force.same.cols=FALSE}, column-order is assumed to be the same in both, and a mismatched number of columns will trigger an error.}
 \item{ nomatch}{like in \code{\link{match}}}
-\item{ char.force}{?convert all columns to \code{character} before checking? Usually doesn't matter; if it does, TRUE is \emph{probably} the safer, but historically the default is \code{FALSE}}
+\item{ char.force}{?convert all columns to \code{character} before checking? Usually doesn't matter; if it does, \code{TRUE} is \emph{probably} the safer, but historically the default is \code{FALSE}}
 \item{ force.same.cols}{Perhaps a misleading name... set to \code{FALSE} if you want \code{multimatch} to use only columns whose name exists in both dataframes, and to re-order columns if necessary so that the names match. Usually the non-default \code{FALSE} is better!}
 }
 \value{A numeric vector, one element per row in \code{df1}, showing which row in \code{df2} it matches to, or \code{nomatch} if none do.

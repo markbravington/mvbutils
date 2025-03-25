@@ -13,10 +13,10 @@ The other columns will have names "D1", "D2", etc, unless either (i) the input h
 \code{A2D} and \code{\link{D2A}} are not strict inverses, because (i) if you start with a \code{data.frame} that lacks rows for some index combinations, those rows will still appear in the result, (ii) \code{factor} columns turn into \code{character} columns, and (iii) columns might get re-ordered.
 }
 }
-\usage{A2D( a, name.of.response = "response")
+\usage{A2D( x, name.of.response = "Value")
 }
 \arguments{
-\item{ a}{array, matrix, or, vector, including \code{offarray} objects from the eponymous package.}
+\item{ x}{array, matrix, or, vector, including \code{offarray} objects from the eponymous package.}
 \item{ name.of.response}{what to call the output column that holds the array \emph{contents} (as opposed to its dimensions).}
 }
 \value{A \code{data.frame}, with one more column than there are dimensions to \code{a}.
