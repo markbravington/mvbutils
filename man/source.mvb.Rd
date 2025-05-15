@@ -3,7 +3,7 @@
 \alias{current.source}
 \alias{from.here}
 \title{Read R code and data from a file or connection}
-\description{\code{source.mvb} works like \code{source(local=TRUE)}, except you can intersperse free-format data into your code. \code{current.source} returns the connection that's currently being read by \code{source.mvb}, so you can redirect input accordingly. To do this conveniently inside \code{read.table}, you can use \code{from.here} to read the next lines as data rather than R{} code.
+\description{\code{source.mvb} is probably obsolete as of \code{mvbutils} 2.11.0; see \code{\link{docattr}}. Anyway, it works like \code{source(local=TRUE)}, except you can intersperse free-format data into your code. \code{current.source} returns the connection that's currently being read by \code{source.mvb}, so you can redirect input accordingly. To do this conveniently inside \code{read.table}, you can use \code{from.here} to read the next lines as data rather than R{} code.
 }
 \usage{
 source.mvb( con, envir=parent.frame(), max.n.expr=Inf,

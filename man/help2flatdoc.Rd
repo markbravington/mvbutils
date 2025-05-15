@@ -12,6 +12,8 @@
 \item{ aliases}{normally leave this empty--- see \bold{Details}.}
 The real argument is \code{text}; if missing, this is deduced from the help for \code{fun.name} (need not be a function) in the installed package \pkg{pkg}.
 }
+\value{A character vector of plain-text help, with class \code{cat} so it prints nicely.
+}
 \details{
 The package containing \code{fun.name} must be loaded first. If you write documentation using \code{\link{flatdoc}}, prepare the package with \code{\link{pre.install}}, build it with RCMD BUILD or INSTALL, and run \code{help2flatdoc} on the result, you should largely recover your original flat-format documentation. Some exceptions:
 

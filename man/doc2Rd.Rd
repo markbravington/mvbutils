@@ -3,9 +3,11 @@
 \alias{docotest}
 \title{Converts plain-text documentation to Rd format}
 \description{
-\code{doc2Rd} converts plain-text documentation into an Rd-format character vector, optionally writing it to a file. You probably won't need to call \code{doc2Rd} yourself, because \code{\link{pre.install}} and \code{\link{patch.install}} do it for you when you are building a package; the entire documentation of package \pkg{mvbutils} was produced this way. The main point of this helpfile is to describe plain-text documentation details. However, rather than wading through all the material below, just have a look at a couple of R{}'s help screens in the pager, e.g. via \code{help( glm, help_type="text")}, copy the result into a text editor, and try making one yourself. Don't bother with indentation, except in item lists as per \bold{More details} below (the pager's version is not 100\% suitable). See \code{\link{fixr}} and its \code{new.doc} argument for how to set up an empty template: also \code{\link{help2flatdoc}} for how to convert existing Rd-format doco.
+\code{doc2Rd} converts plain-text documentation into an Rd-format character vector, optionally writing it to a file. You probably won't need to call \code{doc2Rd} yourself, because \code{\link{pre.install}} and \code{\link{patch.install}} do it for you when you are building a package; the entire documentation of package \pkg{mvbutils} was produced this way. The main point of this helpfile is to describe plain-text documentation details. However, rather than wading through all the material below, just have a look at a couple of R{}'s help screens in the pager, e.g. via \code{help( glm, help_type="text")}, copy the result into a text editor, and try making one yourself. Don't bother with indentation though, except in item lists as per \bold{More details} below (the pager's version is not 100\% suitable). See \code{\link{fixr}} and its \code{new.doc} argument for how to set up an empty template: also \code{\link{help2flatdoc}} for how to convert existing Rd-format doco.
 
-\code{docotest} allows you to quickly check what your plain-text doco would look life
+\code{docotest} lets you quickly check how your doco would look in a browser.
+
+For how to attach plain-text documentation to your function, see \code{\link{docattr}} and \code{\link{write_sourceable_function}}, etc.
 }
 \usage{
 doc2Rd( text, file=NULL, append=, warnings.on=TRUE, Rd.version=,
@@ -28,7 +30,7 @@ For \code{docotest}:
 \value{Character vector containing the text as it would appear in an Rd file, with \code{class} of "cat" so it prints nicely on the screen.
 }
 \section{More details}{
-Flat-format (plain-text) documentation in \code{doc} attributes, or in stand-alone character objects whose name ends with ".doc", can be displayed by the replacement \code{\link{help}} in \code{mvbutils} (see \code{\link{dochelp}}) without any further ado. This is very useful while developing code before the package-creation stage, and you can write such documentation any way you want. For display in an HTML browser (as opposed to R{}'s internal pager), and/or when you want to generate a package, \code{doc2Rd} will convert pretty much anything into a legal Rd file. However, if you can follow a very few rules, using \code{doc2Rd} will actually give nice-looking authentic R{} help. For this to work, your documentation basically needs to look like a plain-text help file, as displayed by \code{help(..., help_type="text")}.
+Flat-format (plain-text) documentation in \code{doc} attributes, or in stand-alone character objects whose name ends with ".doc", can be displayed by the replacement \code{\link{help}} in \code{mvbutils} (see \code{\link{dochelp}}) without any further ado. This is very useful while developing code before the package-creation stage, and you can write such documentation any way you want. For display in an HTML browser (as opposed to R{}'s internal pager), and/or when you want to generate a package, \code{doc2Rd} will convert pretty much anything into a legal Rd file. However, if you can follow a very few rules, using \code{doc2Rd} will actually give nice-looking authentic R{} help. For this to work, your documentation basically needs to look like a plain-text help file, as displayed by \code{help(..., help_type="text")}, except without most indentation (so, your paragraphs should not contain hard line breaks).
 
 Rather than wading through this help file to work out how to write plain-text help, just have a look at a couple of R{}'s help screens in the pager, and try making one yourself. You can also use \code{\link{help2flatdoc}} to convert an existing plain-text help file. Also check the file "sample.fun.rrr" in the "demostuff" subdirectory of this package (see \bold{Examples}). If something doesn't work, delve more deeply...
 
@@ -145,7 +147,7 @@ To check the results: \code{docotest(myfun)} to check the HTML (or \code{patch.i
 
 To convert existing Rd documentation: \code{\link{help2flatdoc}}.
 
-If you want to tinker with the underlying mechanisms: \code{\link{flatdoc}}, \code{\link{write.sourceable.function}}
+If you want to tinker with the underlying mechanisms: \code{\link{flatdoc}}, \code{\link{write_sourceable_function}}
 }
 \examples{
 ## Needs a function with the right kind of "doc" attr

@@ -1,83 +1,84 @@
-mvbutils-package                       How to use the mvbutils package
-A2D                                    Array into dataframe
-autodate                               Universal date converter
-bugfix_Rd2roxygen                      Like Rd2roxygen, but fixing some bugs
-cd                                     Organizing R workspaces
-cdfind                                 Hierarchy-crawling functions for cd-organized workspaces
-cdprompt                               Support routine for cd-organized workspace hierarchy.
-changed.funs                           Show functions and callees in environment 'egood' that have changed or
-                                       disappeared in environment 'ebad'.
-check.patch.versions                   Check consistency of maintained package versions
-Clink_packages                         Pre-install-buildy hooks for compiled code
-compare_spacks                         Compare source packages eg for checking git
-D2A                                    data.frame.to.array package:mvbutils
-ditto.list                             Shorthand filler-inner for lists
-do.in.envir                            Modify a function's scope
-do.on                                  Easier sapply/lapply avoiding explicit function
-doc2Rd                                 Converts plain-text documentation to Rd format
-dochelp                                Documentation (informal help)
-dont.lock.me                           Prevent sealing of a namespace, to facilitate package maintenance.
-dont.lockBindings                      Helper for live-editing of packages
-DYN.UNLOAD                             Unload DLL easily
-extract.named                          Create variables from corresponding named list elements
-fast.read.fwf                          Read in fixed-width files quickly
-find.documented                        Support for flat-format documentation
-fix.order                              Shows functions and scriptlets sorted by date of edit
-fixr                                   Editing functions, text objects, and scriptlets
-flatdoc                                Flat-format documentation
-foodweb                                Shows which functions call what
-generic.dll.loader                     Convenient automated loading of DLLs
-get.backup                             Text backups of function source code
-get_ncores_CRANal                      Detect number of CPU cores in CRAN-robust way
-gitup_pkg                              Update local git repo
-hack                                   Modify standard R functions, including tweaking their default arguments
-help                                   The R help system
-help2flatdoc                           Convert help files to flatdoc format.
-install.pkg                            Package building, distributing, and checking
-library.dynam.reg                      Auto-registration and loading of dynamic library
-local.on.exit                          Macro-like functions
-local.return                           Macro-like functions
-localfuncs                             "Declare" child functions, allowing much tidier code
-lsize                                  Report objects and their memory sizes
-maintain.packages                      Set up task package for live editing
-make.NAMESPACE                         Auto-create a NAMESPACE file
-make_dull                              Hide dull columns in data frames
-max_pkg_ver                            Max package version
-mcut                                   Put reals and integers into specified bins, returning factors.
-mdeparse                               Deparsing nicelier
-mlazy                                  Cacheing objects for lazy-load access
-mlocal                                 Macro-like functions
-move                                   Organizing R workspaces
-multimatch                             Match rows of one dataframe to another using multiple columns
-multirep                               Replacement and insertion functions with more/less than 1 replacement per spot
-mvb.session.env                        Session info environment
-mvb.sys.parent                         Functions to Access the Function Call Stack
-mvboption                              Private options for mvbutils package and beyond
-mvbutils.operators                     Utility operators
-mvbutils.packaging.tools               How to create & maintain packages with mvbutils
-mvbutils.utils                         Miscellaneous utilities
-my.index                               Arbitrary-level retrieval from and modification of recursive objects
-NEG                                    Generate a negated version of your function. Useful for 'nlminb' etc.
-noice                                  Prints a call object nicely
-numvbderiv_parallel                    Economy numerical derivatives
-pre.install                            Update a source and/or installed package from a task package
-print                                  Print values
-rbdf                                   Data frames: better behaviour with zero-length cases
-readLines.mvb                          Read text lines from a connection
-REPORTO                                Stash variables in caller's environment
-rm.pkg                                 Remove object(s) from maintained package
-Save                                   Save R objects
-screen_masked_imports                  Avoid clashing package imports
-search.for.regexpr                     Find functions/objects/flatdoc-documentation containing a regexp.
-search.task.trees                      Locate loaded tasks on search path.
-set.finalizer                          Obsolete but automatic finalization for persistent objects created in C.
-set.presave.hook.mvb                   Hook of some kind
-setup.mcache                           Cacheing objects for lazy-load access
-sleuth                                 Generalized version of find
-source.mvb                             Read R code and data from a file or connection
-strip.missing                          Exclude "missing" objects
-task.home                              Organizing R workspaces
-unpackage                              Convert existing source package into task package
-vignette.pkg                           Build vignette(s) for mvbutils-style package
-visify                                 Make a function autoprint all its doings
-warn.and.subset                        Extract subset and warn about omitted cases
+mvbutils-package                                      How to use the mvbutils package
+A2D                                                   Array into dataframe
+autodate                                              Universal date converter
+bugfix_Rd2roxygen                                     Like Rd2roxygen, but fixing some bugs
+cd                                                    Organizing R workspaces
+cdfind                                                Hierarchy-crawling functions for cd-organized workspaces
+cdprompt                                              Support routine for cd-organized workspace hierarchy.
+changed.funs                                          Show functions and callees in environment 'egood' that have changed or disappeared in environment 'ebad'.
+check.patch.versions                                  Check consistency of maintained package versions
+Clink_packages                                        Pre-install-buildy hooks for compiled code
+compare_spacks                                        Compare source packages eg for checking git
+D2A                                                   data.frame.to.array package:mvbutils
+dedoc_namespace                                       Remove doc attributes when package loads
+ditto.list                                            Shorthand filler-inner for lists
+do.in.envir                                           Modify a function's scope
+do.on                                                 Easier sapply/lapply avoiding explicit function
+doc2Rd                                                Converts plain-text documentation to Rd format
+docattr                                               Flat-format documentation
+dochelp                                               Documentation (informal help)
+dont.lock.me                                          Prevent sealing of a namespace, to facilitate package maintenance.
+dont.lockBindings                                     Helper for live-editing of packages
+DYN.UNLOAD                                            Unload DLL easily
+extract.named                                         Create variables from corresponding named list elements
+fast.read.fwf                                         Read in fixed-width files quickly
+find.documented                                       Support for flat-format documentation
+fix.order                                             Shows functions and scriptlets sorted by date of edit
+fixr                                                  Editing functions, text objects, and scriptlets
+foodweb                                               Shows which functions call what
+generic.dll.loader                                    Convenient automated loading of DLLs
+get.backup                                            Text backups of function source code
+get_ncores_CRANal                                     Detect number of CPU cores in CRAN-robust way
+gitup_pkg                                             Update local git repo
+hack                                                  Modify standard R functions, including tweaking their default arguments
+help                                                  The R help system
+help2flatdoc                                          Convert help files to flatdoc format.
+install.pkg                                           Package building, distributing, and checking
+library.dynam.reg                                     Auto-registration and loading of dynamic library
+local.on.exit                                         Macro-like functions
+local.return                                          Macro-like functions
+localfuncs                                            "Declare" child functions, allowing much tidier code
+lsize                                                 Report objects and their memory sizes
+maintain.packages                                     Set up task package for live editing
+make.NAMESPACE                                        Auto-create a NAMESPACE file
+make_dull                                             Hide dull columns in data frames
+max_pkg_ver                                           Max package version
+mcut                                                  Put reals and integers into specified bins, returning factors.
+mdeparse                                              Deparsing nicelier
+mlazy                                                 Cacheing objects for lazy-load access
+mlocal                                                Macro-like functions
+move                                                  Organizing R workspaces
+multimatch                                            Match rows of one dataframe to another using multiple columns
+multirep                                              Replacement and insertion functions with more/less than 1 replacement per spot
+mvb.session.env                                       Session info environment
+mvb.sys.parent                                        Functions to Access the Function Call Stack
+mvboption                                             Private options for mvbutils package and beyond
+mvbutils.operators                                    Utility operators
+mvbutils.packaging.tools                              How to create & maintain packages with mvbutils
+mvbutils.utils                                        Miscellaneous utilities
+my.index                                              Arbitrary-level retrieval from and modification of recursive objects
+NEG                                                   Generate a negated version of your function. Useful for 'nlminb' etc.
+noice                                                 Prints a call object nicely
+numvbderiv_parallel                                   Economy numerical derivatives
+pre.install                                           Update a source and/or installed package from a task package
+print                                                 Print values
+rbdf                                                  Data frames: better behaviour with zero-length cases
+readLines.mvb                                         Read text lines from a connection
+REPORTO                                               Stash variables in caller's environment
+rm.pkg                                                Remove object(s) from maintained package
+Save                                                  Save R objects
+screen_masked_imports                                 Avoid clashing package imports
+search.for.regexpr                                    Find functions/objects/flatdoc-documentation containing a regexp.
+search.task.trees                                     Locate loaded tasks on search path.
+set.finalizer                                         Obsolete but automatic finalization for persistent objects created in C.
+set.presave.hook.mvb                                  Hook of some kind
+setup.mcache                                          Cacheing objects for lazy-load access
+sleuth                                                Generalized version of find
+source.mvb                                            Read R code and data from a file or connection
+strip.missing                                         Exclude "missing" objects
+task.home                                             Organizing R workspaces
+unpackage                                             Convert existing source package into task package
+vignette.pkg                                          Build vignette(s) for mvbutils-style package
+visify                                                Make a function autoprint all its doings
+warn.and.subset                                       Extract subset and warn about omitted cases
+write_sourceable_function                             Sourceable text for functions, including character attributes

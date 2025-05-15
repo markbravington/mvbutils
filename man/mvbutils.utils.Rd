@@ -38,6 +38,7 @@
 \alias{put.in.session}
 \alias{rename.els}
 \alias{returnList}
+\alias{rsample}
 \alias{safe.rbind}
 \alias{scatn}
 \alias{sourceable}
@@ -90,6 +91,7 @@ pos( substrs, mainstrs, any.case = FALSE, names.for.output)
 put.in.session( ...)
 rename.els( ..., ignore.missing=FALSE)
 returnList( ...)
+rsample( n=length(pop), pop, replace=FALSE, prob=NULL)
 safe.rbind( df1, df2) # Deprecated in 2013
 scatn( fmt, ..., sep='\\n', file='', append=FALSE)
 sourceable( f, fname=deparse1( substitute( f)))
@@ -101,7 +103,7 @@ xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
 }
-\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, qq, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
+\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, pop, replace, prob, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, qq, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
 }
 \details{
 \code{as.cat} makes a character vector print as if it was \code{cat}ted rather than \code{\link{print}}ed (one element per line, no extra quotes or backslashes, no [1] etc prefixes).
@@ -170,6 +172,8 @@ yes.no( prompt, default)
 
 \code{returnList} returns a list corresponding to old-style (pre-R 1.8) \code{return} syntax. Briefly: a single argument is returned as itself. Multiple arguments are returned in a list. The names of that list are the argument names if provided; or, for any unnamed argument that is just a symbolic name, that symbolic name; or no name at all, for other unnamed arguments. You can duplicate pre-1.8 behaviour of \code{return(...)} via \code{return(returnList(...))}.
 
+\code{rsample} draws \code{n} random samples from \code{pop}, according to \code{replace} and \code{prob}. It is like R{}'s built-in \code{sample} but avoids the latter's inconsistent syntax, instead using a syntax similar to all the other \code{r...} random variable functions.
+
 \code{safe.rbind} ( \emph{Deprecated in 2013} ) mimics \code{\link{rbind}}, but works round an R{} bug (I reckon) where a column appears to be a numeric in one \code{data.frame} but a factor in the other. But I now think you should just sort your column classes/types properly in advance, rather than mixing types and relying on somewhat arbitrary conversion rules.
 
 \code{scatn} is just \code{cat( sprintf( fmt, ...), "", file=file, sep=sep)}. \code{scatn} prints a newline afterwards, but not before; \code{nscat} does the opposite; \code{nscatn} does both. If you're just displaying a "title" before calling \code{\link{print}}, use \code{nscat}.
@@ -217,6 +221,7 @@ yes.no( prompt, default)
 \item{  pos}{numeric matrix, one column per match found plus one; at least one column guaranteed}
 \item{  rename.els}{whatever the first argument was, with new names}
 \item{  returnList}{list or single object}
+\item{  rsample}{vector of same type as \code{pop}}
 \item{  safe.rbind}{\code{data.frame}}
 \item{  scatn}{NULL}
 \item{  sourceable}{character (class \code{cat} to print nicely)}
@@ -268,6 +273,7 @@ yes.no( prompt, default)
 \item{put.in.session}{...: a named set of objects, to be \code{assign}ed into the \code{mvb.session.info} search environment}
 \item{rename.els}{...: the first argument is the thing to rename. Subsequent args like \code{X=<some expr giving a string result>} mean that whichever element of the first arg was called "X", will now be called the result of that expression. \code{ignore.missing=TRUE} means that requests to rename non-existent elements will be ignored; otherwise, they will throw an error.}
 \item{returnList}{...: named or un-named arguments, just as for \code{return} before R{} 1.8.}
+\item{rsample}{n: number to draw; pop: values they can take; replace: whether to sample with replacement; prob: weights (must be same length as \code{pop})}
 \item{safe.rbind}{df1, df2: \code{data.frame} or \code{list}}
 \item{scatn, nscat}{fmt, ...: as per \code{sprintf}; file, sep, append: as per \code{cat}}
 \item{sourceable}{f: an actual function object}
@@ -359,6 +365,7 @@ pp <- try( parse( text=
  'df |> mwhere( x \%\% 5 == 0) |> mwhere( y \%in\% cq( A,E,I,O,U))'
 ))
 if( pp \%is.not.a\% 'try-error') eval( pp[[1]]) # just E-row
+rsample( 9, LETTERS[1:3], replace=TRUE)
 sapply( named( cq( alpha, beta)), nchar)  # c( alpha=5, beta=4)
 pos( cq( quick, lazy), "the quick brown fox jumped over the lazy dog")
 # matrix( c( 5, 37), nrow=2)
