@@ -2274,7 +2274,14 @@ A character matrix with maintained packages as rows, and the different instances
 )
 
 "check.pkg" <-
-function( pkg, character.only=FALSE, build.flags=character(0), check.flags=character(0), CRAN=FALSE) {
+function( 
+  pkg, 
+  character.only=FALSE, 
+  build.flags= character(0), 
+  check.flags= character(0),
+  envars= character( 0),
+  CRAN=FALSE
+){
   # Advice is to build into tarball first, then RCMD CHECK that
   orig.pkg <- substitute( pkg)
   set.pkg.and.dir( TRUE)
@@ -2284,7 +2291,7 @@ function( pkg, character.only=FALSE, build.flags=character(0), check.flags=chara
   mc <- match.call()
   mc[[1]] <- build.pkg
   mc$pkg <- orig.pkg # in case of path arg
-  mc$build.flags <- mc$check.flags <- mc$CRAN <- NULL
+  mc$build.flags <- mc$check.flags <- mc$CRAN <- mc$envars <- NULL
   mc$flags <- build.flags
   extract.named( eval.parent( mc)) # dir. etc
 
@@ -2298,8 +2305,17 @@ function( pkg, character.only=FALSE, build.flags=character(0), check.flags=chara
   mkdir( temp.inst.lib)
   on.exit( unlink( temp.inst.lib, recursive=TRUE))
 
- rcmdgeneric.pkg2( orig.pkg, outdir=outdir, indir=file.path( outdir, pkg), cmd='check',
-     postfix= '_' %&% read.dcf( file.path( sourcedir, 'DESCRIPTION'))[,'Version'] %&% '.tar.gz',
+  postfix <- '_' %&% 
+      read.dcf( file.path( sourcedir, 'DESCRIPTION'))[,'Version'] %&% '.tar.gz'
+      
+  if( length( envars)){
+    postfix <- postfix %&% ' ' %&% 
+        paste( paste( names( envars), envars, sep='='), collapse=' ')
+  }
+
+ rcmdgeneric.pkg2( orig.pkg, outdir=outdir, indir=file.path( outdir, pkg), 
+     cmd='check', 
+     postfix=postfix,
      flags=c( check.flags, if( CRAN) '--as-cran', '-l ' %&% temp.inst.lib))
 }
 
@@ -8601,7 +8617,7 @@ USAGE
   build.pkg.binary( pkg, character.only=FALSE, flags=character(0),
       cull.old.builds=TRUE, multiarch=NA, preclean=TRUE)
   check.pkg( pkg, character.only=FALSE, build.flags=character(0),
-      check.flags=character( 0), CRAN=FALSE)
+      check.flags=character( 0), envars=character(0), CRAN=FALSE)
   cull.old.builds( pkg, character.only=FALSE)
   set.rcmd.vars( ...) # NYI; ...
   # ... if you need to set env vars eg PATH for R CMD to work,  then...
@@ -8621,6 +8637,8 @@ See the examples
  flags: character vector, by default empty. Any entries should be function-specific flags, such as "--md5" for 'build.pkg'. It will be passed through 'paste( flags, collapse=" ")', so you can supply flags individually (eg 'flags=c( "--md5", "--compact.vignettes")') or jointly (eg 'flags="--md5 --compact.vignettes"').
 
  build.flags, check.flags: ('check.pkg' only) as per 'flags' but for the two separate parts of 'check.pkg' (see DETAILS). 'check.flags' is overridden if 'CRAN==TRUE''.
+ 
+ envars: optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. Currently only implemented for 'check.pkg'. And it doesn't even bloody well seem to bloody work there; blame R.
 
  preclean: adds flag "--preclean" if TRUE (the default); this is probably a good idea since one build-failure can otherwise cause R to keep failing to build.
 
@@ -8685,6 +8703,13 @@ build.pkg.binary( mvbutils)
 
 # If you enjoy R CMD CHECK:
 check.pkg( mvbutils)
+
+# How to not fail if Suggestees are missing (I think), via envars
+# Doesn't seem to work. Brilliant :/ Thanks R!
+if( FALSE){
+  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'='no'))
+}
+
 
 # Also legal:
 build.pkg( ..mvbutils)
@@ -16049,7 +16074,8 @@ function(
   setwd( outdir) #   dirname( subdir)) # pre-7/2013, was (dir.)
   Sys.setenv( R_LIBS=paste( .libPaths(), collapse=';'))
 
-  comm <- paste( c( 'RCMD', cmd, paste( flags, collapse=' '), indir %&% postfix), collapse=' ')
+  comm <- paste( c( 'RCMD', cmd, paste( flags, collapse=' '), 
+      indir %&% postfix), collapse=' ')
   has.tee <- nzchar( Sys.which( 'tee'))
   if( has.tee) {
     comm <- comm %&% '| tee ' %&% tf

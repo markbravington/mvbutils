@@ -21,7 +21,7 @@ There are also two minor housekeeping functions: \code{cull.old.builds} to tidy 
   build.pkg.binary( pkg, character.only=FALSE, flags=character(0),
       cull.old.builds=TRUE, multiarch=NA, preclean=TRUE)
   check.pkg( pkg, character.only=FALSE, build.flags=character(0),
-      check.flags=character( 0), CRAN=FALSE)
+      check.flags=character( 0), envars=character(0), CRAN=FALSE)
   cull.old.builds( pkg, character.only=FALSE)
   set.rcmd.vars( ...) # NYI; ...
   # ... if you need to set env vars eg PATH for R CMD to work,  then...
@@ -34,6 +34,7 @@ See the examples
 \item{ lib}{(\code{install.pkg} only) where to install to; default is the same place R{} would install to, i.e. \code{.libPaths()[1]}.}
 \item{ flags}{character vector, by default empty. Any entries should be function-specific flags, such as "--md5" for \code{build.pkg}. It will be passed through \code{paste( flags, collapse=" ")}, so you can supply flags individually (eg \code{flags=c( "--md5", "--compact.vignettes")}) or jointly (eg \code{flags="--md5 --compact.vignettes"}).}
 \item{ build.flags, check.flags}{(\code{check.pkg} only) as per \code{flags} but for the two separate parts of \code{check.pkg} (see \bold{Details}). \code{check.flags} is overridden if \code{CRAN==TRUE}'.}
+\item{ envars}{optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. Currently only implemented for \code{check.pkg}. And it doesn't even bloody well seem to bloody work there; blame R{}.}
 \item{ preclean}{adds flag "--preclean" if TRUE (the default); this is probably a good idea since one build-failure can otherwise cause R{} to keep failing to build.}
 \item{ multiarch}{Adds flag "-no-multiarch" if FALSE. Defaults to TRUE unless "Biarch:FALSE" is found in the DESCRIPTION. Default used to be FALSE when I was unable to get 64bit versions to build. Now I mostly can (after working round BINPREF64 bug in R3.3.something by futzing around in etc/arch/Makeconf based on random internet blogs).}
 \item{ cull.old.builds}{self-explanatory}
@@ -79,6 +80,11 @@ build.pkg( mvbutils)
 build.pkg.binary( mvbutils)
 # If you enjoy R CMD CHECK:
 check.pkg( mvbutils)
+# How to not fail if Suggestees are missing (I think), via envars
+# Doesn't seem to work. Brilliant :/ Thanks R!
+if( FALSE)\{
+  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'='no'))
+\}
 # Also legal:
 build.pkg( ..mvbutils)
 # To do it under programmatic control
