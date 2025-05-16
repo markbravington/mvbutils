@@ -82,7 +82,7 @@ flubbo <- structure( function( x)\{
 flubbo       not-yet-in-a-package
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
 You can have multiple lines, lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\\\" is tickety-boo.
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you don't need any dashes at all.
+And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
 \}-"))
 \dontrun{
 ## Put next lines up to "<<end of doc>>" into a text file <<your filename>>

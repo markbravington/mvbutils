@@ -1,5 +1,20 @@
 # This is package mvbutils 
 
+"docattr" <-
+function( rawstr){
+  rawstr <- string2charvec( rawstr)
+  oldClass( rawstr) <- 'docattr'
+return( rawstr)
+}
+
+
+"string2charvec" <-
+function( string){
+## A string is a length-1 charvec. This function splits it at newlines, and removes the first (presumably empty) element.
+  strsplit( string, '\n', fixed=TRUE)[[1]][-1]
+}
+
+
 "%!in%" <-
 function (a, b) 
 !(a %in% b)
@@ -577,7 +592,7 @@ return( as.data.frame( 'x', name_of_response= name.of.response))
   }
   xx
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 A2D           package:mvbutils
 
 Array into dataframe
@@ -669,7 +684,7 @@ structure( function(
   attr( x, 'doc') <- text
   x
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 add.flatdoc.to    package:mvbutils
 
 Skeletal flat-format documentation
@@ -923,7 +938,7 @@ stop( "Ambiguous or incomprehensible dates...")
   mostattributes( returno) <- atts
 return( returno)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 autodate    package:mvbutils
 
 
@@ -1154,7 +1169,7 @@ structure( function(
 
 return( OK)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 bugfix_Rd2roxygen    package:mvbutils
 
 
@@ -1362,7 +1377,7 @@ sort( out)
 
 
 "cat_strings_rawly" <-
-function( x){
+function( x, prefix_package=TRUE){
 ## charvecs are printed as single raw strings, so they look "pure" without escaped characters or extraneous quotes or [1], [2], etc...
 
 ## docattr objects get wrapped in a call to docattr(), so that their class is kept  but they are printed "simply". Note that, if they have aAny other attributes (they shouldn't), those are discarded.
@@ -1400,7 +1415,10 @@ function( x){
         attr( ., 'match.length'))) - 1))
     dashes <- strrep( '-', n_dashes)
       
-    scatn( ' mvbutils::%s( r"%s{', wrapfun_name, dashes)
+#    scatn( ' mvbutils::%s( r"%s{', wrapfun_name, dashes)
+    scatn( ' %s%s( r"%s{', 
+        if( prefix_package) 'mvbutils::' else '', 
+        wrapfun_name, dashes)
     cat( x, sep='\n')
     scatn( '}%s")', dashes)
   } else {
@@ -1495,7 +1513,7 @@ stop("Can't move backwards from ROOT!")
     need.to.promote.on.failure <- FALSE
   }
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 cd        package:mvbutils
 
 Organizing R workspaces
@@ -1784,7 +1802,7 @@ structure( function( pattern, from=., from.text, show.task.name=FALSE) {
   attributes( answer) <- list( names=names( answer))
   answer
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 cdfind        package:mvbutils
 cdregexpr
 cdtree
@@ -1997,7 +2015,7 @@ structure( function() {
 
   invisible( options( prompt = paste( prompt, collapse = "/") %&% opened %&% "> ")) 
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 cdprompt       package:mvbutils
 
 Support routine for cd-organized workspace hierarchy.
@@ -2122,7 +2140,7 @@ structure( function( egood, ebad, topfun=NULL, fw=NULL){
     
 return( fchanges)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 changed.funs    package:not-yet-a-package
 
 Show functions and callees in environment 'egood' that have changed or disappeared in environment 'ebad'.
@@ -2220,7 +2238,7 @@ structure( function( care=NULL) {
   
 return( mat[ keep,])
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 check.patch.versions    package:mvbutils
 
 Check consistency of maintained package versions
@@ -2356,7 +2374,7 @@ stop( sprintf( "Clinker(s) should have exactly %i args: %s--- not the case for: 
 
 invisible( as.list( Clinks))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 Clink_packages    package:mvbutils
 src_changed
 PIBH
@@ -2673,7 +2691,7 @@ structure( function( pkg, gitplace='d:/github/flub', d1, d2, character.only=FALS
   diffs <- names( s1[ in12])[ is_diff]
 returnList( in1, in2, diffs)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 compare_spacks    package:mvbutils
 compare_spack_code
 
@@ -2895,7 +2913,7 @@ warning( "Duplicated indices--- probably using last occurrence, but...")
   output[ indices] <- df[[ data.col]]
   output
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 D2A    package:not-yet-a-package
 
 data.frame.to.array    package:mvbutils
@@ -3036,7 +3054,7 @@ structure( function( ns){
   }
 NULL
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 dedoc_namespace    package:mvbutils
 
 
@@ -3159,7 +3177,7 @@ structure( function( ...){
   mc[ !nondit] <- unname( mc[ findInterval( index( !nondit), index( nondit))])
 return( mc)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 ditto.list    package:handy2
 
 
@@ -3200,7 +3218,7 @@ structure( function( fbody, envir=parent.frame(2)) {
   cc[[1]] <- ff
   eval.parent( cc, 2)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 do.in.envir         package:mvbutils
 
 Modify a function's scope
@@ -3287,7 +3305,7 @@ structure( function( x, expr, ..., simplify=TRUE){
     x <- named( x)
   sapply( x, fungo, simplify=simplify) 
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 do.on    package:handy2
 FOR
 
@@ -3912,7 +3930,7 @@ structure( function( text, file=NULL, append=formals(cat)$append, warnings.on=TR
 
 return( Rd)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 doc2Rd               package:mvbutils
 docotest
 
@@ -4116,14 +4134,6 @@ programming
 
 )
 
-"docattr" <-
-function( rawstr){
-  rawstr <- string2charvec( rawstr)
-  oldClass( rawstr) <- 'docattr'
-return( rawstr)
-}
-
-
 "dochelp" <-
 structure( function( topic, doc, help_type=c( 'text', 'html')) {
   # "doc" might point to another object. Start by looping til we have a character "doc".
@@ -4189,7 +4199,7 @@ structure( function( topic, doc, help_type=c( 'text', 'html')) {
 #  invisible( has.doc) changed for 2.x
   invisible( fff)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 dochelp        package:mvbutils
 
 Documentation (informal help)
@@ -4333,7 +4343,7 @@ stop( "Package '" %&% pkg %&% "' not available")
   class( text) <- 'cat'
   text
 }
-, att1 =  mvbutils::string2charvec( r"{
+, att1 =  string2charvec( r"{
 
 Do something-or-other
 
@@ -4349,14 +4359,14 @@ USAGE
 # ...in comment lines, and/or refer to the EXAMPLES section.
 
 }")
-, att2 =  mvbutils::string2charvec( r"{
+, att2 =  string2charvec( r"{
 
 ARGUMENTS
 
 You can put normal text in ARGUMENTS, too, like this. Remember to indent all arguments, as below.
 
 }")
-, att3 =  mvbutils::string2charvec( r"{
+, att3 =  string2charvec( r"{
 
 VALUE
 
@@ -4398,7 +4408,7 @@ structure( function( env=environment( sys.function( -1))){
   assign.to.base( 'lockEnvironment', hack.lockEnvironment())
   attr( env, 'dont.lock.me') <- TRUE
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 dont.lock.me   package:mvbutils
 
 Prevent sealing of a namespace, to facilitate package maintenance.
@@ -4459,7 +4469,7 @@ structure( function( what, pkgname, namespace.=TRUE) {
   environment( f) <- baseenv()
   setHook.once( pkgname, if( namespace.) "onLoad" else "attach", f, 'append')
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 dont.lockBindings    package:mvbutils
 
 Helper for live-editing of packages
@@ -4564,7 +4574,7 @@ warning( sprintf( "'%s' not found in getLoadedDLLs()", idll))
     }
   }
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 DYN.UNLOAD    package:mvbutils
 
 
@@ -4697,7 +4707,7 @@ structure( function( l, to=parent.frame()) {
   for( i in n[ nchar( n)>0])
     assign( i, l[[ i]], envir=to)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 extract.named      package:mvbutils
 
 Create variables from corresponding named list elements
@@ -4790,7 +4800,7 @@ stop( "Line length mismatch")
         else methas(data[[fi]], colClasses[fi])
   df
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 fast.read.fwf    package:handy2
 
 Read in fixed-width files quickly
@@ -5157,7 +5167,7 @@ structure( function( pos=1,
 
 return( keepo)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 find.documented          package:mvbutils
 find.docholder
 
@@ -5505,7 +5515,7 @@ stop( 'Can\'t deduce fix.order')
   fob <- fob %that.are.in% lsall( oenv) # used to be: [ fob %in% find.funs( oenv) ]
   fob
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 fix.order package:mvbutils
 
 Shows functions and scriptlets sorted by date of edit
@@ -5733,7 +5743,7 @@ stop("Couldn't launch editor")
   failed.to.edit <- FALSE
   invisible(NULL)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 fixr                    package:mvbutils
 fixtext
 readr
@@ -6595,7 +6605,7 @@ structure( function( EOF="<<end of doc>>") {
   attr( doctext, 'line.count') <- NULL
   doctext
 }
-, doc =  mvbutils::docattr( r"---{
+, doc =  docattr( r"---{
 docattr package:mvbutils
 flatdoc
 tidyup_docattr
@@ -6704,7 +6714,7 @@ flubbo       not-yet-in-a-package
 
 You can have multiple lines, lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\" is tickety-boo.
 
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you don't need any dashes at all.
+And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
 }-"))
 
 
@@ -6809,7 +6819,7 @@ return( structure( list( funmat=matrix( 0,0,0), x=numeric( 0), level=numeric( 0)
   }
   invisible( answer)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 foodweb               package:mvbutils
 callers.of
 callees.of
@@ -7023,7 +7033,7 @@ structure( function( path, start='.'){
 
   paste( spath, collapse='/')
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 full.path    package:test
 
 Expand relative file path
@@ -7077,7 +7087,7 @@ stop()
    } # for dlls
 
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 generic.dll.loader    package:mvbutils
 create.wrappers.for.dll
 ldyn.tester
@@ -7225,7 +7235,7 @@ return()
   
   bu  
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 get.backup      package:mvbutils
 create.backups
 read.bkind
@@ -7652,7 +7662,7 @@ return( 1L)
 
 return( avail)  
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 get_ncores_CRANal    package:mvbutils
 
 
@@ -7795,7 +7805,7 @@ stopifnot( file.exists( file.path( git_dir, 'DESCRIPTION')))
   }
 invisible( NULL)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 gitup_pkg    package:mvbutils
 
 
@@ -7849,7 +7859,7 @@ structure( function( fun, ...){
     formals( fun)[[ i]] <- mc[[ i]]
   fun
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 hack        package:mvbutils
 assign.to.base
 
@@ -8028,7 +8038,7 @@ structure( function() {
 
 return( TRUE)
 }
-, tweak =  mvbutils::docattr( r"{
+, tweak =  docattr( r"{
 # From the web, to work round R stupidity:
 ifdef BINPREF64
 BINPREF = $(BINPREF64)
@@ -8132,7 +8142,7 @@ structure( function (topic, package = NULL, lib.loc = NULL, verbose = getOption(
 
   eval(as.call(mc), parent.frame())
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 help   package:mvbutils
 ?
 
@@ -8296,7 +8306,7 @@ stop( "No help found for " %&% fun.name)
   class( text) <- 'cat'
   text
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 help2flatdoc package:mvbutils
 
 Convert help files to flatdoc format.
@@ -8559,7 +8569,7 @@ structure( function( pkg, character.only=FALSE, lib=.libPaths()[1],
       must_hack_makeconf=TRUE # to allow cross-compile from i386
     )
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 install.pkg    package:not-yet-a-package
 build.pkg
 build.pkg.binary
@@ -8958,7 +8968,7 @@ structure( function( chname, package, lib.loc, ...) {
   assign( chname, new.env( parent=emptyenv()), envir=ns)
   FOR( names( gnsym), assign( ., gnsym[[.]], envir=ns[[ chname]]))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 library.dynam.reg    package:mvbutils
 
 Auto-registration and loading of dynamic library
@@ -9070,7 +9080,7 @@ return()
 
   invisible( lsall( envir))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 load.refdb          package:mvbutils
 
 Cacheing objects for lazy-load access
@@ -9127,7 +9137,7 @@ structure( function( expr, add=FALSE) {
 
   assign( 'on.exit.code', subex, envir=where)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 local.on.exit       package:mvbutils
 
 Macro-like functions
@@ -9230,7 +9240,7 @@ As of 2023, I've forgotten what that's about, and/or why mlocal() wraps its eval
   enclos <- parent.frame( 2)$enclos
   assign( 'override.answer', mc, envir=enclos)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 local.return      package:mvbutils
 
 Macro-like functions
@@ -9292,7 +9302,7 @@ structure( function( funcs) {
   }
   invisible( NULL)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 localfuncs    package:mvbutils
 
 "Declare" child functions, allowing much tidier code
@@ -9395,7 +9405,7 @@ structure( function( envir=.GlobalEnv, recursive=0){
   obsize <- c( obsize, -mcsize)[o]
 return( obsize)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 lsize         package:mvbutils
 
 Report objects and their memory sizes
@@ -9539,7 +9549,7 @@ structure( function( ..., character.only=FALSE, autopatch=FALSE){
 
 return( names( maintained.packages))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 maintain.packages    package:mvbutils
 unmaintain.package
 
@@ -9647,7 +9657,7 @@ structure( function(
    cat( funs, sep='\n', file=file)
  invisible( funs)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 make.arguments.section       package:mvbutils
 make.usage.section
 
@@ -9738,7 +9748,7 @@ return( character( 0))
   
 return( unname( text))
 }
-, usage.header.text =  mvbutils::string2charvec( r"{
+, usage.header.text =  string2charvec( r"{
 
 Internal functions for PACKAGE
 
@@ -9750,7 +9760,7 @@ Internal functions for 'PACKAGE', not meant to be called directly.
 USAGE
 
 }")
-, usage.footer.text =  mvbutils::docattr( r"{
+, usage.footer.text =  docattr( r"{
 
 KEYWORDS
 
@@ -9879,7 +9889,7 @@ structure( function( env=1, path=attr( env, 'path'),
 
   returnList( import, import_exceptions, export, S3, useDynLib)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 make.NAMESPACE   package:mvbutils
 write.NAMESPACE
 
@@ -10161,7 +10171,7 @@ structure( function( pkg, Cloaders, sourcedir){
     file.rename( tf, file.path( sourcedir, sprintf( 'R/Cloaders_%s.R', pkg)))
   }
 }
-, run_Cloader_template =  mvbutils::docattr( r"{
+, run_Cloader_template =  docattr( r"{
 run_Cloaders_<PKG> <- function() {
   Cloaders <- attr( sys.function(), 'Cloaders')
   for( iCloader in names( Cloaders)) {
@@ -10192,7 +10202,7 @@ structure( function( df, cols) {
   }
 return( df)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 make_dull    package:mvbutils
 make.dull
 undull
@@ -10300,7 +10310,7 @@ structure( function( Clink_list, dir) {
   }
 return( NULL)
 }
-, makefile_template =  mvbutils::docattr( r"{
+, makefile_template =  docattr( r"{
 # Avoid the hell of tabs
 .RECIPEPREFIX = >
 # ... requires Gnu make 4.9 ish
@@ -10379,7 +10389,7 @@ structure( function( pkg, libroot, pattern='^[rR][ -]?[0-9]+') {
   }
 return( max.ver)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 max_pkg_ver    package:mvbutils
 
 Max package version
@@ -10470,7 +10480,7 @@ structure( function( expr, ...){
   dep <- gsub( op2, '?', dep, fixed=TRUE)
 return( dep)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mdeparse    package:mvbutils
 
 
@@ -10548,7 +10558,7 @@ structure( function( x, breaks=NULL,
   factor( xlabs[ xc], levels=if( all.levels) xlabs else xlabs[ 1 %upto% max( xc, na.rm=TRUE)],
       ordered=TRUE)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mcut    package:handy2
 mintcut
 
@@ -10653,7 +10663,7 @@ return()
   if( !identical( envir, .GlobalEnv))
     save.refdb( envir=envir) # not until asked
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mlazy         package:mvbutils
 mtidy
 demlazy
@@ -10908,7 +10918,7 @@ structure( function( expr){ # tricky_dicky=FALSE
   }
 return( answer)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mlocal       package:mvbutils
 
 Macro-like functions
@@ -11142,7 +11152,7 @@ return( invisible( character(0))) }
 
   invisible( what)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 move     package:mvbutils
 
 Organizing R workspaces
@@ -11420,7 +11430,7 @@ stop( "can't handle arrays (yet)")
   imdf2 <- mdf2 %**% nu
   match( imdf1, imdf2, nomatch)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 multimatch    package:mvbutils
 
 
@@ -11536,7 +11546,7 @@ if( !sorted.at) {
   new[ rep( at, replen) + 1:sum( replen) - rep( 1:length(at), replen)] <- unlist( repl)
   new
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 multirep package:mvbutils
 multinsert
 massrep
@@ -11773,7 +11783,7 @@ structure( function(){
   # currently...
   as.environment( 'mvb.session.info')
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mvb.session.env    package:mvbutils
 mvb_session_env
 
@@ -11839,7 +11849,7 @@ structure( function(n=1) {
 
   p
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mvb.sys.parent    package:mvbutils
 mvb.sys.nframe
 mvb.parent.frame
@@ -11967,7 +11977,7 @@ stop( "eh? weird args")
 
 return( ol)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 mvboption    package:mvbutils
 
 Private options for mvbutils package and beyond
@@ -12277,7 +12287,7 @@ return( var)
     vv <- call( 'pg', vv, i)
   eval( vv)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 my.index       package:mvbutils
 my.index.assign
 my.index.exists
@@ -12453,7 +12463,7 @@ return( f) # useful for
   }
 return( g)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 NEG    package:mvbutils
 
 Generate a negated version of your function. Useful for 'nlminb' etc.
@@ -12557,7 +12567,7 @@ structure( function( cc, ...) { # Args of cc on separate lines
   zub <- c( deparse( cc[[ 1]]) %&% '(', '  ' %&% zub)
 as.cat( zub)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 noice    package:mvbutils
 
 
@@ -12706,7 +12716,7 @@ return( eval.parent( mc))
   
 return( m)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 numvbderiv_parallel    package:mvbutils
 numvbderiv
 
@@ -14668,7 +14678,8 @@ stop( "couldn't make essential directories")
       if( !keep_plaintext_doco){
         attributes( fx) <- attributes( fx) %without.name% 'doc'
       }
-      nicewrite_function( fx, rfile, append=TRUE, doc.special=FALSE)
+      nicewrite_function( fx, rfile, append=TRUE, doc.special=FALSE, 
+          prefix_package= ff_prefix_package)
       hide.vars[[ ifun]] <<- c( all.names( body( fx), unique=TRUE),
           unlist( lapply( formals( fx), all.names, unique=TRUE), 
               use.names=FALSE))
@@ -14683,6 +14694,11 @@ stop( "couldn't make essential directories")
   rfile <- file.path( sourcedir, 'R', pkg %&% '.R')
   # cat( '.packagename <- "', pkg, '"\n', sep='', file=rfile)
   cat( '# This is package', pkg, '\n', file=rfile)
+  
+  # If the package is mvbutils, then docattr needs to come first, so that source docu is kept...
+  funs <- c( funs %that.are.in% cq( docattr, string2charvec), 
+      funs %except% cq( docattr, string2charvec))
+  ff_prefix_package <- pkg != 'mvbutils'
   sapply( funs, ff)
 
   if( is.logical( dont.check.visibility) && isT( dont.check.visibility[1])) {
@@ -14953,13 +14969,13 @@ stop( "couldn't make essential directories")
 
   invisible( NULL)
 }
-, vignette.stub =  mvbutils::string2charvec( r"{
+, vignette.stub =  string2charvec( r"{
 %\VignetteIndexEntry{User manual}
 \documentclass{article}
 \begin{document}
 \end{document}
 }")
-, doc =  mvbutils::docattr( r"-{
+, doc =  docattr( r"-{
 pre.install  package:mvbutils
 patch.installed
 patch.install
@@ -15332,7 +15348,7 @@ function( path) {
 "print" <-
 structure( function( x, ...)
   UseMethod( 'print')
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 print    package:cbinder
 print.cat
 print.compacto
@@ -15758,7 +15774,7 @@ structure( function( ..., deparse.level=1) {
   # ... so don't need to upset the CRANIAcs with quote( mvbutils:::rbind.data.frame)
   eval( mc, parent.frame())
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 rbdf   package:mvbutils
 rbind
 rbind.data.frame
@@ -16170,7 +16186,7 @@ structure( function( con = stdin(), n = -1, ok = TRUE, EOF=as.character( NA), li
     
 return( answer)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 readLines.mvb             package:mvbutils
 
 Read text lines from a connection
@@ -16314,7 +16330,7 @@ stop( sprintf( "No news found for '%s'; not changing anything", pkg))
 
 return( as.cat( NEWS))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 RENEWS    package:mvbutils
 
 
@@ -16389,7 +16405,7 @@ stopifnot( all( sapply( dots, is.name)))
      envir=environment( sys.function( sys.parent())))
 return( NULL)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 REPORTO    package:mvbutils
 
 
@@ -16543,7 +16559,7 @@ return()
     suppressWarnings( rm( list=list, envir=baseenv()$.__S3MethodsTable__.))
   }
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 rm.pkg    package:mvbutils
 remove.from.package
 
@@ -16620,7 +16636,7 @@ structure( function() {
   Save.pos( 1)
   try( savehistory())
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 Save                 package:debug                           R documentation
 Save.pos
 
@@ -16858,7 +16874,7 @@ structure( function( imports, myfuns){
 
 return( dont_import_from %SUCH.THAT% (length(.)>0))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 screen_masked_imports    package:mvbutils
 
 
@@ -16978,7 +16994,7 @@ structure( function( pattern, where=1, lines=FALSE, doc=FALSE, code.only=FALSE, 
 
   answer[ has.some]
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 search.for.regexpr    package:mvbutils
 
 Find functions/objects/flatdoc-documentation containing a regexp.
@@ -17060,7 +17076,7 @@ structure( function(){
   names( taski) <- task.trees
   taski
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 search.task.trees    package:mvbutils
 
 
@@ -17129,7 +17145,7 @@ return( list( handle=handle, trigger=emptyenv()))
   reg.finalizer( e, finalize.me, onexit=TRUE)
 return( list( handle=handle, trigger=e))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 set.finalizer package:handy2
 
 Obsolete but automatic finalization for persistent objects created in C.
@@ -17311,7 +17327,7 @@ structure( function( hook, set=TRUE){
   }
 NULL
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 set.presave.hook.mvb    package:mvbutils
 
 
@@ -17501,7 +17517,7 @@ return()
 
   attr( envir, 'mcache') <- mcache
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 setup.mcache  package:mvbutils
 
 Cacheing objects for lazy-load access
@@ -17590,7 +17606,7 @@ structure( function( pattern, ...) {
   ss <- FOR( ss, { obj <- lsall( pos=.); grep( pattern=pattern, obj, ..., value=TRUE)} )
 return( ss[ lengths( ss) > 0])
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 sleuth    package:mvbutils
 
 
@@ -17738,7 +17754,7 @@ stop( sprintf( 'in %s, %s', summary( con)$description, errmsg), call.=FALSE)
 
   last
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 source.mvb             package:mvbutils
 current.source
 from.here
@@ -17944,13 +17960,6 @@ return( if( rewrite) new_manifest else '')
 }
 
 
-"string2charvec" <-
-function( string){
-## A string is a length-1 charvec. This function splits it at newlines, and removes the first (presumably empty) element.
-  strsplit( string, '\n', fixed=TRUE)[[1]][-1]
-}
-
-
 "strip.missing" <-
 structure( function( obs) {
   sp <- sys.frame( mvb.sys.parent())
@@ -17961,7 +17970,7 @@ structure( function( obs) {
   }
   obs
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 strip.missing      package:mvbutils
 
 Exclude "missing" objects
@@ -18239,7 +18248,7 @@ return( file.path( .Path[ length( .Path)], fname))
   } else
 return( as.vector( .Path[ length( .Path)]))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 task.home    package:mvbutils
 
 Organizing R workspaces
@@ -18715,7 +18724,7 @@ stop( "Not overwriting")
   }
 return( invisible( NULL))
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 unpackage    package:mvbutils
 
 
@@ -19138,7 +19147,7 @@ return()
   
 return( builts)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 vignette.pkg    package:mvbutils
 
 
@@ -19223,7 +19232,7 @@ stopifnot( exprs %is.a% '{')
   print( as.cat( flubadub))
 invisible( res)
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 visify    package:mvbutils
 
 
@@ -19367,7 +19376,7 @@ structure( function( x, cond,
   }
   x[ cond,,drop=FALSE]
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 warn.and.subset package:mvbutils
 
 Extract subset and warn about omitted cases
@@ -19561,7 +19570,7 @@ structure( function(
 
   cat("\n")
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  docattr( r"{
 write.sourceable.function              package:mvbutils
 
 Sourceable code for functions (and more) with flat-format documentation
@@ -19632,7 +19641,7 @@ internal
 
 "write_sourceable_function" <-
 structure( function( 
-  x, con, append=FALSE, print.name=FALSE, xn=NULL, ...
+  x, con, append=FALSE, print.name=FALSE, xn=NULL, prefix_package=TRUE, ...
 ){
 ############################
   if( is.character( con))
@@ -19692,7 +19701,7 @@ structure( function(
       
     for( iatt in natts){
       cat( sprintf( ', %s = ', simplest_name_generator( iatt)))
-      cat_strings_rawly( atts[[ iatt]] )
+      cat_strings_rawly( atts[[ iatt]], prefix_package=prefix_package)
     }
     cat( '\n')
   }
@@ -19700,10 +19709,9 @@ structure( function(
   cat( strrep( ')', nbrax))
   cat( '\n')
 }
-, doc =  mvbutils::docattr( r"--{
+, doc =  docattr( r"--{
 write_sourceable_function              package:mvbutils
 string2charvec
-docattr
 simplest_name_generator
 cat_strings_rawly
 
@@ -19719,11 +19727,14 @@ Raw strings didn't use to exist in R, so before version 2.10 of 'mvbutils', the 
 
 _Obsolete_: if 'write_sourceable_function' is applied to a non-function with a "source" attribute, then just the source attribute is printed; the idea is that this could be read back by 'source', probably in the course of 'FF' after 'fixr', to regenerate the non-function object. I don't think it's wise to rely on this....
 
+
+.HELPERS
+
 'string2charvec', 'docattr', and 'simplest_name_generator' are helper functions that you're unlikely to use yourself. For the record, though:
 
  - 'string2charvec' turns a string (length-1 non-empty character vector with no attributes) into a character vector, with a new element for every newline. The first element is discarded, because it's usually just a linebreak (perhaps preceded by accidental spaces etc) inserted to let the "real" raw string start on a fresh line. 'string2charvec' is called by 'docattr' (qv) which facilitates keeping plain-text documentation directly with the function, as an attribute.
  
- - 'docattr' is very similar, but adds an S3 class "docattr". It simplifies the code produced by 'write_sourceable_function' for presenting the plain-text documentation. I don't recommend using 'docattr' for anything except an attribute called "doc" that contains, yes, documenbloodytation.
+ - 'docattr' (qv) is very similar, but adds an S3 class "docattr". It simplifies the code produced by 'write_sourceable_function' for presenting the plain-text documentation. I don't recommend using 'docattr' for anything except an attribute called "doc" that contains, yes, documenbloodytation.
  
  - 'simplest_name_generator' prints an R symbol (a "name") in a way that could appear on the LHS of '<symbol> <- 0'. If the name is simple, with no funny characters in it, then it's not quoted and is left alone. If it contains mildly strange characters that would cause the unquoted version to not parse, then it's quoted. If it contains characters that would break simple quotes (for example, quotes or backticks!) then it's wrapped in a bullet-proof raw string. "Only the paranoid survive"...
  
@@ -19745,11 +19756,11 @@ source( tf)
 
 USAGE
 
-write_sourceable_function( x, con, append=FALSE, print.name=FALSE, xn=NULL, ...)
-string2charvec( x)
-docattr( rawstr)
+write_sourceable_function( x, con, append=FALSE, 
+    print.name=FALSE, xn=NULL, prefix_package=TRUE, ...)
+string2charvec( string)
 simplest_name_generator( x)
-cat_strings_rawly( x)
+cat_strings_rawly( x, prefix_package=TRUE)
 
 
 ARGUMENTS
@@ -19766,7 +19777,9 @@ ARGUMENTS
  
  ...: ignored, but allows calls that use old 'write.sourceable.function' arguments
  
- rawstr: a string (length-1 character vector), presumably a "raw string" though R doesn't care.
+ string: a string (length-1 character vector), presumably a "raw string" though R doesn't care.
+ 
+ prefix_package: Whether to prefix the call to 'docattr' or 'string2charvec' with 'mvbutils::'. Should always be TRUE _except_ when producing the R source code for 'mvbutils' itself with 'KeepPlaintextDoco=YES' in the "DESCRIPTION" file, since in that case those two functions won't be available as exports when the R source file is sourced.
 
 
 DETAILS
@@ -19799,7 +19812,7 @@ flubbo       not-yet-in-a-package
 
 You can have multiple lines and lots of "quotes" and even weird characters like "\".
 
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you don't need any dashes at all.
+And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
 }-"))
 
 
