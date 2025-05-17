@@ -2308,15 +2308,11 @@ function(
   postfix <- '_' %&% 
       read.dcf( file.path( sourcedir, 'DESCRIPTION'))[,'Version'] %&% '.tar.gz'
       
-  if( length( envars)){
-    postfix <- postfix %&% ' ' %&% 
-        paste( paste( names( envars), envars, sep='='), collapse=' ')
-  }
-
  rcmdgeneric.pkg2( orig.pkg, outdir=outdir, indir=file.path( outdir, pkg), 
-     cmd='check', 
-     postfix=postfix,
-     flags=c( check.flags, if( CRAN) '--as-cran', '-l ' %&% temp.inst.lib))
+     cmd= 'check', 
+     postfix= postfix,
+     envars= envars,
+     flags= c( check.flags, if( CRAN) '--as-cran', '-l ' %&% temp.inst.lib))
 }
 
 
@@ -8619,9 +8615,9 @@ USAGE
   check.pkg( pkg, character.only=FALSE, build.flags=character(0),
       check.flags=character( 0), envars=character(0), CRAN=FALSE)
   cull.old.builds( pkg, character.only=FALSE)
-  set.rcmd.vars( ...) # NYI; ...
-  # ... if you need to set env vars eg PATH for R CMD to work,  then...
-  # ... you have to do so yourself; see DETAILS
+  set.rcmd.vars( ...) # NYI; see envars arg...
+  # ... or if it doesn't and you need to set env vars eg PATH 
+  # for R CMD to work,  then DIY; see DETAILS
 
 
 ARGUMENTS
@@ -8638,7 +8634,7 @@ See the examples
 
  build.flags, check.flags: ('check.pkg' only) as per 'flags' but for the two separate parts of 'check.pkg' (see DETAILS). 'check.flags' is overridden if 'CRAN==TRUE''.
  
- envars: optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. Currently only implemented for 'check.pkg'. And it doesn't even bloody well seem to bloody work there; blame R.
+ envars: optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. They will be restored afterwards (or deleted if they didn't exist beforehand).
 
  preclean: adds flag "--preclean" if TRUE (the default); this is probably a good idea since one build-failure can otherwise cause R to keep failing to build.
 
@@ -8664,7 +8660,7 @@ The only environment variable currently made known to R CMD is R_LIBS-- let me k
 
 'check.pkg' calls "R CMD check" after first calling 'build.pkg' (more efficiently, I should perhaps try to work out whether there's an up-to-date tarball already). It doesn't delete the tarball afterwards. It _may_ also be possible for you to do some checks directly from R via functions in the 'utils' package, which is potentially a lot quicker. However, NB the possibility of interference with your current R session. For example, at one stage 'codoc' (which is the only check that I personally find very useful) tried to unload & load the package, which was very bad; but I think that may no longer be the case.
 
-You _may_ have to set some environment variables (eg PATH, and perhaps R_LIBS) for the underlying R CMD calls to work. Currently you have to do this manually--- your '.First' or '.Rprofile' would be a good place. If you really object to changing these for the whole R session, let me know; I've left a placeholder for a function 'set.rcmd.vars' that could store a list of environment variables to be set temporarily for the duration of the R CMD calls only, but I haven't implemented it (and won't unless there's demand).
+You _may_ have to set some environment variables (eg PATH, and perhaps R_LIBS) for the underlying R CMD calls to work. As of 'mvbutils' v2.11.18, the 'envars' argument might do the trick (just for the duration of the RCMD call). Otherwise, currently you have to do it manually--- your '.First' or '.Rprofile' would be a good place. [There _was_ a plan for a function 'set.rcmd.vars' that could temporarily set envars before each RCMD call and then restore them afterwards, but I've shelved it in favour of 'envars', at least for now.]
 
 Perhaps it would be desirable to let some flags be set automatically, eg via something in the 'pre.install.hook' for a package. I'll add this if requested.
 
@@ -8705,10 +8701,7 @@ build.pkg.binary( mvbutils)
 check.pkg( mvbutils)
 
 # How to not fail if Suggestees are missing (I think), via envars
-# Doesn't seem to work. Brilliant :/ Thanks R!
-if( FALSE){
-  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'='no'))
-}
+check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
 
 
 # Also legal:
@@ -16058,6 +16051,7 @@ function(
   cmd='ECHO',
   postfix='',
   flags=character( 0),
+  envars=character(0),
   must_hack_makeconf=FALSE,
   ...) {
 #########################
@@ -16073,7 +16067,14 @@ function(
 
   setwd( outdir) #   dirname( subdir)) # pre-7/2013, was (dir.)
   Sys.setenv( R_LIBS=paste( .libPaths(), collapse=';'))
-
+  
+  if( length( envars)){
+    old_envars <- Sys.getenv( names( envars))
+    on.exit( add=TRUE,
+        do.call( 'Sys.setenv', as.list( old_envars)))
+    do.call( 'Sys.setenv', as.list( envars))
+  }
+  
   comm <- paste( c( 'RCMD', cmd, paste( flags, collapse=' '), 
       indir %&% postfix), collapse=' ')
   has.tee <- nzchar( Sys.which( 'tee'))

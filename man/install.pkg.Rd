@@ -23,9 +23,9 @@ There are also two minor housekeeping functions: \code{cull.old.builds} to tidy 
   check.pkg( pkg, character.only=FALSE, build.flags=character(0),
       check.flags=character( 0), envars=character(0), CRAN=FALSE)
   cull.old.builds( pkg, character.only=FALSE)
-  set.rcmd.vars( ...) # NYI; ...
-  # ... if you need to set env vars eg PATH for R CMD to work,  then...
-  # ... you have to do so yourself; see *Details*
+  set.rcmd.vars( ...) # NYI; see envars arg...
+  # ... or if it doesn't and you need to set env vars eg PATH
+  # for R CMD to work,  then DIY; see *Details*
 }
 \arguments{
 See the examples
@@ -34,7 +34,7 @@ See the examples
 \item{ lib}{(\code{install.pkg} only) where to install to; default is the same place R{} would install to, i.e. \code{.libPaths()[1]}.}
 \item{ flags}{character vector, by default empty. Any entries should be function-specific flags, such as "--md5" for \code{build.pkg}. It will be passed through \code{paste( flags, collapse=" ")}, so you can supply flags individually (eg \code{flags=c( "--md5", "--compact.vignettes")}) or jointly (eg \code{flags="--md5 --compact.vignettes"}).}
 \item{ build.flags, check.flags}{(\code{check.pkg} only) as per \code{flags} but for the two separate parts of \code{check.pkg} (see \bold{Details}). \code{check.flags} is overridden if \code{CRAN==TRUE}'.}
-\item{ envars}{optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. Currently only implemented for \code{check.pkg}. And it doesn't even bloody well seem to bloody work there; blame R{}.}
+\item{ envars}{optional named character vector of envars to set on the command-line, which is how you control some RCMD behaviour. They will be restored afterwards (or deleted if they didn't exist beforehand).}
 \item{ preclean}{adds flag "--preclean" if TRUE (the default); this is probably a good idea since one build-failure can otherwise cause R{} to keep failing to build.}
 \item{ multiarch}{Adds flag "-no-multiarch" if FALSE. Defaults to TRUE unless "Biarch:FALSE" is found in the DESCRIPTION. Default used to be FALSE when I was unable to get 64bit versions to build. Now I mostly can (after working round BINPREF64 bug in R3.3.something by futzing around in etc/arch/Makeconf based on random internet blogs).}
 \item{ cull.old.builds}{self-explanatory}
@@ -54,7 +54,7 @@ The only environment variable currently made known to R{} CMD is R_LIBS-- let me
 
 \code{check.pkg} calls "R CMD check" after first calling \code{build.pkg} (more efficiently, I should perhaps try to work out whether there's an up-to-date tarball already). It doesn't delete the tarball afterwards. It \emph{may} also be possible for you to do some checks directly from R{} via functions in the \pkg{utils} package, which is potentially a lot quicker. However, NB the possibility of interference with your current R{} session. For example, at one stage \code{codoc} (which is the only check that I personally find very useful) tried to unload & load the package, which was very bad; but I think that may no longer be the case.
 
-You \emph{may} have to set some environment variables (eg PATH, and perhaps R_LIBS) for the underlying R{} CMD calls to work. Currently you have to do this manually--- your \code{.First} or \code{.Rprofile} would be a good place. If you really object to changing these for the whole R{} session, let me know; I've left a placeholder for a function \code{set.rcmd.vars} that could store a list of environment variables to be set temporarily for the duration of the R{} CMD calls only, but I haven't implemented it (and won't unless there's demand).
+You \emph{may} have to set some environment variables (eg PATH, and perhaps R_LIBS) for the underlying R{} CMD calls to work. As of \code{mvbutils} v2.11.18, the \code{envars} argument might do the trick (just for the duration of the RCMD call). Otherwise, currently you have to do it manually--- your \code{.First} or \code{.Rprofile} would be a good place. [There \emph{was} a plan for a function \code{set.rcmd.vars} that could temporarily set envars before each RCMD call and then restore them afterwards, but I've shelved it in favour of \code{envars}, at least for now.]
 
 Perhaps it would be desirable to let some flags be set automatically, eg via something in the \code{pre.install.hook} for a package. I'll add this if requested.
 }
@@ -81,10 +81,7 @@ build.pkg.binary( mvbutils)
 # If you enjoy R CMD CHECK:
 check.pkg( mvbutils)
 # How to not fail if Suggestees are missing (I think), via envars
-# Doesn't seem to work. Brilliant :/ Thanks R!
-if( FALSE)\{
-  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'='no'))
-\}
+check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
 # Also legal:
 build.pkg( ..mvbutils)
 # To do it under programmatic control
