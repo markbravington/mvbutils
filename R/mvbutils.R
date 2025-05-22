@@ -739,6 +739,15 @@ internal
 
 )
 
+"add_list_defaults" <-
+function( l, ...) {
+###### Add defaults to list 'l' if not already in 'l'
+  defaults <- list(...)
+  l <- c( l, defaults %without.name% names( l))
+return( l)
+}
+
+
 "as.cat" <-
 function( x) { stopifnot( is.character( x)); oldClass( x) <- 'cat'; x}
 
@@ -4077,7 +4086,7 @@ In SEE.ALSO, the syntax is slightly different; names of things to link to should
 
 In EXAMPLES, to designate "don't run" segments, put a "## Don't run" line before and a "## End don't run" line after.
 
-I never bother with *Keywords*, but if you do, then separate the keywords with commas, semicolons, or line breaks; don't use quotes. A token *Keywords* section will be auto-generated if you don't include one, to keep RCMD happy.
+I never bother with *Keywords* (except sometimes "internal", to avoid exporting something), but if you do, then separate the keywords with commas, semicolons, or line breaks; don't use quotes. A token *Keywords* section will be auto-generated if you don't include one, to keep RCMD happy.
 
 
 .INFREQUENTLY.ASKED.QUESTIONS
@@ -14781,6 +14790,8 @@ stop( "couldn't make essential directories")
   if( file.exists( RBI <- file.path( dir., '.Rbuildignore'))){
     # Actual file gets priority: copy whole
     mvb.file.copy( RBI, file.path( sourcedir, '.Rbuildignore'))
+    # Fucken R requires *different* file for binaries vs targz FFS
+    mvb.file.copy( RBI, file.path( sourcedir, '.Rinstignore'))
   } else {
     # Tell RCMD not to build "funs.rda" into package...
     # ... plus any Lyx or Rnw vignette sources (and backup versions)...
@@ -14789,6 +14800,7 @@ stop( "couldn't make essential directories")
       '\\bR/funs[.]rda$', 
       '(?i)\\bvignettes/.*[.](lyx|rnw|Rnw)[^[:alnum:]]*$'))
     writeLines( RBIlines, file.path( sourcedir, '.Rbuildignore'))
+    writeLines( RBIlines, file.path( sourcedir, '.Rinstignore'))    
   }
   
   

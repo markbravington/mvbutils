@@ -1,5 +1,6 @@
 \name{mvbutils.utils}
 \alias{mvbutils.utils}
+\alias{add_list_defaults}
 \alias{as.cat}
 \alias{atts}
 \alias{clamp}
@@ -53,6 +54,7 @@
 \description{Miscellaneous utilities.
 }
 \usage{
+add_list_defaults( l, ...)
 as.cat( x)
 atts( x, exclude=cq( levels, class, dim, dimnames, names, row.names, tsp))
 clamp( x, min, max)
@@ -103,9 +105,11 @@ xgsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 xsub( x, pattern, replacement, perl=!fixed, fixed=FALSE, ...)
 yes.no( prompt, default)
 }
-\arguments{\item{ x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, pop, replace, prob, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, qq, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
+\arguments{\item{ l, x, y, n, gap, width, extra, ..., by, keep, keep_, env, from, exclude, exclude.mcache, nlocal, lvector, dir, name, pos, frame, mode, dirlist, lvec, cond, opt.name, default, substrs, mainstrs, any.case, names.for.output, ignore.missing, pop, replace, prob, df1, df2, prompt,  obj, delve, trace, fmt, sep, append, file, expr, lo, hi, what, args.to.integrate, qq, s, min, max, pattern, replacement, perl, fixed, f, fname}{see "Arguments by function"}
 }
 \details{
+\code{add_list_defaults} appends its \code{...} argument(s) to its \code{l} argument, excluding those where \code{l} already has an element with that name. \code{l} should be a list.
+
 \code{as.cat} makes a character vector print as if it was \code{cat}ted rather than \code{\link{print}}ed (one element per line, no extra quotes or backslashes, no [1] etc prefixes).
 
 \code{atts} returns the names of the attributes of \code{x}, excluding any that are in \code{exclude}.
@@ -234,6 +238,7 @@ yes.no( prompt, default)
 }
 \section{Arguments by function}{
 \describe{
+\item{add_list_defaults}{l: a list. \code{...}: name-value pairs that act as defaults for \code{l} if it doesn't already contain elements with those names.}
 \item{as.cat}{x: character vector that you want to be displayed via \code{cat( x, sep="\\n")}}
 \item{atts}{x: any object; exclude: a character vector whatever quotidian attributes that you are not interested in knowing about}
 \item{clip}{x: a vector or list}
@@ -290,6 +295,10 @@ yes.no( prompt, default)
 }
 \author{Mark Bravington}
 \examples{
+# add_list_defaults
+ll <- list( A='cat', B=c('dog','goldfish'), C='funnelweb')
+add_list_defaults( ll, B='rabbit', D='anthrax')
+# B does not change, but D is added
 # as.cat
 ugly.bugly <- c( 'A rose by any other name', 'would annoy taxonomists')
 ugly.bugly

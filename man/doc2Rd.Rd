@@ -100,7 +100,7 @@ In \bold{See also}, the syntax is slightly different; names of things to link to
 
 In \bold{Examples}, to designate "don't run" segments, put a "## Don't run" line before and a "## End don't run" line after.
 
-I never bother with \bold{Keywords}, but if you do, then separate the keywords with commas, semicolons, or line breaks; don't use quotes. A token \bold{Keywords} section will be auto-generated if you don't include one, to keep RCMD happy.
+I never bother with \bold{Keywords} (except sometimes "internal", to avoid exporting something), but if you do, then separate the keywords with commas, semicolons, or line breaks; don't use quotes. A token \bold{Keywords} section will be auto-generated if you don't include one, to keep RCMD happy.
 }
 \subsection{Infrequently asked questions}{
 \bold{Q:} Why didn't you use Markdown/MyPetBargainSyntax?
