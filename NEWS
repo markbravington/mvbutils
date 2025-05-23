@@ -1,3 +1,5 @@
+2.12.0: bit of a tidy-up, importing a few more functions; bumped minor version for sake of dependencies in other packages such as 'gbasics'
+
 2.11.0: now uses 'docattr' or 'string2charvec' and raw strings to hold plain-text documentation and other character-mode attributes. 'flatdoc', 'source.mvb', etc should now be obsolete.
 
 2.9.38: incorporated 'multimatch', 'A2D', and 'D2A' from package 'handy2' (the latter two with slight name and syntax changes). 'A2D' should eventually be made generic--- at present, it's hardwired to do the right thing on 'offarray' objects.
