@@ -19118,7 +19118,14 @@ return()
     if( !file.exists( pcfile)){
 warning( "Can't find 'precomp.R' in vignettes folder")
     } else {
-      precompile <- try( source( pcfile, local=TRUE, echo=TRUE))
+      # Actually should run this in a separate R process, cozza library() and search()
+      # Old version ran in an env derived from 'mvbutils' 
+      # precompile <- try( source( pcfile, local=TRUE, echo=TRUE))
+      precompile <- system2( Sys.which( 'R'), sprintf( '--vanilla --quiet --file=%s R_LIBS=%s R_LIBS_USER=""',
+          pcfile, paste( .libPaths(), collapse=';')))
+      if( precompile != 0){
+        precompile <- try( sqrt( 'bollocks'), silent=TRUE) # make it an error
+      }
     }
     
     if( precompile %is.a% 'try-error'){
