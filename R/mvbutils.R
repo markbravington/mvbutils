@@ -19102,6 +19102,7 @@ structure( function(
   character.only= FALSE,
   precompile= FALSE,
   build= TRUE,
+  decache= FALSE,
   ...
 ){
   set.pkg.and.dir( TRUE)
@@ -19121,8 +19122,10 @@ warning( "Can't find 'precomp.R' in vignettes folder")
       # Actually should run this in a separate R process, cozza library() and search()
       # Old version ran in an env derived from 'mvbutils' 
       # precompile <- try( source( pcfile, local=TRUE, echo=TRUE))
-      precompile <- system2( Sys.which( 'R'), sprintf( '--vanilla --quiet --file=%s R_LIBS=%s R_LIBS_USER=""',
-          pcfile, paste( .libPaths(), collapse=';')))
+      precompile <- system2( Sys.which( 'R'), sprintf( 
+          '--vanilla --quiet --file=%s R_LIBS=%s R_LIBS_USER="" VIGDECACHE_%s="%s"',
+          pcfile, paste( .libPaths(), collapse=';'),
+          toupper( pkg), ifelse( decache, "yes", '')))
       if( precompile != 0){
         precompile <- try( sqrt( 'bollocks'), silent=TRUE) # make it an error
       }
@@ -19167,11 +19170,15 @@ return()
   builts <- character()
   if( build){
     for( vig in viggies){
-      file.copy( file.path( vigpath, vig), docdir) # needed for pkgVignettes
-      res <- try( tools::buildVignette( 
-          file= file.path( vigpath, vig), dir= docdir, ...))
-      if( res %is.not.a% 'try-error'){
-        builts <- c( builts, res)
+      OK <- file.copy( file.path( vigpath, vig), docdir, overwrite=TRUE) 
+      if( !OK){
+        warning( sprintf( 'Could not copy "%s" to installed doc dir', vig))
+      } else {
+        OK <- try( tools::buildVignette( 
+            file= file.path( vigpath, vig), dir= docdir, ...))
+      }
+      if( !isFALSE( OK) && (OK %is.not.a% 'try-error') && length( OK)){
+        builts <- c( builts, OK)
       } else {
         scatn( "Failed on %s", vig)
         print( res)
@@ -19204,9 +19211,9 @@ DESCRIPTION
 
 Vignette-building is insanely complicated (though this might be hidden from you) and can be slow. So it's not handled directly by 'pre.install', 'patch.install', and friends. Doing 'build.pkg' and 'install.pkg' will work normally, but if you want to _change_ a vignette in an installed package without complete re-installation, then you have to manually (re)build vignette(s) and indices. 'vignette.pkg' should do that for you.
 
-It will copy all files (and folders) from the task's "vignettes" folder into the source package's "vignettes" folder (after zapping the latter). If 'build=TRUE' (the default) it will then build the vignettes in the _installed_ package (that's just how R does it, for whatever reason).
+The _bare-bones_ usage (which is not the recommended way--- see next para) is to copy all files (and folders) from the task's "vignettes" folder into the source package's "vignettes" folder (after zapping the latter). If 'build=TRUE' (the default) it will then build the vignettes in the _installed_ package (that's just how R does it, for whatever reason).
 
-Also, there can be an intermediate level of vignette, where all the calculations/plots are already done and saved, and the precompiled vignette is just ready to be turned into HTML and/or PDF, something which should be fairly quick. If you give your original vignette files the extension ".Rmd.orig", then an R script "precomp.R" will be created by 'pre.install' in the task package vignette. It is a very simple script that mainly just shows the 'knitr' command to use. 'vignette.pkg(...,precompile=TRUE)' will then run that script to precompile all the vignettes (which can be slow, of course) in the task package "vignettes" folder, producing ".Rmd" files that are precompiled, along with figure files etc in subfolders.
+Also (recommended!), there can be an intermediate level of vignette, where all the calculations/plots are already done and saved, and the precompiled vignette is just ready to be turned into HTML and/or PDF, something which should be fairly quick for whatever machine ends up doing it (eg an R-universe or CRAN server). If you give your original vignette files the extension ".Rmd.orig", then an R script "precomp.R" will be created by 'pre.install' in the task package vignette. It is a very simple script that mainly just shows the 'knitr' command to use. 'vignette.pkg(...,precompile=TRUE)' will then run that script to precompile all the vignettes (which can be slow, of course) in the task package "vignettes" folder, producing ".Rmd" files that are precompiled, along with figure files etc in subfolders. If you are precompiling, you can use 'decache=TRUE' to clear the cache automatically; see ARGUMENTS.
 
 Precompilation happens only if 'precompile=TRUE'. Copying the "vignettes" folder always happens, unless 'precompile=TRUE' and precompilation fails, in which case the function aborts. After copying, building happens unless 'build=FALSE'. Index reconstruction happens only if some building has taken place.
 
@@ -19214,7 +19221,9 @@ Precompilation happens only if 'precompile=TRUE'. Copying the "vignettes" folder
 USAGE
 
 vignette.pkg( pkg, pattern= "[.]Rmd$", 
-  character.only= FALSE, precompile= FALSE, build= TRUE, ...)
+  character.only= FALSE, precompile= FALSE, 
+  build= TRUE, decache= FALSE,
+  ...)
 
 
 ARGUMENTS
@@ -19228,6 +19237,11 @@ ARGUMENTS
  precompile: ?run the "precomp.R" script in the source package vignettes folder?
  
  build: ?should the vignettes be rebuilt?
+ 
+ decache: if 'TRUE' and if 'precompile' is 'TRUE', then the envar "VIGDECACHE_<PKG>" will be set to "yes" when 'knit' is called (note that the package name will be capitalized). You can add some code to your vignette to clear the cache iff that envar exists, as in
+ 
+ %%# 
+ knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>'))
  
  ...: passed to 'tools::buildVignette' (qv)
 
