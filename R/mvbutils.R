@@ -19107,6 +19107,10 @@ structure( function(
 ){
   set.pkg.and.dir( TRUE)
 
+  if( build && !isNamespaceLoaded( pkg)){
+stop( "Must load package before building its vignette(s)")
+  }
+
   # Precompilation happens in task package
   vigpath <- file.path( dir., 'vignettes')
   if( !dir.exists( vigpath)){
@@ -19132,7 +19136,7 @@ warning( "Can't find 'precomp.R' in vignettes folder")
     }
     
     if( precompile %is.a% 'try-error'){
-  return()
+return()
     } # no point in updating indices
   }
 
@@ -19149,10 +19153,6 @@ warning( "Can't find 'precomp.R' in vignettes folder")
   
   if( !build){
 return()
-  }
-  
-  if( !isNamespaceLoaded( pkg)){
-stop( "Must load package before building its vignette(s)")
   }
   
   viggies <- dir( vigpath, pattern=pattern)
@@ -19181,7 +19181,7 @@ return()
         builts <- c( builts, OK)
       } else {
         scatn( "Failed on %s", vig)
-        print( res)
+        print( OK)
       }
     }
   }
@@ -19216,6 +19216,32 @@ The _bare-bones_ usage (which is not the recommended way--- see next para) is to
 Also (recommended!), there can be an intermediate level of vignette, where all the calculations/plots are already done and saved, and the precompiled vignette is just ready to be turned into HTML and/or PDF, something which should be fairly quick for whatever machine ends up doing it (eg an R-universe or CRAN server). If you give your original vignette files the extension ".Rmd.orig", then an R script "precomp.R" will be created by 'pre.install' in the task package vignette. It is a very simple script that mainly just shows the 'knitr' command to use. 'vignette.pkg(...,precompile=TRUE)' will then run that script to precompile all the vignettes (which can be slow, of course) in the task package "vignettes" folder, producing ".Rmd" files that are precompiled, along with figure files etc in subfolders. If you are precompiling, you can use 'decache=TRUE' to clear the cache automatically; see ARGUMENTS.
 
 Precompilation happens only if 'precompile=TRUE'. Copying the "vignettes" folder always happens, unless 'precompile=TRUE' and precompilation fails, in which case the function aborts. After copying, building happens unless 'build=FALSE'. Index reconstruction happens only if some building has taken place.
+
+
+.TO.DO.
+
+I like PDFs. It would be great to produce two versions, one in PDF so you can peruse it while not glued to your goddamn screen. But R has no mechanism to formally xtuple rendered versions of a vignette (you get N=1), and suggestions to the contrary seem to elicit the usual CRANiac bleating. TBF the PDF produced by putting the following in place of the "rmarkdown::html_vignette" line doesn't look very pretty anyway, but no doubt it could be tweaked with lashing of options:
+  pdf_document:
+    latex_engine: pdflatex
+    pandoc_args: [ --listings ]  
+    
+The closest approach is something like this, suggested by Peter Harrison in 2018, to make a special-prupose 'knit' function that produces all outputs.
+  title: "multiple outputs"
+  output:
+    pdf_document: <blah options>
+    rmarkdown::html_vignette: <blah options>
+  knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding,
+    output_dir = "output", output_format = "all") })
+  
+which does at some stage produce both files, but it looks like R tries to delete anything exectp the PDF. Genius. Also, there's a dot-log file that creeps into the source package somehow.
+
+One manualesque version (on Windows) might be to print the HTML to a PDF using a browser from CLI. This from 
+
+%%#
+https://superuser.com/questions/1537277/how-can-i-print-html-file-to-pdf-from-command-line-in-windows-10-without-admin
+"C:\Program Files\Microsoft\Edge\Application\msedge.exe" --headless --print-to-pdf="c:\outdir\out.pdf" "c:\indir\in.html"
+
 
 
 USAGE
