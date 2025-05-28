@@ -63,9 +63,7 @@ vignette.pkg( pkg, pattern= "[.]Rmd$",
 \item{ character.only}{for automated use; see \code{\link{pre.install}}}
 \item{ precompile}{?run the "precomp.R" script in the source package vignettes folder?}
 \item{ build}{?should the vignettes be rebuilt?}
-\item{ decache}{if \code{TRUE} and if \code{precompile} is \code{TRUE}, then the envar "VIGDECACHE_<PKG>" will be set to "yes" when \code{knit} is called (note that the package name will be capitalized). You can add some code to your vignette to clear the cache iff that envar exists, as in}
-\item{ \%\%#}{}
-\item{ knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( VIGDECACHE_<PKG>))}{}
+\item{ decache}{if \code{TRUE} and if \code{precompile} is \code{TRUE}, then the envar "VIGDECACHE_<PKG>" will be set to "yes" when \code{knit} is called (note that the package name will be capitalized). You can add some code to your vignette to clear the cache iff that envar exists, as in \bold{Examples}.}
 \item{ ...}{passed to \code{tools::buildVignette} (qv)}
 }
 \value{A character vector of all files that were built. If there are errors during the build process, you should see on-screen messages.
@@ -75,6 +73,8 @@ vignette.pkg( pkg, pattern= "[.]Rmd$",
 \examples{
 \dontrun{
 vignette.pkg( kinference)
+# Code you can maybe add at the start of your vignette, to optionally clear the cache as per 'decache' arg
+knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
 }
 }
 \keyword{misc}

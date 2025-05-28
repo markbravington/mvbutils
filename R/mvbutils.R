@@ -19195,7 +19195,9 @@ return()
         open='w')
     try( nstools$.writeVignetteHtmlIndex( pkg, vig_ind_file, vig_ind))
     close( vig_ind_file)
-    saveRDS( vig_ind, file = system.file( 'Meta/vignette.rds', package=pkg))
+    # Next borks unless dot-rds file already exists, so...
+    # saveRDS( vig_ind, file = system.file( 'Meta/vignette.rds', package=pkg))
+    saveRDS( vig_ind, file = file.path( system.file( 'Meta', package=pkg), 'vignette.rds'))
   }
   
 return( builts)
@@ -19264,10 +19266,7 @@ ARGUMENTS
  
  build: ?should the vignettes be rebuilt?
  
- decache: if 'TRUE' and if 'precompile' is 'TRUE', then the envar "VIGDECACHE_<PKG>" will be set to "yes" when 'knit' is called (note that the package name will be capitalized). You can add some code to your vignette to clear the cache iff that envar exists, as in
- 
- %%# 
- knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>'))
+ decache: if 'TRUE' and if 'precompile' is 'TRUE', then the envar "VIGDECACHE_<PKG>" will be set to "yes" when 'knit' is called (note that the package name will be capitalized). You can add some code to your vignette to clear the cache iff that envar exists, as in EXAMPLES.
  
  ...: passed to 'tools::buildVignette' (qv)
 
@@ -19286,7 +19285,13 @@ EXAMPLES
 
 ## Don't run
 vignette.pkg( kinference)
+
+# Code you can maybe add at the start of your vignette, to optionally clear the cache as per 'decache' arg
+knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
+
 ## End don't run
+
+
 
 }")
 
