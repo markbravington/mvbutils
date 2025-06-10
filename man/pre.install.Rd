@@ -16,7 +16,7 @@ It's possible to tweak the source-package-creation process, and this is what 'pr
 
 \code{spkg} is a rarely-needed utility that returns the folder of source package created by \code{pre.install}.
 
-Vignettes have to built "manually" (it's easy!), using \code{\link{vignette.pkg}}.
+Vignettes have to be built "manually" (but it's easy!), using \code{\link{vignette.pkg}}.
 }
 \usage{
  # 95\% of the time you just need:

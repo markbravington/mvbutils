@@ -13799,14 +13799,78 @@ stop( "Can't find path of installed package '" %&% pkg %&% "'")
   if( DLLs.only)
 return( invisible( NULL))
 
+  desc <- tools$.read_description( file.path( ipath, 'DESCRIPTION'))
+
   # files to copy
-  update.installed.dir( spath, ipath, 'demo')
-  update.installed.dir( spath, ipath, 'exec')
-  update.installed.dir( spath, ipath, 'data')
+  update_installed_dir( spath, ipath, 'demo')
+  update_installed_dir( spath, ipath, 'exec')
+  
+  # data folder: need to check for lazydata
+  lazyData <- desc[ 'LazyData']
+  lazyData <- !is.na( lazyData) && 
+      (toupper( lazyData) %in% c( 'Y', 'YES', 'T', 'TRUE'))
+
+  if( !lazyData){ # then simply update files
+    update_installed_dir( spath, ipath, 'data')
+  } else { # buckle up...
+    dolazyd <- FALSE # default
+    lazydtemp <- file.path( ipath, 'lazydtemp')
+    
+    # Has lazydata been set up yet?
+    lazyfiles <- file.path( ipath, 'data', 'Rdata.rd' %&% cq( b, s, x))
+    if( !all( file.exists( lazyfiles))){
+      # then create it 
+      update_installed_dir( spath, ipath, 'data')
+      dolazyd <- TRUE
+    } else { # check if update required
+      # Temp copy out Rdata.rd. files
+      
+      unlink( lazydtemp, force=TRUE)
+      mkdir( lazydtemp)
+      temp_lazyfiles <- file.path( lazydtemp, basename( lazyfiles))
+      file.rename( lazyfiles, temp_lazyfiles)
+      
+      dolazyd <- update_installed_dir( spath, ipath, 'data') # TRUE iff changes
+      if( !dolazyd){
+        file.rename( temp_lazyfiles, lazyfiles)
+      }
+    }
+    
+    if( dolazyd){
+      # Copy "raw" files to safety for now, since lazyd will zap em
+      rawdata <- dir( file.path( ipath, 'data'), no..=TRUE)
+      file.copy( file.path( ipath, 'data', rawdata), lazydtemp) 
+    
+      lazycompress <- desc[ "LazyDataCompression"]
+      data_compress <- FALSE
+      data_compress <- if ( is.na( lazycompress)) FALSE else 
+        switch( lazycompress, 
+          none = FALSE, 
+          gzip = TRUE, 
+          bzip2 = 2L, 
+          xz = 3L, 
+          TRUE
+        )
+      res <- try( tools$data2LazyLoadDB( pkg, file.path( ipath, '..'),
+          compress = data_compress))
+      if( res %is.a% 'try-error'){
+        print( res)
+warning( "lazyData error...")
+      }
+      
+      # ... restore originals back here, so update_installed_dir() works next time
+      # They are ignored by normal package loading
+      file.rename( file.path( lazydtemp, rawdata), 
+          file.path( ipath, 'data', rawdata))
+    } # if really need to lazydata
+    
+    unlink( lazydtemp, force=TRUE) # tidy up
+  } # if maybe need to lazydata
+  
   if( is.dir( file.path( spath, 'inst'))) {
     # 12/2023: changed FALSE to TRUE next, so that "obsolete" files
     # and dirs in installed version *will* be zapped.
-    update.installed.dir( spath, ipath, 'inst', '.', FALSE)
+    update_installed_dir( spath, ipath, 'inst', '.', FALSE)
   }
 
 
@@ -13827,8 +13891,9 @@ stop( "No 'funs.rda' file available for quick reinstall")
 
   lazy.loading <- getRversion() >= '2.14'
   if( !lazy.loading) {
-    lazy.loading <- tools$.read_description( file.path( ipath, 'DESCRIPTION'))[ 'LazyLoad']
-    lazy.loading <- is.na( lazy.loading) | (toupper( lazy.loading) %in% c( 'Y', 'YES'))
+    lazy.loading <- desc[ 'LazyLoad']
+    lazy.loading <- is.na( lazy.loading) || 
+        (toupper( lazy.loading) %in% c( 'Y', 'YES'))
   }
   if( lazy.loading)
     is.rdb <- TRUE # from R 2.14 on, lazy.loading is always TRUE
@@ -15028,7 +15093,7 @@ It's possible to tweak the source-package-creation process, and this is what 'pr
 
 'spkg' is a rarely-needed utility that returns the folder of source package created by 'pre.install'.
 
-Vignettes have to built "manually" (it's easy!), using 'vignette.pkg' (qv).
+Vignettes have to be built "manually" (but it's easy!), using 'vignette.pkg' (qv).
 
 
 USAGE
@@ -18820,13 +18885,18 @@ SEE.ALSO
 )
 
 "update.installed.dir" <-
-function( opath, ipath, source, installed=source, delete.obsolete=TRUE, excludo=character( 0)) {
+function( 
+  opath, ipath, 
+  source, installed=source, 
+  delete.obsolete=TRUE, excludo=character( 0)
+){
 #################
   if( is.dir( file.path( opath, source))) {
     mkdir( file.path( ipath, installed))
     
     # Avoid a/./b
-    fp <- function( ...) normalizePath( file.path( ...), winslash='/', mustWork=FALSE)
+    fp <- function( ...) 
+        normalizePath( file.path( ...), winslash='/', mustWork=FALSE)
     
     if( !length( excludo))
       unexcluded <- identity
@@ -18854,8 +18924,10 @@ function( opath, ipath, source, installed=source, delete.obsolete=TRUE, excludo=
     mkdir( fp( ipath, sbasename( source.dirs[ is.new.dir])))
     
     # Used to use dir() here, but list.files doesn't include folders; better
-    sources <- unexcluded( list.files( fp( opath, source), full.names=TRUE, recursive=TRUE))
-    installeds <- list.files( fp( ipath, installed), full.names=TRUE, recursive=TRUE)
+    sources <- unexcluded( list.files( fp( opath, source), 
+        full.names=TRUE, recursive=TRUE))
+    installeds <- list.files( fp( ipath, installed), 
+        full.names=TRUE, recursive=TRUE)
     
     if( delete.obsolete) {
       is.xs <- ibasename( installeds) %not.in% sbasename( sources)
@@ -18872,14 +18944,20 @@ function( opath, ipath, source, installed=source, delete.obsolete=TRUE, excludo=
 
       new.files <- sbasename( sources) %except% ibasename( installeds)
       changed.files <- names( new.md5) %that.are.in% names( old.md5)
-      changed.files <- changed.files[ new.md5[ changed.files] != old.md5[ changed.files]]
+      changed.files <- changed.files %such.that% (new.md5[.] != old.md5[.])
       to.copy <- c( new.files, changed.files)
-      if( length( to.copy)) # keep file times
+      if( length( to.copy)){ # keep file times
         mvb.file.copy( fp( opath, source, to.copy), fp( ipath, installed, to.copy),
             overwrite=TRUE)
+return( TRUE)
+      }
     } # if anything potentially to copy
-  } else if( delete.obsolete)
+  } else if( delete.obsolete) {
     unlink( file.path( ipath, installed), recursive=TRUE)
+return( TRUE)    
+  }
+  
+return( FALSE) # coz nuthin happened
 }
 
 
@@ -18892,6 +18970,83 @@ function( pkg, nlocal = sys.parent()) mlocal({
     try( patch.installed( pkg, character.only=TRUE))
   }
 })
+
+
+"update_installed_dir" <-
+function( 
+  opath, ipath, 
+  source, installed=source, 
+  delete.obsolete=TRUE, excludo=character( 0)
+){
+#################
+  if( is.dir( file.path( opath, source))) {
+    mkdir( file.path( ipath, installed))
+    
+    # Avoid a/./b
+    fp <- function( ...) 
+        normalizePath( file.path( ...), winslash='/', mustWork=FALSE)
+    
+    if( !length( excludo))
+      unexcluded <- identity
+    else 
+      unexcluded <- function( strs) {
+          o <- do.call( 'rbind', lapply( excludo, grepl, x=strs))
+          strs[ !apply( o, 2, any)]
+        }
+    
+    source.dirs <- unexcluded( list.dirs( fp( opath, source)))
+    inst.dirs <- list.dirs( fp( ipath, installed))
+    
+    nipath <- fp( ipath, installed)
+    nopath <- fp( opath, source)
+    ibasename <- function( fpath) substring( fpath, nchar( nipath) + 2)
+    sbasename <- function( fpath) substring( fpath, nchar( nopath) + 2)
+    
+    if( delete.obsolete) {
+      is.xs <- ibasename( inst.dirs) %not.in% sbasename( source.dirs)
+      unlink( inst.dirs[ is.xs])
+      inst.dirs <- inst.dirs[ !is.xs]
+    }
+
+    is.new.dir <- sbasename( source.dirs) %not.in% ibasename( inst.dirs)
+    mkdir( fp( ipath, sbasename( source.dirs[ is.new.dir])))
+    
+    # Used to use dir() here, but list.files doesn't include folders; better
+    sources <- unexcluded( list.files( fp( opath, source), 
+        full.names=TRUE, recursive=TRUE))
+    installeds <- list.files( fp( ipath, installed), 
+        full.names=TRUE, recursive=TRUE)
+    
+    if( delete.obsolete) {
+      is.xs <- ibasename( installeds) %not.in% sbasename( sources)
+      unlink( installeds[ is.xs])
+      installeds <- installeds[ !is.xs]
+    }
+    
+    if( length( sources)) {
+      # Really should check whether files have turned into dirs or vice versa...
+      old.md5 <- md5sum( installeds)
+      names( old.md5) <- ibasename( names( old.md5))
+      new.md5 <- md5sum( sources)
+      names( new.md5) <- sbasename( names( new.md5))
+
+      new.files <- sbasename( sources) %except% ibasename( installeds)
+      changed.files <- names( new.md5) %that.are.in% names( old.md5)
+      changed.files <- changed.files %such.that% (new.md5[.] != old.md5[.])
+      to.copy <- c( new.files, changed.files)
+      if( length( to.copy)){ # keep file times
+        mvb.file.copy( fp( opath, source, to.copy), fp( ipath, installed, to.copy),
+            overwrite=TRUE)
+return( TRUE)
+      }
+    } # if anything potentially to copy
+  } else if( delete.obsolete) {
+    unlink( file.path( ipath, installed), recursive=TRUE)
+return( TRUE)    
+  }
+  
+return( FALSE) # coz nuthin happened
+}
 
 
 "update_loaded_pkg" <-
