@@ -16520,7 +16520,7 @@ DESCRIPTION
 
 'REPORTO' is a convenience function for use during model-fitting, when you have a hand-written "objective function" to optimize. Suppose your function 'obfun' computes lots of jolly interesting intermediate quantities, which you would like to preserve somewhere, before the function exits and they vanish. Then, just insert a call eg 'REPORTO( key_result, fascinating, important)' somewhere. You can make multiple calls to 'REPORTO' (with different variables...) and they will all be stashed.
 
-You should probably give 'obfun' an environment before you do this, otherwise the interesting stuff will end up in '.GlobalEnv' (if you are lucky), resulting in clutter. You can also use 'environment(obfun)' to stash data in, so that 'obfun' will be able to just refer directly to it, again without cluttering up '.GlobalEnv'. That level of self-discipline is worth cultivating. See EXAMPLES, and eg '?closure' for some kind of intro to R's lexical-scoping rules, on which this all depends. There must be a more reader-friendly help link somewhere, though...
+You should probably give 'obfun' an environment before you do this, otherwise the interesting stuff will end up in '.GlobalEnv' (if you are lucky), resulting in clutter. You can also use 'environment(obfun)' to pre-stash _data_ (i.e., before you invoke the function), so that 'obfun' will be able to just refer directly to it, again without cluttering up '.GlobalEnv'. That level of self-discipline is worth cultivating. See EXAMPLES, and eg '?closure' for some kind of intro to R's lexical-scoping rules, on which this all depends. There must be a more reader-friendly help link somewhere, though...
 
 Of course, you can do all this with base-R commands anyway (see below). But a *key reason* for using 'REPORTO'--- at least if you are using the package 'offarray'---  is that the package 'offartmb' will automatically translate 'REPORTO' calls into 'RTMB::REPORT' calls, so your code can then run under package 'RTMB' without further modification; see 'offarray::reclasso'. Plus, even in normal R use, the 'REPORTO( var1, var2)' syntax is clearer and easier.
 
@@ -16547,7 +16547,7 @@ ARGUMENTS
 
  names: A character vector with the names of _additional_ variables to stash.
  
-Thus, 'REPORTO(myvar)' or 'REPORTO(char="myvar")' have identical effects. The 'names' argument is handy if you want to stash, say, all variables whose names begin with "ncomps_"--- then 'REPORTO(names=ls(pattern="^ncomps_")'.
+Thus, 'REPORTO(myvar)' or 'REPORTO(names="myvar")' have identical effects. The 'names' argument is handy if you want to stash, say, all variables whose names begin with "ncomps_"--- then 'REPORTO(names=ls(pattern="^ncomps_")'.
 
 
 VALUE

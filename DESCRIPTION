@@ -10,4 +10,4 @@ KeepPlaintextDoco: yes
 NeedsCompilation: no
 ByteCompile: no
 License: GPL (>=2)
-Version: 2.12.16
+Version: 2.12.17

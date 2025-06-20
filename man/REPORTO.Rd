@@ -4,7 +4,7 @@
 \description{
 \code{REPORTO} is a convenience function for use during model-fitting, when you have a hand-written "objective function" to optimize. Suppose your function \code{obfun} computes lots of jolly interesting intermediate quantities, which you would like to preserve somewhere, before the function exits and they vanish. Then, just insert a call eg \code{REPORTO( key_result, fascinating, important)} somewhere. You can make multiple calls to \code{REPORTO} (with different variables...) and they will all be stashed.
 
-You should probably give \code{obfun} an environment before you do this, otherwise the interesting stuff will end up in \code{.GlobalEnv} (if you are lucky), resulting in clutter. You can also use \code{environment(obfun)} to stash data in, so that \code{obfun} will be able to just refer directly to it, again without cluttering up \code{.GlobalEnv}. That level of self-discipline is worth cultivating. See \bold{Examples}, and eg \code{?closure} for some kind of intro to R{}'s lexical-scoping rules, on which this all depends. There must be a more reader-friendly help link somewhere, though...
+You should probably give \code{obfun} an environment before you do this, otherwise the interesting stuff will end up in \code{.GlobalEnv} (if you are lucky), resulting in clutter. You can also use \code{environment(obfun)} to pre-stash \emph{data} (i.e., before you invoke the function), so that \code{obfun} will be able to just refer directly to it, again without cluttering up \code{.GlobalEnv}. That level of self-discipline is worth cultivating. See \bold{Examples}, and eg \code{?closure} for some kind of intro to R{}'s lexical-scoping rules, on which this all depends. There must be a more reader-friendly help link somewhere, though...
 
 Of course, you can do all this with base-R commands anyway (see below). But a \bold{key reason} for using \code{REPORTO}--- at least if you are using the package \pkg{offarray}--- is that the package \pkg{offartmb} will automatically translate \code{REPORTO} calls into \code{RTMB::REPORT} calls, so your code can then run under package \pkg{RTMB} without further modification; see \code{offarray::reclasso}. Plus, even in normal R{} use, the \code{REPORTO( var1, var2)} syntax is clearer and easier.
 \subsection{Pedants corner}{
@@ -23,7 +23,7 @@ And, yes, of course, in normal-R use you can also achieve the effect via \code{<
 \arguments{
 \item{ ...}{variables you want to stash--- unquoted. Can be empty.}
 \item{ names}{A character vector with the names of \emph{additional} variables to stash.}
-Thus, \code{REPORTO(myvar)} or \code{REPORTO(char="myvar")} have identical effects. The \code{names} argument is handy if you want to stash, say, all variables whose names begin with "ncomps_"--- then \code{REPORTO(names=ls(pattern="^ncomps_")}.
+Thus, \code{REPORTO(myvar)} or \code{REPORTO(names="myvar")} have identical effects. The \code{names} argument is handy if you want to stash, say, all variables whose names begin with "ncomps_"--- then \code{REPORTO(names=ls(pattern="^ncomps_")}.
 }
 \value{\code{REPORTO} itself returns NULL; it is called for its side-effects.
 }
