@@ -50,7 +50,9 @@ The inner function (typically called \code{cdsomething.guts}) must have argument
 }
 \author{Mark Bravington}
 \examples{
+\dontrun{
 cdfind( ".First", 0) # probably returns list( .First="ROOT")
+}
 }
 \seealso{\code{\link{cd}}
 }

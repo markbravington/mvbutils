@@ -37,7 +37,7 @@ multimatch( xx, yy, force=FALSE) # auto-drop loyalty & royalty (different names)
 # NA 2 3
 try( multimatch( xx[,1:2], yy[,1:3]))
 # <error>: num of cols
-try( multimatch( xx[,1:2], yy[,1:3], force=F))
+try( multimatch( xx[,1:2], yy[,1:3], force=FALSE))
 # all good
 multimatch( as.matrix( xx[,1:3]), as.matrix( yy[,1:3])) # matrices OK too
 # NA 2 3

@@ -34,8 +34,10 @@ fff( 9) # 12; ffdie wouldn't know about abcdef without the do.in.envir call
 # Show sys.call issues
 # Note that the "envir" argument in this case makes the
 # "do.in.envir" call completely superfluous!
-ffe <- function(...) do.in.envir( envir=sys.frame( sys.nframe()), sys.call( -5))
-ffe( 27, b=4) # ffe( 27, b=4)
+try(\{ # Not needed here, but I was trying to debug CMD CHECK examples and hit woe
+  ffe <- function(...) do.in.envir( envir=sys.frame( sys.nframe()), sys.call( -5))
+  ffe( 27, b=4) # ffe( 27, b=4)
+\})
 }
 \seealso{\code{\link{mlocal}}
 }

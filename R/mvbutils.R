@@ -1881,7 +1881,9 @@ Mark Bravington
 
 EXAMPLES
 
+## Don't run
 cdfind( ".First", 0) # probably returns list( .First="ROOT")
+## End don't run
 
 
 SEE.ALSO
@@ -2878,16 +2880,25 @@ return( dll.env)
 function( pkg, character.only=FALSE) {
 ##################
   set.pkg.and.dir( FALSE) # just to deal with 'pkg'
-  zipdirs <- dir( dir., # dir( attr( maintained.packages[[ pkg]], 'path'), 
-      pattern='^[rR][0-9]+', full.names=TRUE, include.dirs=TRUE) %such.that% is.dir( .)
+  zipdirs <- dir( dir., # dir( attr( maintained.packages[[ pkg]], 'path'),
+      pattern='^[rR][0-9]+', full.names=TRUE, 
+      include.dirs=TRUE) %such.that% is.dir( .)
+
+  # max() on empty numeric_version USED TO return length-0
+  # now it returns Inf with a warning :/
+  # FFS R, "nice one" :/
+  # See also get.last.R.mandatory.rebuild.version()
+  
+  JUST_FAARRRKIN_MAX <- function( x) if( !length( x)) x else max( x)
       
   for( izipdir in zipdirs) {
     tarballs <- dir( izipdir, pattern=sprintf( '^%s_([0-9]+[.])+tar[.]gz$', pkg))
-    tarver <- numeric_version( sub( '.*_', '', sub( '.tar.gz', '', tarballs, fixed=TRUE)))
+    tarver <- numeric_version( sub( '.*_', '', 
+        sub( '.tar.gz', '', tarballs, fixed=TRUE)))
     zippos <- dir( izipdir, pattern=sprintf( '^%s_([0-9]+[.])+zip$', pkg))
     zipver <- numeric_version( sub( '.*_', '', sub( '.zip', '', zippos, fixed=TRUE)))
     
-    maxver <- max( c( zipver, tarver))
+    maxver <- JUST_FAARRRKIN_MAX( c( zipver, tarver))
     unlink( file.path( izipdir, zippos[ zipver < maxver]))  
     unlink( file.path( izipdir, tarballs[ tarver < maxver]))
   }  
@@ -3293,9 +3304,10 @@ fff( 9) # 12; ffdie wouldn't know about abcdef without the do.in.envir call
 # Show sys.call issues
 # Note that the "envir" argument in this case makes the 
 # "do.in.envir" call completely superfluous!
-ffe <- function(...) do.in.envir( envir=sys.frame( sys.nframe()), sys.call( -5))
-ffe( 27, b=4) # ffe( 27, b=4)
-
+try({ # Not needed here, but I was trying to debug CMD CHECK examples and hit woe
+  ffe <- function(...) do.in.envir( envir=sys.frame( sys.nframe()), sys.call( -5))
+  ffe( 27, b=4) # ffe( 27, b=4)
+})
 
 SEE.ALSO
 
@@ -5436,6 +5448,17 @@ function (j, nodes, parents)
 }
 
 
+"find.scriptlets" <-
+function( pos=1, ..., exclude.mcache=TRUE, pattern='[.][rR]$') {
+  mc <- match.call( expand.dots=TRUE)
+  mc$pattern <- NULL
+  mc$mode <- 'character'
+  mc[[1]] <- quote( find.funs)
+  chars <- eval.parent( mc) %that.match% pattern
+return( chars)
+}
+
+
 "find.web" <-
 function( nlocal=sys.parent()) mlocal({
   funs <- unique( c( funs, generics))
@@ -5764,7 +5787,7 @@ stop("Couldn't launch editor")
   failed.to.edit <- FALSE
   invisible(NULL)
 }
-, doc =  docattr( r"{
+, doc =  docattr( r"-----{
 fixr                    package:mvbutils
 fixtext
 readr
@@ -5851,12 +5874,21 @@ which will mean that non-function objects whose name ends '.r' get written to fi
 
 'fixr' creates a blank function template if the object doesn't exist already, or if 'new=TRUE'. If you want to create a new character vector as opposed to a new function, call 'fixtext', or equivalently set 'what=""' when you call 'fixr'.
 
-If the function has attributes, the version in the text editor will be wrapped in a 'structure(...)' construct (and you can do this yourself). If a 'doc' attribute exists, it's printed as free-form text at the end of the file, and the call to 'structure' will  end with a line similar to:
+If the function has attributes, the version in the text editor will be wrapped in a 'structure(...)' construct (and you can do this yourself). If a 'doc' attribute exists, it's printed as free-form text at the end of the file, nowadays wrapped in a call like this: 
 
 %%#
+, doc =  mvbutils::docattr( r"----{
+<documentation here...>
+}----")
+
+(perhaps with no dashes, or a different number) which eventually ends with some closing brackets and so on. Or, in functions written with old versions of 'mvbutils' (pre-2.11), you'll instead see something like this:
+
+%%# 
 ,doc=flatdoc( EOF="<<end of doc>>"))
 
-When the file is sourced back in, that line will cause the rest of the file-- which should be free-format text, with no escape characters etc.-- to be read in as a 'doc' attribute, which can be displayed by 'help'. If you want to add plain-text documentation, you can also add these lines yourself-- see 'flatdoc'. Calling 'fixr( myfun, new.doc=TRUE)' sets up a documentation template that you can fill in, ready for later conversion to Rd format in a package (see 'mvbutils.packaging.tools').
+and then the docu, and no closing stuff at the end of the file.
+
+When the file is sourced back in, those lines will cause the rest of the free-format text (no escape characters needed, etc)  to be read in as a 'doc' attribute, which can be displayed by 'help'. If you want to add plain-text documentation, you can also add these lines yourself-- see 'flatdoc'. Calling 'fixr( myfun, new.doc=TRUE)' sets up a documentation template that you can fill in, ready for later conversion to Rd format in a package (see 'mvbutils.packaging.tools').
 
 The list of functions being edited by 'fixr' is stored in the variable 'fix.list' in the 'mvb.session.info' environment. When you quit and restart R, the function files you have been using will stay open in the editor, but 'fix.list' will be empty; hence, updating the file "myfun.r" will not update the corresponding R function. If this happens, just type 'fixr(myfun)' in R and when your editor asks you if you want to replace the on-screen version, say no. Save the file again (some editors require a token modification, such as space-then-delete, first) and R will notice the update. Very very occasionally, you may want to tell R to stop trying to update one of the things it's editing, via eg 'fixtext <<- fixtext[-3,]' if the offending thing is the third row in 'fixlist'; note the double arrow.
 
@@ -5971,7 +6003,7 @@ KEYWORDS
 
 utilities; programming
 
-}")
+}-----")
 
 )
 
@@ -7443,10 +7475,21 @@ function() {
 ##############################
   # Self-explanatory. NB R.rebuild.vers created in mvbutils:::.onLoad
 
-  last.R.major <- numeric_version( sub( '[.][0-9]+[^.]*$', '', as.character( getRversion())))
+  last.R.major <- numeric_version( sub( '[.][0-9]+[^.]*$', '', 
+      as.character( getRversion())))
+      
+  # This one works OK coz there's always at least one elt in arg to max()
   Rrebver <- max( R.rebuild.vers %such.that% (. <= last.R.major))
-  next_Rrebver <- min( R.rebuild.vers %such.that% (. > last.R.major))
-  if( !length( next_Rrebver)) { # min() on empty numeric_version will return length-0
+  
+  # min() on empty numeric_version USED TO return length-0
+  # now it returns Inf with a warning :/
+  # FFS R, "nice one" :/
+  
+  JUST_FAARRRKIN_MIN <- function( x) if( !length( x)) x else min( x)
+  next_Rrebver <- JUST_FAARRRKIN_MIN( 
+      R.rebuild.vers %such.that% (. > last.R.major))
+      
+  if( !length( next_Rrebver)){
     next_Rrebver <- numeric_version( sprintf( '%i.%i', last.R.major[[1,1]]+1, 0))
   }
 
@@ -11522,7 +11565,7 @@ multimatch( xx, yy, force=FALSE) # auto-drop loyalty & royalty (different names)
 # NA 2 3 
 try( multimatch( xx[,1:2], yy[,1:3]))
 # <error>: num of cols
-try( multimatch( xx[,1:2], yy[,1:3], force=F))
+try( multimatch( xx[,1:2], yy[,1:3], force=FALSE))
 # all good
 multimatch( as.matrix( xx[,1:3]), as.matrix( yy[,1:3])) # matrices OK too
 # NA 2 3

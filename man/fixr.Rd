@@ -64,13 +64,23 @@ which will mean that non-function objects whose name ends \code{.r} get written 
 
 \code{fixr} creates a blank function template if the object doesn't exist already, or if \code{new=TRUE}. If you want to create a new character vector as opposed to a new function, call \code{fixtext}, or equivalently set \code{what=""} when you call \code{fixr}.
 
-If the function has attributes, the version in the text editor will be wrapped in a \code{structure(...)} construct (and you can do this yourself). If a \code{doc} attribute exists, it's printed as free-form text at the end of the file, and the call to \code{structure} will end with a line similar to:
+If the function has attributes, the version in the text editor will be wrapped in a \code{structure(...)} construct (and you can do this yourself). If a \code{doc} attribute exists, it's printed as free-form text at the end of the file, nowadays wrapped in a call like this:
+
+\preformatted{
+  , doc =  mvbutils::docattr( r"----{
+  <documentation here...>
+  }----")
+}
+
+(perhaps with no dashes, or a different number) which eventually ends with some closing brackets and so on. Or, in functions written with old versions of \code{mvbutils} (pre-2.11), you'll instead see something like this:
 
 \preformatted{
   ,doc=flatdoc( EOF="<<end of doc>>"))
 }
 
-When the file is sourced back in, that line will cause the rest of the file-- which should be free-format text, with no escape characters etc.-- to be read in as a \code{doc} attribute, which can be displayed by \code{\link{help}}. If you want to add plain-text documentation, you can also add these lines yourself-- see \code{\link{flatdoc}}. Calling \code{fixr( myfun, new.doc=TRUE)} sets up a documentation template that you can fill in, ready for later conversion to Rd format in a package (see \code{\link{mvbutils.packaging.tools}}).
+and then the docu, and no closing stuff at the end of the file.
+
+When the file is sourced back in, those lines will cause the rest of the free-format text (no escape characters needed, etc) to be read in as a \code{doc} attribute, which can be displayed by \code{\link{help}}. If you want to add plain-text documentation, you can also add these lines yourself-- see \code{\link{flatdoc}}. Calling \code{fixr( myfun, new.doc=TRUE)} sets up a documentation template that you can fill in, ready for later conversion to Rd format in a package (see \code{\link{mvbutils.packaging.tools}}).
 
 The list of functions being edited by \code{fixr} is stored in the variable \code{fix.list} in the \code{mvb.session.info} environment. When you quit and restart R{}, the function files you have been using will stay open in the editor, but \code{fix.list} will be empty; hence, updating the file "myfun.r" will not update the corresponding R{} function. If this happens, just type \code{fixr(myfun)} in R{} and when your editor asks you if you want to replace the on-screen version, say no. Save the file again (some editors require a token modification, such as space-then-delete, first) and R{} will notice the update. Very very occasionally, you may want to tell R{} to stop trying to update one of the things it's editing, via eg \code{fixtext <<- fixtext[-3,]} if the offending thing is the third row in \code{fixlist}; note the double arrow.
 

@@ -15,6 +15,7 @@
 \alias{expanded.call}
 \alias{everyth}
 \alias{find.funs}
+\alias{find.scriptlets}
 \alias{find.lurking.envs}
 \alias{index}
 \alias{inv.logit}
@@ -69,6 +70,7 @@ env.name.string( env)
 expanded.call( nlocal=sys.parent())
 everyth( x, by=1, from=1)
 find.funs(pos=1, ..., exclude.mcache = TRUE, mode="function")
+find.scriptlets(pos=1, ..., exclude.mcache = TRUE, pattern='[.][rR]$')
 find.lurking.envs(obj, delve=FALSE, trace=FALSE)
 index( lvector)
 integ(expr, lo, hi, what = "x", ..., args.to.integrate = list())
@@ -138,6 +140,8 @@ yes.no( prompt, default)
 
 \code{find.funs} finds "function" objects (or objects of other modes, via the "mode" arg) in one or more environments, optionally matching a pattern.
 
+\code{find.scriptlets} is like \code{find.funs} but looks for character vectors whose name suggests that they are a "scriptlet" (ie text runnable with \code{eval(parse(text=<scriptlet>)))}, as per \code{\link{fixr}} and suitable for \code{mrun} or \code{mdrun} in the \pkg{debug} package).
+
 \code{find.lurking.envs( myobj)} will search through \code{myobj} and all its attributes, returning the size of each sub-object. The size of environments is returned as Inf. The search is completely recursive, except for environments and by default the inner workings of functions; attributes of the entire function are always recursed. Changing the \code{delve} parameter to TRUE ensures full recursion of function arguments and function bodies, which will show e.g. the \code{srcref} structure; try it to see why the default is FALSE. \code{find.lurking.envs} can be very useful for working out e.g. why the result of a model-fitting function is taking up 1000000MB of disk space; sometimes this is due to unnecessary environments in well-concealed places.
 
 \code{index} returns the position(s) of TRUE elements. Unlike \code{which}: attributes are lost; NA elements map to NAs; \code{index(<<length 0 object>>)} is \code{numeric(0)}; \code{index( <<non-logical>>)} is NA.
@@ -205,6 +209,7 @@ yes.no( prompt, default)
 \item{  expanded.call}{a \code{call} object}
 \item{  everyth}{same type as \code{x}}
 \item{  find.funs}{a character vector of function names}
+\item{  find.scriptlets}{a character vector of scriptlet names}
 \item{  find.lurking.envs}{a \code{data.frame} with columns "what" and "size"}
 \item{  integ}{scalar}
 \item{  inv.logit}{numeric vector}
@@ -250,9 +255,10 @@ yes.no( prompt, default)
 \item{env.name.string}{env: environment}
 \item{expanded.call}{nlocal: frame to retrieve arguments from. Normally, use the default; see \code{\link{mlocal}}.}
 \item{everyth}{x: subsettable thing. by: step between values to extract. from: first position.}
-\item{find.funs}{...: extra arguments for \code{objects}. Usually just "pattern" for regexp searches.}
-\item{find.funs}{exclude.mcache: if TRUE (default), don't look at \code{\link{mlazy}} objects}
+\item{find.funs, find.scriptlets}{...: extra arguments for \code{objects}. Usually just "pattern" for regexp searches.}
+\item{find.funs, find.scriplets}{exclude.mcache: if TRUE (default), don't look at \code{\link{mlazy}} objects}
 \item{find.funs}{mode: "function" to look for functions, "environment" to look for environments, etc}
+\item{find.scriptlets}{pattern: regexp that scriptlet names should match.}
 \item{find.lurking.envs}{delve: whether to recurse into function arguments and function bodies}
 \item{find.lurking.envs}{trace: just a debugging aid-- leave as FALSE}
 \item{index}{lvector: vector of TRUE/FALSE/NA}
@@ -345,14 +351,20 @@ empty.data.frame( a=1, b=factor( c( "yes", "no")))$b
 everyth( 1:10, 3, 5) # c( 5, 8)
 f <- function( a=9, b) expanded.call(); f( 3, 4) # list( a=3, b=4)
 find.funs( "package:base", patt="an") # "transform" etc.
+e <- new.env()
+e$myscript.R <- as.cat( string2charvec( r"{
+  # raw strings are great!
+  dir()
+}"))
+find.scriptlets( e) # "myscript.R"
 find.lurking.envs( cd)
 #                                     what  size
 #1                     attr(obj, "source")  5368
 #2                                     obj 49556
 #3 environment(obj) <: namespace:mvbutils>   Inf
-\dontrun{
+## Don't run:
 eapply( .GlobalEnv, find.lurking.envs)
-}
+## End don't run
 integ( sin(x), 0, 1) # [1] 0.4597
 integ( sin(x+a), a=5, 0, 1) # [1] -0.6765; 'a' is "passed" to 'expr'
 integ( sin(y+a), what='y', 0, 1, a=0) # [1] 0.4597; arg is 'y' not 'x'
@@ -413,11 +425,12 @@ identical( glurp, oglurp) # yes
 longstring <- 'Bollocks, then the good stuff, then more bollocks'
 longstring |> xsub( ',[^,]*$', '') |> xsub( '.*, *', '')
 # "then the good stuff"
-\dontrun{
-mkdir( "subdirectory.of.getwd")
-yes.no( "OK (Y/N)? ")
+## Don't run:
+# and i mean REALLY don't, so stop crazy Craniac bypasses...
+if( FALSE)\{ mkdir( "subdirectory.of.getwd")\}
+if( interactive()) yes.no( "OK (Y/N)? ")
 masking( 1)
 masked( 5)
-}
+## End don't run
 }
 \keyword{misc}

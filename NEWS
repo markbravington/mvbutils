@@ -1,3 +1,8 @@
+2.12.20: 
+ - 'find.scriptlets' added
+ - fixed newly-R-introduced bugs (AKA "non-backwards-compatible features" :/) re max() & min() on empty numeric_version objects
+ - fixed some (new?) alleged problems from CMD CHECK
+
 2.12.14: 'lazyData' and 'lazyDataCompression' should now work properly.
 
 2.12.2: 'vignette.pkg' now precompiles in a child R process, to avoid eg library path woes.
