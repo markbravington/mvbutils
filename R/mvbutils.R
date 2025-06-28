@@ -88,6 +88,10 @@ function( x, name)
   match(name, names(x), nomatch = 0L) > 0L
 
 
+"%in.names.of%" <-
+function( name, x) hasName( x, name)
+
+
 "%in.range%" <-
 function (a, b) 
 (a >= min(b)) & (a <= max(b))

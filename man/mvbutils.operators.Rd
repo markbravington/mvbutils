@@ -10,6 +10,7 @@
 \alias{\%is.a\%}
 \alias{\%is.not.an\%}
 \alias{\%is.an\%}
+\alias{\%in.names.of\%}
 \alias{\%matching\%}
 \alias{\%not.in\%}
 \alias{\%not.in.range\%}
@@ -44,6 +45,7 @@ x \%is.not.a\% what
 x \%is.a\% what
 x \%is.not.an\% what
 x \%is.an\% what
+name \%in.names.of\% x
 x \%matching\% patt
 a \%not.in\% b
 a \%not.in.range\% b
@@ -73,7 +75,7 @@ a \%<-\% value # really e.g. \{x;y\} \%<-\% list( 'yes', sqrt(pi)) to create x &
 \item{ \%upto\%, \%downto\%}{numeric}
 \item{ \%is.a\%, \%in\%, etc}{logical}
 \item{ \%<-\%}{technically NULL return, but it overwrites / creates objects; see below...}
-\item{ \%has.name\%}{logical vector}
+\item{ \%has.name\%, \%in.names.of\%}{logical vector}
 \item{ All others}{same type as first argument.}
 \item{ Note that attributes are _not_ stripped by the subsetting of \%without.name\%, \%except\%, \%such.that\%, \%SUCH.THAT\%, or \%that.are.in\% (as of v2.8.369)--- whereas base R does, which I view as a bug. However, attributes may still get stripped by the other \%that... and \%matching\%, because (some of) those use unique. Possibly I should tweak those too, but I think they are inconsistently designed (e.g. \%that.match\% returns unique values, but \%that.dont.match\% uses subsetting) and I dont want to risk breaking more things...}{}
 }
@@ -86,7 +88,7 @@ a \%<-\% value # really e.g. \{x;y\} \%<-\% list( 'yes', sqrt(pi)) to create x &
 
 \code{\%except\%} vector, condition: character or numeric vectors
 
-\code{\%has.name\%} x, name: whether \code{name} (perhaps several) is in \code{names(x)}. Sugar for \code{base::hasName}.
+\code{\%has.name\%}, \code{\%in.names.of\%} x, name: whether \code{name} (perhaps several) is in \code{names(x)}. These differ only in the order of the parameters, but in some contexts one version seems more natural. Sugar for \code{base::hasName}.
 
 \code{\%in.range\%}, \code{\%not.in.range\%} a, b: numeric vectors.
 
@@ -135,6 +137,7 @@ xx <- list( y=0, z='pterodactyl')
 xx \%has.name\% 'y' # yep
 xx \%has.name\% 'pringle' # nope
 xx \%has.name\% cq( y, z) # yep and yep again
+cq( y, z, zzz) \%in.names.of\% xx # same thing
 1:5 \%in.range\% c( 2, 4) # c(F,T,T,T,F)
 1:5 \%not.in.range\% c( 2, 4) # c(T,F,F,F,T)
 c( "cat", "hat", "dog", "brick") \%matching\% c( "at", "ic") # cat hat brick

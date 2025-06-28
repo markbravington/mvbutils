@@ -1,3 +1,5 @@
+2.12.30: added '%in.names.of%' as "reverse" of '%has.name%'
+
 2.12.20: 
  - 'find.scriptlets' added
  - fixed newly-R-introduced bugs (AKA "non-backwards-compatible features" :/) re max() & min() on empty numeric_version objects
