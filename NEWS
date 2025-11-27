@@ -1,3 +1,5 @@
+2.12.32: tweak to 'Rd2txt_easy' to handle change in default 'Rd2txt' treatment of description-lists for R 4.6.
+
 2.12.30: added '%in.names.of%' as "reverse" of '%has.name%'
 
 2.12.20: 

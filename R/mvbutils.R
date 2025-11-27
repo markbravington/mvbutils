@@ -16238,6 +16238,7 @@ function( p1, options=FALSE) { # p1 from parse_Rd()
       minIndent= -24, extraIndent=0, # ignore list nesting
       enumFormat= function( n) sprintf( '%d. ', n),
       showURLs=TRUE,
+      descStyle=NULL, # for R >= 4.6
       code_quote=TRUE,
       underline_titles=TRUE)
   on.exit( Rd2txt_options( rdo))
@@ -19959,7 +19960,7 @@ structure( function(
   stop( "Can't figure out what name to print")
       }
     } # if null xn
-    sprintf( '%s <- ', simplest_name_generator( xn))
+    cat( sprintf( '%s <- ', simplest_name_generator( xn)))
   }
 
   if( is.character( x))
