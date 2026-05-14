@@ -1,3 +1,7 @@
+2.12.41: worked around some R 4.5.x bugs (in 'Rd2txt' and 'Rd2txt_options') that were making 'unpackage' verrrry slow. The bugs may be fixed anyway in R 4.6.
+
+2.12.34: patched 'pre.install' so it again works for brand-new package never installed before and lacking a '..mypak$mypak.VERSION'. Probably broken by a change in R itself.
+
 2.12.32: tweak to 'Rd2txt_easy' to handle change in default 'Rd2txt' treatment of description-lists for R 4.6.
 
 2.12.30: added '%in.names.of%' as "reverse" of '%has.name%'

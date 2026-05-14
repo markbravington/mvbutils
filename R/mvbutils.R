@@ -14441,15 +14441,19 @@ stop( "couldn't make essential directories")
       # Choose newer of installed and DESCRIPTION...
       # ... but these may not be all possible installed versions
       # ... eg for later versions of R than is now running
-      inst.version <- max_pkg_ver( pkg, .libPaths())
+      # "Fixed" for R4.5 to work with brand-new packages not yet installed      
+      # This is absolutely horrible code; I suspect it could be better
+
+      inst.version <- max_pkg_ver( pkg, .libPaths()) # returns "0" if not installed
       desc.version <- try( package_version( description[ 'Version']))
-      if( inst.version %is.a% 'try-error') {
+      if( is.na( inst.version) || (inst.version=='0') || 
+          (inst.version %is.a% 'try-error')) {
         inst.version <- desc.version
-      } else if( desc.version %is.a% 'try-error') {
+      } else if( is.na( desc.version) || (desc.version %is.a% 'try-error')) {
         desc.version <- inst.version
       }
 
-      if( inst.version %is.a% 'try-error') {
+      if( is.na( inst.version) || (inst.version %is.a% 'try-error')) {
         warning( "Can't deduce version: setting to 1.0.0")
         ood.version <- numeric_version( '1.0.0')
         click.version <- FALSE
@@ -16250,6 +16254,16 @@ return( Rd2txt_options()) # the new lot
   t1 <- tempfile()
   on.exit( { unlink( t1); Rd2txt_options( rdo)})
 
+  Rd2txt( p1, t1)
+readLines( t1)
+}
+
+
+"Rd2txt_sans_options" <-
+function( p1){ # p1 from parse_Rd()
+## 2026 attempt to get round presumed bug in Rd2txt_options, which was taking quadratically long in unpackage()
+  t1 <- tempfile()
+  on.exit( unlink( t1))
   Rd2txt( p1, t1)
 readLines( t1)
 }
@@ -18780,14 +18794,37 @@ stop( "Not overwriting")
   doc_md5_orig <- character()
 
   Rd.files <- dir( file.path( spath, 'man'), pattern='Rd$', full.names=TRUE)
+  scatn( 'Rd conversion (can be slow): %i files', length( Rd.files))
+  
+  # 2026: Bizarre bug presumably in Rd2txt_options,at least for R-4.5.1rc,
+  # that was causing quadratic slowdown and taking >50% of runtime
+  # tho there was some problem with Rd2txt itself as well
+  # May have gone with R 4.6.0
+  # Anyway, try setting options just once
+  rdo <- Rd2txt_options( width=10000,
+      itemBullet= '\006 ', # '* ',
+      sectionIndent= 80, sectionExtra= 2,
+      minIndent= -24, extraIndent=0, # ignore list nesting
+      enumFormat= function( n) sprintf( '%d. ', n),
+      showURLs=TRUE,
+      descStyle=NULL, # for R >= 4.6
+      code_quote=TRUE,
+      underline_titles=TRUE)
+  on.exit( Rd2txt_options( rdo), add=TRUE)
+  
+  
   for( rdf in Rd.files) {
+    scatn( '%i: %s', match( rdf, Rd.files), rdf)
+    gc() # minimize clog? we live in hope
+   
     p1 <- parse_Rd( rdf)
     rdt <- tools$RdTags( p1)
     name <- unlist( p1[ rdt=='\\name'])
     aliases <- unlist( p1[ rdt=='\\alias'])
     namal <- unique( c( name, aliases))
     helpo <- help2flatdoc( fun.name=name, pkg=x, aliases=aliases, 
-        text=Rd2txt_easy( p1))
+        text= Rd2txt_sans_options( p1))
+        # text=Rd2txt_easy( p1))
 
     # Dock whitespace and blank lines at the end--- for change-checking later
     helpo <- gsub( ' +$', '', helpo)
@@ -18806,7 +18843,9 @@ stop( "Not overwriting")
       # src@srcfile$lines contains *all*, but src itself
       # ... only points to a part of it
       attr( e[[ funs[ matcho]]], 'doc') <- helpo
-      if( !is.null( roxor <- attr( e[[ funs[ matcho]]], 'roxy_orig'))) {
+      
+      # keep_Roxygen is new 2026--- mebbe wrong
+      if( keep_Roxygen && !is.null( roxor <- attr( e[[ funs[ matcho]]], 'roxy_orig'))) {
         tf1 <- tempfile()
         writeLines( helpo, tf1)
         md5 <- md5sum( tf1)
@@ -18815,17 +18854,23 @@ stop( "Not overwriting")
         doc_md5_orig[ funs[ matcho]] <- md5
         attr( e[[ funs[ matcho]]], 'roxy_orig') <- NULL # don't want it written out!
       }
+      unlink( tf) # 2026 maybe...
       nicewrite_function( e[[ funs[ matcho]]], tf, append=FALSE, 
           print.name=FALSE, doc.special=TRUE)
+      # e[[ funs[ matcho] ]] <- source( tf, keep.source=FALSE) # maybe this will be faster, discarding srcref
       lines <- readLines( tf)
-      attr( attr( e[[ funs[ matcho]]], 'srcref'), 'srcfile')$lines <- lines
-      attr( e[[ funs[ matcho]]], 'srcref')[ 2] <- regexpr( 'function', lines[1])
+
+      # Add srcref manually
+      osrc <- attr( e[[ funs[ matcho]]], 'srcref')
+      attr( osrc, 'srcfile')$lines <- lines
+      osrc[ 2] <-  regexpr( 'function', lines[1])
       # Single-line functions will lose characters thx2 addition of word "structure", so...
-      if( attr( e[[ funs[ matcho]]], 'srcref')[ 3]==1) {
-        attr( e[[ funs[ matcho]]], 'srcref')[ 4] <- nchar( lines[ 1])
+      if( osrc[ 3]==1) {
+        osrc[ 4] <- nchar( lines[ 1])
       }
-      attr( e[[ funs[ matcho]]], 'srcref')[1:8] <- 
-          attr( e[[ funs[ matcho]]], 'srcref')[ c( 1:4, 2, 4, 1, 3)]
+      osrc[ 1:8] <- osrc[ c( 1:4, 2, 4, 1, 3)]
+      attr( e[[ funs[ matcho] ]], 'srcref') <- osrc
+      rm( osrc) # tidy...
     } else {
       e[[ sprintf( '%s%s.doc', name, if(name==x) '.package' else '')]] <- helpo
     }
