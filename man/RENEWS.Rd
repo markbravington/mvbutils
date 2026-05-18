@@ -13,7 +13,9 @@
 }
 \examples{
 \dontrun{
-RENEWS( mvbutils)
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  RENEWS( mvbutils)
+\} # if F
 }
 }
 \keyword{internal

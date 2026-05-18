@@ -14,12 +14,14 @@
 }
 \examples{
 \dontrun{
-library( debug)
-debug:::.onLoad # d.lB is called to make 'tracees' editable inside 'debug's namespace.
-debug:::.onAttach # d.lB is called to make 'tracees' editable in the search path
-# NB also that an active binding is used to ensure that the 'tracees' object in the search...
-#... path is a "shadow of" or "pointer to" the one in 'debug's namespace; the two cannot get...
-#... out-of-synch
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  library( debug)
+  debug:::.onLoad # d.lB is called to make 'tracees' editable inside 'debug's namespace.
+  debug:::.onAttach # d.lB is called to make 'tracees' editable in the search path
+  # NB also that an active binding is used to ensure that the 'tracees' object in the search...
+  #... path is a "shadow of" or "pointer to" the one in 'debug's namespace; the two cannot get...
+  #... out-of-synch
+\} # if F
 }
 }
 \seealso{\code{lockBinding}, \code{setHook}

@@ -67,27 +67,29 @@ The point of all this "tee" business is that there's no reliable way in R{} itse
 }
 \examples{
 \dontrun{
-# First time package installation
-# Must be cd()ed to task above 'mvbutils'
-maintain.packages( mvbutils)
-pre.install( mvbutils)
-install.pkg( mvbutils)
-# Subsequent maintenance is all done by:
-patch.install( mvbutils)
-# For distro to
-build.pkg( mvbutils)
-# or on Windows (?and Macs?)
-build.pkg.binary( mvbutils)
-# If you enjoy R CMD CHECK:
-check.pkg( mvbutils)
-# How to not fail if Suggestees are missing (I think), via envars
-check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
-# Also legal:
-build.pkg( ..mvbutils)
-# To do it under programmatic control
-for( ipack in all.my.package.names) \{
-  build.pkg( char=ipack)
-\}
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # First time package installation
+  # Must be cd()ed to task above 'mvbutils'
+  maintain.packages( mvbutils)
+  pre.install( mvbutils)
+  install.pkg( mvbutils)
+  # Subsequent maintenance is all done by:
+  patch.install( mvbutils)
+  # For distro to
+  build.pkg( mvbutils)
+  # or on Windows (?and Macs?)
+  build.pkg.binary( mvbutils)
+  # If you enjoy R CMD CHECK:
+  check.pkg( mvbutils)
+  # How to not fail if Suggestees are missing (I think), via envars
+  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
+  # Also legal:
+  build.pkg( ..mvbutils)
+  # To do it under programmatic control
+  for( ipack in all.my.package.names) \{
+    build.pkg( char=ipack)
+  \}
+\} # if F
 }
 }
 \keyword{misc}

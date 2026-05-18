@@ -21,13 +21,12 @@ add.flatdoc.to(x, char.x = NULL, pkg=NULL, env=NULL, convert.to.source=FALSE)
 \seealso{\code{\link{flatdoc}}, \code{\link{fixr}}, \code{\link{doc2Rd}}
 }
 \examples{
-\dontrun{
 myfun <- function( ...) ...
 myfun <- mvbutils:::add.flatdoc.to( myfun)
 # 'fixr( myfun)' will now allow editing of code & doco together
 # Or, in a maintained package:
 # ..mypack$myfun <<- add.flatdoc.to( myfun, pkg='mypack')
-}
+## End don't run
 }
 \keyword{internal
 }

@@ -232,23 +232,25 @@ The nuances of \code{R.target.version} change with the changing tides of R{} ver
 }
 \examples{
 \dontrun{
-# Workflow for simple case:
-cd( task.above.mypack)
-maintain.packages( mypack)
-# First-time setup, or after major R version changes:
-pre.install( mypack)
-install.pkg( mypack)
-library( mypack)
-# ... do stuff
-# Subsequent maintenance:
-maintain.packages( mypack) # only once per session, usually at the start
-library( mypack) # maybe optional
-# ...do various things involving changes to mypack, then...
-patch.install( mypack) # keep disk image up-to-date
-# Prepare copies for distribution
-build.pkg( mypack) # for Linux or CRAN
-build.pkg.binary( mypack) # for Windows or Macs
-check.pkg( mypack) # if you like that sort of thing
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # Workflow for simple case:
+  cd( task.above.mypack)
+  maintain.packages( mypack)
+  # First-time setup, or after major R version changes:
+  pre.install( mypack)
+  install.pkg( mypack)
+  library( mypack)
+  # ... do stuff
+  # Subsequent maintenance:
+  maintain.packages( mypack) # only once per session, usually at the start
+  library( mypack) # maybe optional
+  # ...do various things involving changes to mypack, then...
+  patch.install( mypack) # keep disk image up-to-date
+  # Prepare copies for distribution
+  build.pkg( mypack) # for Linux or CRAN
+  build.pkg.binary( mypack) # for Windows or Macs
+  check.pkg( mypack) # if you like that sort of thing
+\} # if F
 }
 }
 \author{Mark Bravington}

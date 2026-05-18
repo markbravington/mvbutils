@@ -24,8 +24,10 @@ Note that, if you call \code{assign.to.base} during the \code{.onLoad} of your p
 }
 \examples{
 \dontrun{
-hack( dir, all.files=getOption( "ls.all.files", TRUE)) # from my '.First'
-assign.to.base( "dir", hack( dir, all.files=TRUE))
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  hack( dir, all.files=getOption( "ls.all.files", TRUE)) # from my '.First'
+  assign.to.base( "dir", hack( dir, all.files=TRUE))
+\} # if F
 }
 }
 \keyword{programming

@@ -65,7 +65,8 @@ The criteria for deciding whether to raw-string-ify an attribute are:
 Iff the attribute has S3 class "docattr", then \code{cat_strings_rawly} will wrap it in a call to \code{mvbutils::docattr} (which will mean it doesn't get full printed out at the console); otherwise, it will be wrapped in a call to \code{mvbutils::string2charvec}.
 }
 \examples{
-# This is from the examples for 'flatdoc'. It's there to illustrate plain-text documentation, but you can see the call to 'docattr' in the middle.
+# This is from the examples for 'flatdoc'. It's there to illustrate plain-text documentation,
+# but you can see the call to 'docattr' in the middle.
 flubbo <- structure( function( x)\{
   ## A comment
   x+1
@@ -73,21 +74,24 @@ flubbo <- structure( function( x)\{
 ,doc=docattr( r"-{
 flubbo       not-yet-in-a-package
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
-You can have multiple lines and lots of "quotes" and even weird characters like "\\\".
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
-\}-"))
-\dontrun{
-write_sourceable_function( write_sourceable_function, "wsf.r")
-# To dump all functions and their documentation in a workspace into a single sourceable file:
-cat( "", file="allfuns.r")
-sapply( find.funs(), write_sourceable_function,
-    file="allfuns.r", append=TRUE, print.name=TRUE)
-# A non-function. Probably don't do this!
-scrunge <- c( 1:7, 11)
-attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
-scrunge # [1] 1 2 3 4 5 6 7 11
-write_sourceable_function( scrunge, stdout()) # source
-fixr( scrunge) # source
-}
+Thanks to raw strings, which are wonderful (see 'Quotes' for extreeeeemly brief doco):
+Look at 'flatdoc' examples for more on raw strings.
+}-"))
+## Don't run
+# Infuriating CRAN check (ie that Don't run is ignored--- WTF?!) means I have to wrap this:
+if( FALSE && is_very_annoying( "CRAN"))\{
+  write_sourceable_function( write_sourceable_function, "wsf.r")
+  # To dump all functions and their documentation in a workspace into a single sourceable file:
+  cat( "", file="allfuns.r")
+  sapply( find.funs(), write_sourceable_function,
+      con="allfuns.r", append=TRUE, print.name=TRUE)
+  # A non-function. Probably don't do this!
+    scrunge <- c( 1:7, 11)
+    attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
+    scrunge # [1] 1 2 3 4 5 6 7 11
+    write_sourceable_function( scrunge, stdout()) # source
+    fixr( scrunge) # source
+\} # if F
+## End don't run
 }
 \keyword{misc}

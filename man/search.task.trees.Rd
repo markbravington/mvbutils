@@ -11,9 +11,11 @@
 }
 \examples{
 \dontrun{
-search.task.trees() # c( ROOT=1) if you haven't used cd yet
-cd( mytask)
-search.task.trees() # c( "ROOT/mytask"=1, ROOT=2)
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  search.task.trees() # c( ROOT=1) if you haven't used cd yet
+  cd( mytask)
+  search.task.trees() # c( "ROOT/mytask"=1, ROOT=2)
+\} # if F
 }
 }
 \keyword{misc}

@@ -13,11 +13,13 @@ dont.lock.me( env=environment( sys.function( -1)))
 }
 \examples{
 \dontrun{
-# This unseals the namespace of MYPACK only if the option "maintaining.MYPACK" is non-NULL:
-.onLoad <- function( libname, pkgname) \{
-  if( !is.null( getOption( 'maintaining.' \%&\% pkgname)))
-    mvbutils:::dont.lock.me()
-\}
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # This unseals the namespace of MYPACK only if the option "maintaining.MYPACK" is non-NULL:
+  .onLoad <- function( libname, pkgname) \{
+    if( !is.null( getOption( 'maintaining.' \%&\% pkgname)))
+      mvbutils:::dont.lock.me()
+  \}
+\} # if F
 }
 }
 \keyword{programming

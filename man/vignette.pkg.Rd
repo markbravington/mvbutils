@@ -72,9 +72,12 @@ vignette.pkg( pkg, pattern= "[.]Rmd$",
 }
 \examples{
 \dontrun{
-vignette.pkg( kinference)
-# Code you can maybe add at the start of your vignette, to optionally clear the cache as per 'decache' arg
-knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  vignette.pkg( kinference)
+  # Code you can maybe add at the start of your vignette, to optionally clear the cache as
+  # per 'decache' arg
+  knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
+\} # if F
 }
 }
 \keyword{misc}

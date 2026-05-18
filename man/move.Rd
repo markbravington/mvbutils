@@ -36,12 +36,14 @@ You will be prompted for whether to \code{save} the source and destination tasks
 }
 \examples{
 \dontrun{
-move( myobj, ., 0) # back to the ROOT task
-move( what="\%myop\%", 0/first.task, 0/second.task)
-# neither source nor destination attached. Funny name requires "what"
-move( what=c( "first.obj", "second.obj"), ., ../sibling.task)
-# multiple objects require "what"
-move( myobj, ..myfirstpack, ..mysecondpack) # live-edited packages
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  move( myobj, ., 0) # back to the ROOT task
+  move( what="\%myop\%", 0/first.task, 0/second.task)
+  # neither source nor destination attached. Funny name requires "what"
+  move( what=c( "first.obj", "second.obj"), ., ../sibling.task)
+  # multiple objects require "what"
+  move( myobj, ..myfirstpack, ..mysecondpack) # live-edited packages
+\} # if F
 }
 }
 \seealso{\code{\link{cd}}

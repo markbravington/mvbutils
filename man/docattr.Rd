@@ -73,7 +73,8 @@ If you are writing with \code{\link{doc2Rd}} in mind and a number of such functi
 the demo in "flatdoc.demo.R"
 }
 \examples{
-# This illustrate the general format for a function with attached plain-text documentation. It is the format produced by write_sourceable_function()
+# This illustrates the general format for a function with attached plain-text
+# documentation. It is the format produced by write_sourceable_function()
 flubbo <- structure( function( x)\{
   ## A comment
   x+1
@@ -81,6 +82,7 @@ flubbo <- structure( function( x)\{
 ,doc=mvbutils::docattr( r"-{
 flubbo       not-yet-in-a-package
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
+The next paragraphs will be truncated if you are reading the PDF manual, but that's OK.
 You can have multiple lines, lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\\\" is tickety-boo.
 And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
 \}-"))
@@ -108,8 +110,8 @@ And you can use the power of raw strings to r"{have a short one}" inside your fu
 #and this goes into "att2"
 #<<end of part 2>>
 ## Now "source.mvb" that file, to create "myfun"; then:
-myfun( 'att1') # "This goes into \\\"att1\\\""
-myfun( 'att2') # "and this goes into \\\"att2\\\""
+# myfun( 'att1') # "This goes into \\\"att1\\\""
+# myfun( 'att2') # "and this goes into \\\"att2\\\""
 }
 }
 \author{Mark Bravington}

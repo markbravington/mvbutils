@@ -25,19 +25,21 @@ search.for.regexpr( pattern, where=1, lines=FALSE,
 }
 \examples{
 \dontrun{
-# On my own system's ROOT task (i.e. workspace--- see ?cd)
-search.for.regexpr( 'author', doc=FALSE)
-# $.GlobalEnv
-# [1] "cleanup.refs"
-# the code to function 'cleanup.refs' contains "author"
-search.for.regexpr( 'author', doc=TRUE)
-# $.GlobalEnv
-# [1] "scrunge"
-# 'scrunge' is a function with a character attribute that contains "author"
-search.for.regexpr( 'author', doc='p')
-#$.GlobalEnv
-# [1] "scrunge" "p1"      "p2"
-## 'scrunge' again, plus two character vectors whose names contain 'p'
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # On my own system's ROOT task (i.e. workspace--- see ?cd)
+  search.for.regexpr( 'author', doc=FALSE)
+  # $.GlobalEnv
+  # [1] "cleanup.refs"
+  # the code to function 'cleanup.refs' contains "author"
+  search.for.regexpr( 'author', doc=TRUE)
+  # $.GlobalEnv
+  # [1] "scrunge"
+  # 'scrunge' is a function with a character attribute that contains "author"
+  search.for.regexpr( 'author', doc='p')
+  #$.GlobalEnv
+  # [1] "scrunge" "p1"      "p2"
+  ## 'scrunge' again, plus two character vectors whose names contain 'p'
+\} # if F
 }
 }
 \keyword{misc

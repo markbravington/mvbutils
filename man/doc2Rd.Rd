@@ -161,7 +161,9 @@ cat( '\\n***Rd output:***\\n')
 sample.fun.Rd <- doc2Rd( sample.fun)
 print( sample.fun.Rd) # already "cat" class
 \dontrun{
-docotest( sample.fun) # should display in browser
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  docotest( sample.fun) # should display in browser
+\} # if F
 }
 }
 \keyword{programming

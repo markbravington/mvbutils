@@ -98,14 +98,16 @@ There is presumably some speed penalty from using a cache, but experience to dat
 \author{Mark Bravington}
 \examples{
 \dontrun{
-biggo <- matrix( runif( 1e6), 1000, 1000)
-gc() # lots of memory
-mlazy( biggo)
-gc() # still lots of memory
-mtidy( biggo)
-gc() # better
-biggo[1,1]
-gc() # worse; it's been reloaded
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  biggo <- matrix( runif( 1e6), 1000, 1000)
+  gc() # lots of memory
+  mlazy( biggo)
+  gc() # still lots of memory
+  mtidy( biggo)
+  gc() # better
+  biggo[1,1]
+  gc() # worse; it's been reloaded
+\} # if F
 }
 }
 \keyword{programming}

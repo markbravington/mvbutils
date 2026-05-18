@@ -69,7 +69,6 @@ Suppose you maintain a package \pkg{mypack} in which you want to mildly redefine
 }
 }
 \examples{
-\dontrun{
 # Special methods shown below; basic behaviour of 'print', 'print.default',
 # and 'print.function' is as for base-R
 #cat
@@ -102,6 +101,5 @@ x # calls print.specialprint; consistently formatted for once
 #[2,]         0.00         0.00         0.14       403.43   1202604.28
 #[3,]         0.00         0.00         1.00      2980.96   8886110.52
 #[4,]         0.00         0.00         7.39     22026.47  65659969.14
-}
 }
 \keyword{misc}

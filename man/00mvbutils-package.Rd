@@ -4,9 +4,9 @@
 \docType{package}
 \title{How to use the mvbutils package}
 \description{
-Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2025?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part only for interactive use.
+Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2026?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part \code{mvbeautifuls} only for interactive use (and not on CRAN). The most up-to-date version can be found at \code{https://markbravington.r-universe.dev}; I rarely update the CRAN version.
 
-For now, \code{mvbutils} offers the following main features:
+For now (v2.12+), \code{mvbutils} offers the following main features:
 
 \itemize{
 \item Miscellaneous goodies: local/nested functions (\code{\link{mlocal}}), display of what-calls-what (\code{\link{foodweb}}), multiple replacement (\code{\link{multirep}}), nicely-formatted latex tables (\code{xtable.mvb}), autoprinting of statements and outputs within a function (\code{\link{visify}}), universal-ish date convertor (\code{\link{autodate}}), parallel-processing numerical derivative (\code{\link{numvbderiv_parallel}}), matching multiple columns in dataframes/matrices (\code{\link{multimatch}}), nicely converting between arrays and dataframes (\code{\link{A2D}} and \code{\link{D2A}}), numerous lower-level lower-level utility functions and operators (\code{\link{mvbutils.utils}}, \code{\link{mvbutils.operators}}, \code{\link{extract.named}}, \code{\link{mdeparse}}, \code{\link{mcut}}, \code{\link{search.for.regexpr}}, \code{\link{strip.missing}}, \code{\link{FOR}}). These functions mostly aren't spectacular in themselves, but many are used in other more spectacular packages.
@@ -20,8 +20,6 @@ The interactive-only part has:
 \item Automated package construction, including production of Rd-format from plain text documentation. Packages can be edited & updated while loaded, without needing to quit/rebuild/reinstall. See \code{\link{mvbutils.packaging.tools}}.
 \item "Lazy loading" for individual objects, allowing fast and transparent access to collections of biggish objects where only a few objects are used at a time. See \code{\link{mlazy}}.
 }
-
-The all-purpose part is fairly CRAN-friendly but the interactive-only part has various features that need to be hidden from prying eyes (which I have duly done). I long ago lost the energy to keep fighting pointless battles with a moving target, so I don't bother putting \code{mvbutils} on CRAN nowadays. After I split it, I might put the all-purpose part back on CRAN (still called \code{mvbutils}), since it is meant to be imported into other packages etc. The other part will become \code{mvbutifuls}, available somewhere else.
 }
 \section{Interactive use for r life management}{
 As of 2024, I may be the only person still using these features! There used to be more users, before the Rstudio publicity machine juggernauted its way thru. Mine's still pretty good though: better, I reckon. Anyway! To get the full features of the \pkg{mvbutils} package-- in particular, the project organization-- you need to start R{} in the same directory every time (your "ROOT task"), and then switch to whichever project from inside R{}; see \code{\link{cd}}. Various \code{options} always need to be set to make \code{\link{fixr}} and the \pkg{debug} package work the way you want, so one advantage of the start-in-the-same directory-approach is that you can keep all your project-independent \code{options()}, library loads, etc., in a single \code{.First} function or ".Rprofile" file, to be called automatically when you start R{}. However, many features (including support for the \pkg{debug} package) will work even if you don't follow this suggestion.
@@ -29,7 +27,7 @@ As of 2024, I may be the only person still using these features! There used to b
 The remaining sections of this document cover details that most users don't know about; there's no need to read them when you are just starting out with \code{mvbutils}.
 }
 \section{Housekeeping info}{
-On loading, the \pkg{mvbutils} package creates a new environment in the search path, called \code{mvb.session.info}, which stores some housekeeping information. \code{mvb.session.info} is never written to disk, and disappears when the R{} session finishes. [For Splus users: \code{mvb.session.info} is similar to frame 0.] You should never change anything in \code{mvb.session.info} by hand, but it is sometimes useful to look at some of the variables there:
+On loading, the \pkg{mvbutils} package creates a new environment in the search path, called \code{mvb.session.info}, which stores some housekeeping information. \code{mvb.session.info} is never written to disk, and disappears when the R{} session finishes. [For Splus users: \code{mvb.session.info} is similar to frame 0.] You should never change anything in \code{mvb.session.info} by hand, andbut it is sometimes useful to look at some of the variables there:
 
 \itemize{
 \item \code{.First.top.search} is the directory R{} started in (your ROOT task).

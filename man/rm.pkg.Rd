@@ -21,9 +21,11 @@ remove.from.package( ...) # really has same args as 'rm.pkg'
 }
 \examples{
 \dontrun{
-rm.pkg( "mypackage", foo, bar)
-rm.pkg( "mypackage", list=cq( foo, bar))
-rm.pkg( ..mypackage, list=cq( foo, bar))
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  rm.pkg( "mypackage", foo, bar)
+  rm.pkg( "mypackage", list=cq( foo, bar))
+  rm.pkg( ..mypackage, list=cq( foo, bar))
+\} # if F
 }
 }
 \keyword{misc

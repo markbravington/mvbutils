@@ -1,7 +1,7 @@
 structure( function( x, ...) {
   # just a comment
 }
-,doc=flatdoc( EOF='<<end of doc>>'))
+, doc =  mvbutils::docattr( r"{
 some.functions package:mypack
 sample.fun
 another.fun
@@ -107,6 +107,5 @@ SEE.ALSO
 
 KEYWORDS
  IO; documentation
- 
-<<end of doc>>
-
+}")
+)

@@ -51,18 +51,20 @@ Getting fancy, you can alternatively set the environment of your calling functio
 }
 \examples{
 \dontrun{
-mypack:::.onLoad <- function( libname, pkgname) generic.dll.loader( libname, pkgname)
-#... or just copy the code into your .onLoad
-# For casual testing of a DLL that's not yet in a package
-dl <- ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll')
-getDLLRegisteredRoutines( l1)
-LL_mydll <- create.wrappers.for.dll( dl)
-.C( LL_mydll$C_rout1, as.integer( 0)) # ... whatever!
-ldyn.unload( dl)
-# Safer because not permanent:
-assign( 'dl', ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll'), pos='mvb.session.info')
-assign( 'LL_mydll', create.wrappers.for.dll( dl), pos='mvb.session.info')
-.C( LL.mydll$C_rout1, as.integer( 0)) # ... whatever!
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  mypack:::.onLoad <- function( libname, pkgname) generic.dll.loader( libname, pkgname)
+  #... or just copy the code into your .onLoad
+  # For casual testing of a DLL that's not yet in a package
+  dl <- ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll')
+  getDLLRegisteredRoutines( l1)
+  LL_mydll <- create.wrappers.for.dll( dl)
+  .C( LL_mydll$C_rout1, as.integer( 0)) # ... whatever!
+  ldyn.unload( dl)
+  # Safer because not permanent:
+  assign( 'dl', ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll'), pos='mvb.session.info')
+  assign( 'LL_mydll', create.wrappers.for.dll( dl), pos='mvb.session.info')
+  .C( LL.mydll$C_rout1, as.integer( 0)) # ... whatever!
+\} # if F
 }
 }
 \keyword{misc}

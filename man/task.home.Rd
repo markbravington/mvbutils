@@ -16,8 +16,10 @@ Without any arguments, \code{task.home} returns the path of the current task. Wi
 }
 \examples{
 \dontrun{
-task.home( "myfile.c") # probably the same as file.path( getwd(), "myfile.c")
-task.home() # probably the same as getwd()
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  task.home( "myfile.c") # probably the same as file.path( getwd(), "myfile.c")
+  task.home() # probably the same as getwd()
+\} # if F
 }
 }
 \seealso{\code{\link{cd}}, \code{getwd}, \code{file.path}

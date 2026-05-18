@@ -1,35 +1,53 @@
-2.12.41: worked around some R 4.5.x bugs (in 'Rd2txt' and 'Rd2txt_options') that were making 'unpackage' verrrry slow. The bugs may be fixed anyway in R 4.6.
+2.12.43:
+ - tidied up for CRAN, who noticed that my ancient email address was borked
+ - added 'if(FALSE...)' wrappers in many Examples, to prevent R CMD CHECK trying to run them _despite_ being marked "not run". Exasperating...
 
-2.12.34: patched 'pre.install' so it again works for brand-new package never installed before and lacking a '..mypak$mypak.VERSION'. Probably broken by a change in R itself.
+2.12.41:
+ - worked around some R 4.5.x bugs (in 'Rd2txt' and 'Rd2txt_options') that were making 'unpackage' verrrry slow. The bugs may be fixed anyway in R 4.6.
 
-2.12.32: tweak to 'Rd2txt_easy' to handle change in default 'Rd2txt' treatment of description-lists for R 4.6.
+2.12.34:
+ - patched 'pre.install' so it again works for brand-new package never installed before and lacking a '..mypak$mypak.VERSION'. Probably broken by a change in R itself.
 
-2.12.30: added '%in.names.of%' as "reverse" of '%has.name%'
+2.12.32:
+ - tweak to 'Rd2txt_easy' to handle change in default 'Rd2txt' treatment of description-lists for R 4.6.
 
-2.12.20: 
+2.12.30:
+ - added '%in.names.of%' as "reverse" of '%has.name%'
+
+2.12.20:
  - 'find.scriptlets' added
  - fixed newly-R-introduced bugs (AKA "non-backwards-compatible features" :/) re max() & min() on empty numeric_version objects
  - fixed some (new?) alleged problems from CMD CHECK
 
-2.12.14: 'lazyData' and 'lazyDataCompression' should now work properly.
+2.12.14:
+ - 'lazyData' and 'lazyDataCompression' should now work properly.
 
-2.12.2: 'vignette.pkg' now precompiles in a child R process, to avoid eg library path woes.
+2.12.2:
+ - 'vignette.pkg' now precompiles in a child R process, to avoid eg library path woes.
 
-2.12.0: bit of a tidy-up, importing a few more functions; bumped minor version for sake of dependencies in other packages such as 'gbasics'
+2.12.0:
+ - bit of a tidy-up, importing a few more functions; bumped minor version for sake of dependencies in other packages such as 'gbasics'
 
-2.11.0: now uses 'docattr' or 'string2charvec' and raw strings to hold plain-text documentation and other character-mode attributes. 'flatdoc', 'source.mvb', etc should now be obsolete.
+2.11.0:
+ - now uses 'docattr' or 'string2charvec' and raw strings to hold plain-text documentation and other character-mode attributes. 'flatdoc', 'source.mvb', etc should now be obsolete.
 
-2.9.38: incorporated 'multimatch', 'A2D', and 'D2A' from package 'handy2' (the latter two with slight name and syntax changes). 'A2D' should eventually be made generic--- at present, it's hardwired to do the right thing on 'offarray' objects.
+2.9.38:
+ - incorporated 'multimatch', 'A2D', and 'D2A' from package 'handy2' (the latter two with slight name and syntax changes). 'A2D' should eventually be made generic--- at present, it's hardwired to do the right thing on 'offarray' objects.
 
-2.9.32: fixed CRAN-check bug in examples of 'mvbutils.utils'
+2.9.32:
+ - fixed CRAN-check bug in examples of 'mvbutils.utils'
 
-2.9.30: added 'sourceable'
+2.9.30:
+ - added 'sourceable'
 
-2.9.22: added 'mwhere'
+2.9.22:
+ - added 'mwhere'
 
-2.9.20: added 'visify'
+2.9.20:
+ - added 'visify'
 
-2.9.0: tidy-up and ready for new 'offarray'
+2.9.0:
+ - tidy-up and ready for new 'offarray'
 
 2.8.510:
  - Doco bug fixes; added 'Imports: grDevices' ('graphics' already imported, so no cost).

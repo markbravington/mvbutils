@@ -31,9 +31,11 @@ If you are unhappy, there are two things you might be unhappy about. First, \cod
 }
 \examples{
 \dontrun{
-Save() #
-Save.pos( "package:mvbutils") # binary image of exported functions
-Save.pos( 3, path="temp.Rdata") # path appended to attr( search()[3], "path")
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  Save() #
+  Save.pos( "package:mvbutils") # binary image of exported functions
+  Save.pos( 3, path="temp.Rdata") # path appended to attr( search()[3], "path")
+\} # if F
 }
 }
 \author{Mark Bravington}

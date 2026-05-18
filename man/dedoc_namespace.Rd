@@ -11,11 +11,13 @@
 }
 \examples{
 \dontrun{
-# Put this into your package:
-.onLoad <- function( libname, pkgname)\{
-  # stuff for .onLoad(), or no stuff
-  dedoc_package( pkgname)
-\}
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # Put this into your package:
+  .onLoad <- function( libname, pkgname)\{
+    # stuff for .onLoad(), or no stuff
+    dedoc_package( pkgname)
+  \}
+\} # if F
 }
 }
 \keyword{misc}

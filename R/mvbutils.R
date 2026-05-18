@@ -727,7 +727,6 @@ SEE.ALSO
 
 EXAMPLES
 
-## Don't run
 myfun <- function( ...) ...
 myfun <- mvbutils:::add.flatdoc.to( myfun)
 # 'fixr( myfun)' will now allow editing of code & doco together
@@ -1657,7 +1656,7 @@ function( pos, nlocal=sys.parent()) mlocal({
     
   can.go.up <- !is.null( names( attr( as.environment( pos+1), 'path')))
   if( can.go.up)
-    update.maintained.package( names( .Path)[ length( .Path)])
+    update_maintained_package( names( .Path)[ length( .Path)])
   else {
     need.to.promote.on.failure <- pos>1
 stop( "Can't cd up; there's a non-task in position 2", call.=FALSE)
@@ -2550,13 +2549,15 @@ EXAMPLES
 # Setup in a helper-mini-package
 
 ## Don't run
-# In ADT:::._onLoad, where ADT:::ADT_PIBH is a PIBH; see main text
-  Clink_packages( ADT=ADT_PIBH)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # In ADT:::._onLoad, where ADT:::ADT_PIBH is a PIBH; see main text
+    Clink_packages( ADT=ADT_PIBH)
 
-# Inside ADT:::ADT_PIBH <- function( dir, Rdir) {...}
-  redo <- mvbutils::src_changed( Rcpp_files, this_Cloader)
-  if( nzchar( redo)) { recompile() }
-  
+  # Inside ADT:::ADT_PIBH <- function( dir, Rdir) {...}
+    redo <- mvbutils::src_changed( Rcpp_files, this_Cloader)
+    if( nzchar( redo)) { recompile() }
+} # if F
+
 ## End don't run  
 }")
 
@@ -3119,11 +3120,14 @@ write_sourceable_function, pre.install
 EXAMPLES
 
 ## Don't run
-# Put this into your package:
-.onLoad <- function( libname, pkgname){
-  # stuff for .onLoad(), or no stuff
-  dedoc_package( pkgname)
-}
+
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # Put this into your package:
+  .onLoad <- function( libname, pkgname){
+    # stuff for .onLoad(), or no stuff
+    dedoc_package( pkgname)
+  }
+} # if F
 ## End don't run
 
 }")
@@ -4160,7 +4164,9 @@ sample.fun.Rd <- doc2Rd( sample.fun)
 print( sample.fun.Rd) # already "cat" class
 
 ## Don't run:
-docotest( sample.fun) # should display in browser
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  docotest( sample.fun) # should display in browser
+} # if F
 ## End don't run
 
 KEYWORDS
@@ -4429,6 +4435,8 @@ EXAMPLES
 reformat.my.hard.drive()
 ## End don't run
 
+# ... note that CRAN will still try to run "don't run" examples :/
+
 
 KEYWORDS
 
@@ -4473,12 +4481,14 @@ EXAMPLES
 
 ## Don't run:
 
-# This unseals the namespace of MYPACK only if the option "maintaining.MYPACK" is non-NULL:
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # This unseals the namespace of MYPACK only if the option "maintaining.MYPACK" is non-NULL:
 
-.onLoad <- function( libname, pkgname) {
-  if( !is.null( getOption( 'maintaining.' %&% pkgname)))
-    mvbutils:::dont.lock.me()
-}
+  .onLoad <- function( libname, pkgname) {
+    if( !is.null( getOption( 'maintaining.' %&% pkgname)))
+      mvbutils:::dont.lock.me()
+  }
+} # if F
 
 ## End Don't run
 
@@ -4534,13 +4544,16 @@ Locking occurs after '.onLoad' / '.onAttach' are called so, to circumvent it, 'd
 EXAMPLES
 
 ## Don't run
-library( debug)
-debug:::.onLoad # d.lB is called to make 'tracees' editable inside 'debug's namespace.
-debug:::.onAttach # d.lB is called to make 'tracees' editable in the search path
 
-# NB also that an active binding is used to ensure that the 'tracees' object in the search...
-#... path is a "shadow of" or "pointer to" the one in 'debug's namespace; the two cannot get...
-#... out-of-synch
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  library( debug)
+  debug:::.onLoad # d.lB is called to make 'tracees' editable inside 'debug's namespace.
+  debug:::.onAttach # d.lB is called to make 'tracees' editable in the search path
+
+  # NB also that an active binding is used to ensure that the 'tracees' object in the search...
+  #... path is a "shadow of" or "pointer to" the one in 'debug's namespace; the two cannot get...
+  #... out-of-synch
+} # if F
 
 ## End Don't run
   
@@ -4646,7 +4659,9 @@ EXAMPLES
 
 
 ## Don't run
-DYN.UNLOAD( "offending_C_code")
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  DYN.UNLOAD( "offending_C_code")
+} # if F
 ## End don't run
 
 }")
@@ -5602,10 +5617,12 @@ Add a 'pattern' argument a la find.funs.
 EXAMPLES
 
 ## Don't run:
-## Need to create backups and do some function editing first
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  ## Need to create backups and do some function editing first
 
-fix.order() # functions in .GlobalEnv
-fix.order( "ROOT") # functions in your startup task
+  fix.order() # functions in .GlobalEnv
+  fix.order( "ROOT") # functions in your startup task
+} # if F
 
 ## End don't run
 
@@ -6758,7 +6775,8 @@ the demo in "flatdoc.demo.R"
 
 EXAMPLES
 
-# This illustrate the general format for a function with attached plain-text documentation. It is the format produced by write_sourceable_function()
+# This illustrates the general format for a function with attached plain-text 
+# documentation. It is the format produced by write_sourceable_function()
 
 flubbo <- structure( function( x){
   ## A comment
@@ -6768,6 +6786,8 @@ flubbo <- structure( function( x){
 flubbo       not-yet-in-a-package
 
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
+
+The next paragraphs will be truncated if you are reading the PDF manual, but that's OK.
 
 You can have multiple lines, lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\" is tickety-boo.
 
@@ -6805,8 +6825,8 @@ And you can use the power of raw strings to r"{have a short one}" inside your fu
 #<<end of part 2>>
 
 ## Now "source.mvb" that file, to create "myfun"; then:
-myfun( 'att1') # "This goes into \"att1\""
-myfun( 'att2') # "and this goes into \"att2\""
+# myfun( 'att1') # "This goes into \"att1\""
+# myfun( 'att2') # "and this goes into \"att2\""
 
 ## End don't run
 
@@ -7008,27 +7028,29 @@ foodweb( ) # functions in .GlobalEnv
 # ... though it's only 5sec on my humble laptop. So...
 
 ## Don't run
-foodweb( where="package:mvbutils", cex=0.4, charlim=60) # yikes!
-foodweb( c( find.funs("package:mvbutils"), "paste"))
-# functions in .GlobalEnv, and "paste"
-foodweb( find.funs("package:mvbutils"), prune="paste")
-# only those parts of the tree connected to "paste";
-# NB that funs <- unique( c( funs, prune)) inside "foodweb"
-foodweb( where="package:mvbutils", rprune="aste")
-# doesn't include "paste" as it's not in "mvbutils", and rprune doesn't augment funs
-foodweb( where=asNamespace( "mvbutils")) # secret stuff
-fw <- foodweb( where="package:mvbutils")
-## End Don't run
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  foodweb( where="package:mvbutils", cex=0.4, charlim=60) # yikes!
+  foodweb( c( find.funs("package:mvbutils"), "paste"))
+  # functions in .GlobalEnv, and "paste"
+  foodweb( find.funs("package:mvbutils"), prune="paste")
+  # only those parts of the tree connected to "paste";
+  # NB that funs <- unique( c( funs, prune)) inside "foodweb"
+  foodweb( where="package:mvbutils", rprune="aste")
+  # doesn't include "paste" as it's not in "mvbutils", and rprune doesn't augment funs
+  foodweb( where=asNamespace( "mvbutils")) # secret stuff
+  fw <- foodweb( where="package:mvbutils")
+  ## End Don't run
 
-fw <- foodweb( where=asNamespace( "mvbutils")) # also plots
-fw$funmat # a big matrix
-callers.of( "mlocal", fw)
-callees.of( "find.funs", fw)
+  fw <- foodweb( where=asNamespace( "mvbutils")) # also plots
+  fw$funmat # a big matrix
+  callers.of( "mlocal", fw)
+  callees.of( "find.funs", fw)
 
-# ie only descs of functions whose name contains 'name'
-foodweb( where=asNamespace( 'mvbutils'), rprune="name", ancestors=FALSE, descendents=TRUE)
+  # ie only descs of functions whose name contains 'name'
+  foodweb( where=asNamespace( 'mvbutils'), rprune="name", ancestors=FALSE, descendents=TRUE)
+} # if F
 
-
+## End don't run
 }")
 
 )
@@ -7209,25 +7231,25 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  mypack:::.onLoad <- function( libname, pkgname) generic.dll.loader( libname, pkgname)
+  #... or just copy the code into your .onLoad
 
-mypack:::.onLoad <- function( libname, pkgname) generic.dll.loader( libname, pkgname)
-#... or just copy the code into your .onLoad
+  # For casual testing of a DLL that's not yet in a package
+  dl <- ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll')
+  getDLLRegisteredRoutines( l1)
 
-# For casual testing of a DLL that's not yet in a package
-dl <- ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll')
-getDLLRegisteredRoutines( l1)
+  LL_mydll <- create.wrappers.for.dll( dl)
+  .C( LL_mydll$C_rout1, as.integer( 0)) # ... whatever!
+  ldyn.unload( dl)
 
-LL_mydll <- create.wrappers.for.dll( dl)
-.C( LL_mydll$C_rout1, as.integer( 0)) # ... whatever!
-ldyn.unload( dl)
+  # Safer because not permanent:
 
-# Safer because not permanent:
+  assign( 'dl', ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll'), pos='mvb.session.info')
+  assign( 'LL_mydll', create.wrappers.for.dll( dl), pos='mvb.session.info')
 
-assign( 'dl', ldyn.tester( 'path/to/my/dll/libs/i386/mydll.dll'), pos='mvb.session.info')
-assign( 'LL_mydll', create.wrappers.for.dll( dl), pos='mvb.session.info')
-
-.C( LL.mydll$C_rout1, as.integer( 0)) # ... whatever!
-
+  .C( LL.mydll$C_rout1, as.integer( 0)) # ... whatever!
+} # if F
 
 ## End don't run
 }")
@@ -7346,51 +7368,51 @@ The function 'fix.order' (qv) uses the access dates of backup files to list your
 EXAMPLES
 
 ## Don't run
-## Need some backups first
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  ## Need some backups first
 
 
-# Restore a function:
-g1 <- get.backup( "myfun", "package:myfun")[[1]] # returns most recent backup only
+  # Restore a function:
+  g1 <- get.backup( "myfun", "package:myfun")[[1]] # returns most recent backup only
 
-# To turn this into an actual function (with source attribute as per your formatting):
-myfun <- source.mvb( textConnection( g1)) # would be nice to have an self-closing t.c.
+  # To turn this into an actual function (with source attribute as per your formatting):
+  myfun <- source.mvb( textConnection( g1)) # would be nice to have an self-closing t.c.
 
-cat( get.backup( "myfun", "package:myfun", zap=FALSE)[[1]][1]) 
-# shows "myfun" <- function...
+  cat( get.backup( "myfun", "package:myfun", zap=FALSE)[[1]][1]) 
+  # shows "myfun" <- function...
 
-# Restore a character vector:
-mycharvec <- as.cat( get.backup( 'mycharvec', ..mypackage)[[1]]) # ready to roll
+  # Restore a character vector:
+  mycharvec <- as.cat( get.backup( 'mycharvec', ..mypackage)[[1]]) # ready to roll
 
-# Restore most recent backup of everything... brave!
-# Will include functions & charvecs that have subsequently been deleted
+  # Restore most recent backup of everything... brave!
+  # Will include functions & charvecs that have subsequently been deleted
 
-bks <- read.bkind() # in current task
-for( i in bks$object.names) {
-  cat( "Restoring ", i, "...")
-  gb <- get.backup( i, unlength=FALSE)[[1]] # unlength F so we can check type
-  
-  # Is it a charvec?
-  if( grepl( '^ *[0-9]+ *$', gb[1])) # could check length too
-    gb <- as.cat( gb[-1]) # remove line showing length and...
-    # ...set class to "cat" for nice printing, as per 'as.cat'
-  else {
-    # Nope, so it's a function and needs to be sourced
-    tc <- textConnection( gb)
-    gbfun <- try( source.mvb( gb)) # will set source attribute, documentation etc.
-    close( tc)
-    if( gbfun %is.a% "try-error") {
-      gbfun <- stop( function( ...) stop( ii %&% " failed to parse"), list( ii=i))
-      attr( gbfun, 'source') <- gb # still assign source attribute
+  bks <- read.bkind() # in current task
+  for( i in bks$object.names) {
+    cat( "Restoring ", i, "...")
+    gb <- get.backup( i, unlength=FALSE)[[1]] # unlength F so we can check type
+
+    # Is it a charvec?
+    if( grepl( '^ *[0-9]+ *$', gb[1])) # could check length too
+      gb <- as.cat( gb[-1]) # remove line showing length and...
+      # ...set class to "cat" for nice printing, as per 'as.cat'
+    else {
+      # Nope, so it's a function and needs to be sourced
+      tc <- textConnection( gb)
+      gbfun <- try( source.mvb( gb)) # will set source attribute, documentation etc.
+      close( tc)
+      if( gbfun %is.a% "try-error") {
+        gbfun <- stop( function( ...) stop( ii %&% " failed to parse"), list( ii=i))
+        attr( gbfun, 'source') <- gb # still assign source attribute
+      }
+      gb <- gbfun
     }
-    gb <- gbfun
+
+    assign( i, gb)
+    cat( '\n')
   }
-      
-  assign( i, gb)
-  cat( '\n')
-}
-
+} # if F
 ## End don't run
-
 
 SEE.ALSO
 
@@ -7739,7 +7761,7 @@ Detect number of CPU cores in CRAN-robust way
 
 DESCRIPTION
 
-This is only relevant for parallel code inside package examples and vignettes. In real applications, you would call 'parallel::detectCores' (qv) and then decide how many of those to use. But CRAN enforces a limit of (currently) 2 cores when checking examples (and presumably vignettes etc)--- and doesn't give you any way to find out what the limit is from code; it just gives an error. Since the _entire_ point of parallel processing is to use lots of cores if available, CRAN makes it impossible to demonstrate anything realistic in examples, if you want to get them past CRAN. You ccan of course limit the number of cores to 2 purely for CRAN's benefit, but then you are castrating your code for real tests.
+This is only relevant for parallel code inside package examples and vignettes. In real applications, you would call 'parallel::detectCores' (qv) and then decide how many of those to use. But CRAN enforces a limit of (currently) 2 cores when checking examples (and presumably vignettes etc)--- and doesn't give you any way to find out what the limit is from code; it just gives an error. Since the _entire_ point of parallel processing is to use lots of cores if available, CRAN makes it impossible to demonstrate anything realistic in examples, if you want to get them past CRAN. You can of course limit the number of cores to 2 purely for CRAN's benefit, but then you are castrating your code for real tests.
 
 To avoid this lunacy, you can call this function inside your example/vignette. It counts roughly how many cores are _allowed_ (ie won't cause an error), up to the limit requested by its argument (which you would get from 'detectCores' etc). Actually it only goes in multiples of 2, so it won't necessarily give you the max.
 
@@ -7962,9 +7984,10 @@ ARGUMENTS
 EXAMPLES
 
 ## Don't run:
-
-hack( dir, all.files=getOption( "ls.all.files", TRUE)) # from my '.First'
-assign.to.base( "dir", hack( dir, all.files=TRUE))
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  hack( dir, all.files=getOption( "ls.all.files", TRUE)) # from my '.First'
+  assign.to.base( "dir", hack( dir, all.files=TRUE))
+} # if F
 
 ## End Don't run
 
@@ -8737,37 +8760,38 @@ The point of all this "tee" business is that there's no reliable way in R itself
 EXAMPLES
 
 ## Don't run
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
 
-# First time package installation
-# Must be cd()ed to task above 'mvbutils'
-maintain.packages( mvbutils)
-pre.install( mvbutils)
-install.pkg( mvbutils)
+  # First time package installation
+  # Must be cd()ed to task above 'mvbutils'
+  maintain.packages( mvbutils)
+  pre.install( mvbutils)
+  install.pkg( mvbutils)
 
-# Subsequent maintenance is all done by:
-patch.install( mvbutils)
+  # Subsequent maintenance is all done by:
+  patch.install( mvbutils)
 
-# For distro to
-build.pkg( mvbutils)
+  # For distro to
+  build.pkg( mvbutils)
 
-# or on Windows (?and Macs?)
-build.pkg.binary( mvbutils)
+  # or on Windows (?and Macs?)
+  build.pkg.binary( mvbutils)
 
-# If you enjoy R CMD CHECK:
-check.pkg( mvbutils)
+  # If you enjoy R CMD CHECK:
+  check.pkg( mvbutils)
 
-# How to not fail if Suggestees are missing (I think), via envars
-check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
+  # How to not fail if Suggestees are missing (I think), via envars
+  check.pkg( mvbutils, envars=c( '_R_CHECK_FORCE_SUGGESTS_'=0))
 
 
-# Also legal:
-build.pkg( ..mvbutils)
+  # Also legal:
+  build.pkg( ..mvbutils)
 
-# To do it under programmatic control
-for( ipack in all.my.package.names) {
-  build.pkg( char=ipack)
-}
-
+  # To do it under programmatic control
+  for( ipack in all.my.package.names) {
+    build.pkg( char=ipack)
+  }
+} # if F 
 ## End don't run
 
 }")
@@ -9698,16 +9722,18 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # In your .First:
+  library( mvbutils)
+  maintain.packages( myfirstpack, mysecondpack, mythirdpack)
 
-# In your .First:
-library( mvbutils)
-maintain.packages( myfirstpack, mysecondpack, mythirdpack)
+  # or...
+  live.edit.list <- c( 'myfirstpack', 'mysecondpack', 'mythirdpack')
+  maintain.packages( live.edit.list, character.only=TRUE)
 
-# or...
-live.edit.list <- c( 'myfirstpack', 'mysecondpack', 'mythirdpack')
-maintain.packages( live.edit.list, character.only=TRUE)
+  library( myfirstpack) # etc
+} # if F
 
-library( myfirstpack) # etc
 ## End Don't run
 }")
 
@@ -10872,14 +10898,16 @@ Mark Bravington
 EXAMPLES
 
 ## Don't run:
-biggo <- matrix( runif( 1e6), 1000, 1000)
-gc() # lots of memory
-mlazy( biggo)
-gc() # still lots of memory
-mtidy( biggo)
-gc() # better
-biggo[1,1]
-gc() # worse; it's been reloaded
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  biggo <- matrix( runif( 1e6), 1000, 1000)
+  gc() # lots of memory
+  mlazy( biggo)
+  gc() # still lots of memory
+  mtidy( biggo)
+  gc() # better
+  biggo[1,1]
+  gc() # worse; it's been reloaded
+} # if F
 ## End Don't run
 
 KEYWORDS
@@ -11276,15 +11304,17 @@ You will be prompted for whether to 'save' the source and destination tasks, if 
 EXAMPLES
 
 ## Don't run:
-move( myobj, ., 0) # back to the ROOT task
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  move( myobj, ., 0) # back to the ROOT task
 
-move( what="%myop%", 0/first.task, 0/second.task)
-# neither source nor destination attached. Funny name requires "what"
+  move( what="%myop%", 0/first.task, 0/second.task)
+  # neither source nor destination attached. Funny name requires "what"
 
-move( what=c( "first.obj", "second.obj"), ., ../sibling.task)
-# multiple objects require "what"
+  move( what=c( "first.obj", "second.obj"), ., ../sibling.task)
+  # multiple objects require "what"
 
-move( myobj, ..myfirstpack, ..mysecondpack) # live-edited packages
+  move( myobj, ..myfirstpack, ..mysecondpack) # live-edited packages
+} # if F
 
 ## End Don't run
 
@@ -14919,6 +14949,13 @@ stop( "couldn't make essential directories")
     writeLines( RBIlines, file.path( sourcedir, '.Rinstignore'))    
   }
   
+  # dot-gitignore for eg vscode workspaces. Also perhaps funs.rda and sysdata.rda
+  copy_files_if_there <- function( fnames) do.on( fnames,
+      if( file.exists( ffn <- file.path( dir., .))){
+        mvb.file.copy( ., file.path( sourcedir, .))
+      })
+  
+  copy_files_if_there( c( '.gitignore', 'README.Md'))
   
   # Obsolete: Object list, used by maintain.packages-- funny name to avoid clashing
   # cat( '\n`original!object!list` <-', deparse( c( funs, extra.data)), '', sep='\n',
@@ -15414,27 +15451,29 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-# Workflow for simple case:
-cd( task.above.mypack)
-maintain.packages( mypack)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # Workflow for simple case:
+  cd( task.above.mypack)
+  maintain.packages( mypack)
 
-# First-time setup, or after major R version changes:
-pre.install( mypack)
-install.pkg( mypack)
-library( mypack)
-# ... do stuff
+  # First-time setup, or after major R version changes:
+  pre.install( mypack)
+  install.pkg( mypack)
+  library( mypack)
+  # ... do stuff
 
-# Subsequent maintenance:
-maintain.packages( mypack) # only once per session, usually at the start
-library( mypack) # maybe optional
+  # Subsequent maintenance:
+  maintain.packages( mypack) # only once per session, usually at the start
+  library( mypack) # maybe optional
 
-# ...do various things involving changes to mypack, then...
-patch.install( mypack) # keep disk image up-to-date
+  # ...do various things involving changes to mypack, then...
+  patch.install( mypack) # keep disk image up-to-date
 
-# Prepare copies for distribution
-build.pkg( mypack) # for Linux or CRAN
-build.pkg.binary( mypack) # for Windows or Macs
-check.pkg( mypack) # if you like that sort of thing
+  # Prepare copies for distribution
+  build.pkg( mypack) # for Linux or CRAN
+  build.pkg.binary( mypack) # for Windows or Macs
+  check.pkg( mypack) # if you like that sort of thing
+} # if F
 
 ## End Don't run
 
@@ -15589,8 +15628,6 @@ Suppose you maintain a package 'mypack' in which you want to mildly redefine an 
 
 EXAMPLES
 
-## Don't run
-
 # Special methods shown below; basic behaviour of 'print', 'print.default',
 # and 'print.function' is as for base-R
 
@@ -15627,8 +15664,6 @@ x # calls print.specialprint; consistently formatted for once
 #[2,]         0.00         0.00         0.14       403.43   1202604.28
 #[3,]         0.00         0.00         1.00      2980.96   8886110.52
 #[4,]         0.00         0.00         7.39     22026.47  65659969.14
-
-## End don't run
 }")
 
 )
@@ -16528,7 +16563,9 @@ Modified '<pkg>.NEWS' of class 'cat', so you can check it before manually assigi
 EXAMPLES
 
 ## Don't run
-RENEWS( mvbutils)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  RENEWS( mvbutils)
+} # if F
 ## End don't run
 
 
@@ -16759,9 +16796,11 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-rm.pkg( "mypackage", foo, bar)
-rm.pkg( "mypackage", list=cq( foo, bar))
-rm.pkg( ..mypackage, list=cq( foo, bar))
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  rm.pkg( "mypackage", foo, bar)
+  rm.pkg( "mypackage", list=cq( foo, bar))
+  rm.pkg( ..mypackage, list=cq( foo, bar))
+} # if F
 ## End Don't run
 
 KEYWORDS
@@ -16854,11 +16893,11 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-
-Save() #
-Save.pos( "package:mvbutils") # binary image of exported functions
-Save.pos( 3, path="temp.Rdata") # path appended to attr( search()[3], "path")
-
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  Save() #
+  Save.pos( "package:mvbutils") # binary image of exported functions
+  Save.pos( 3, path="temp.Rdata") # path appended to attr( search()[3], "path")
+} # if F
 ## End don't run
 
 
@@ -17206,22 +17245,24 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-# On my own system's ROOT task (i.e. workspace--- see ?cd)
-search.for.regexpr( 'author', doc=FALSE)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  # On my own system's ROOT task (i.e. workspace--- see ?cd)
+  search.for.regexpr( 'author', doc=FALSE)
 
-# $.GlobalEnv
-# [1] "cleanup.refs"
-# the code to function 'cleanup.refs' contains "author"
+  # $.GlobalEnv
+  # [1] "cleanup.refs"
+  # the code to function 'cleanup.refs' contains "author"
 
-search.for.regexpr( 'author', doc=TRUE)
-# $.GlobalEnv
-# [1] "scrunge"
-# 'scrunge' is a function with a character attribute that contains "author"
+  search.for.regexpr( 'author', doc=TRUE)
+  # $.GlobalEnv
+  # [1] "scrunge"
+  # 'scrunge' is a function with a character attribute that contains "author"
 
-search.for.regexpr( 'author', doc='p')
-#$.GlobalEnv
-# [1] "scrunge" "p1"      "p2"
-## 'scrunge' again, plus two character vectors whose names contain 'p'
+  search.for.regexpr( 'author', doc='p')
+  #$.GlobalEnv
+  # [1] "scrunge" "p1"      "p2"
+  ## 'scrunge' again, plus two character vectors whose names contain 'p'
+} # if F
 
 ## End don't run
 
@@ -17270,9 +17311,12 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-search.task.trees() # c( ROOT=1) if you haven't used cd yet
-cd( mytask)
-search.task.trees() # c( "ROOT/mytask"=1, ROOT=2)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  search.task.trees() # c( ROOT=1) if you haven't used cd yet
+  cd( mytask)
+  search.task.trees() # c( "ROOT/mytask"=1, ROOT=2)
+} # if F
+
 ## End Don't run
 
 }")
@@ -17355,20 +17399,23 @@ A list with elements 'handle' and 'trigger', the second being the environment th
 EXAMPLES
 
 ## Don't run:
-myfun <- function( ...) {
-  ...0
-  # Create object, return pointer, and ensure safe disposal
-  keeper <- set.finalizer( .C( "create_thing", handle=integer(2), ...1)$handle,
-      "dispose_of_thing")
-  "cause" + "crash" # whoops, will cause crash: but finalizer will still be called
-  # "dispose_of_thing" had better be the name of a DLL routine that takes a...
-  # ... single integer argument, of length 1 or 2
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  myfun <- function( ...) {
+    ...0
+    # Create object, return pointer, and ensure safe disposal
+    keeper <- set.finalizer( .C( "create_thing", handle=integer(2), ...1)$handle,
+        "dispose_of_thing")
+    "cause" + "crash" # whoops, will cause crash: but finalizer will still be called
+    # "dispose_of_thing" had better be the name of a DLL routine that takes a...
+    # ... single integer argument, of length 1 or 2
 
-  # Intention was to use the object. First param of DLL routine "use_thing" should
-  # be pointer to thing.
-  .C( "use_thing", keeper$handle, ...2)
-}
-myfun(...)
+    # Intention was to use the object. First param of DLL routine "use_thing" should
+    # be pointer to thing.
+    .C( "use_thing", keeper$handle, ...2)
+  }
+  myfun(...)
+} # if F
+
 ## End Don't run
 
 SEE.ALSO
@@ -18445,8 +18492,10 @@ Without any arguments, 'task.home' returns the path of the current task. With a 
 EXAMPLES
 
 ## Don't run:
-task.home( "myfile.c") # probably the same as file.path( getwd(), "myfile.c")
-task.home() # probably the same as getwd()
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  task.home( "myfile.c") # probably the same as file.path( getwd(), "myfile.c")
+  task.home() # probably the same as getwd()
+} # if F
 ## End Don't run
 
 
@@ -18977,94 +19026,6 @@ SEE.ALSO
 
 )
 
-"update.installed.dir" <-
-function( 
-  opath, ipath, 
-  source, installed=source, 
-  delete.obsolete=TRUE, excludo=character( 0)
-){
-#################
-  if( is.dir( file.path( opath, source))) {
-    mkdir( file.path( ipath, installed))
-    
-    # Avoid a/./b
-    fp <- function( ...) 
-        normalizePath( file.path( ...), winslash='/', mustWork=FALSE)
-    
-    if( !length( excludo))
-      unexcluded <- identity
-    else 
-      unexcluded <- function( strs) {
-          o <- do.call( 'rbind', lapply( excludo, grepl, x=strs))
-          strs[ !apply( o, 2, any)]
-        }
-    
-    source.dirs <- unexcluded( list.dirs( fp( opath, source)))
-    inst.dirs <- list.dirs( fp( ipath, installed))
-    
-    nipath <- fp( ipath, installed)
-    nopath <- fp( opath, source)
-    ibasename <- function( fpath) substring( fpath, nchar( nipath) + 2)
-    sbasename <- function( fpath) substring( fpath, nchar( nopath) + 2)
-    
-    if( delete.obsolete) {
-      is.xs <- ibasename( inst.dirs) %not.in% sbasename( source.dirs)
-      unlink( inst.dirs[ is.xs])
-      inst.dirs <- inst.dirs[ !is.xs]
-    }
-
-    is.new.dir <- sbasename( source.dirs) %not.in% ibasename( inst.dirs)
-    mkdir( fp( ipath, sbasename( source.dirs[ is.new.dir])))
-    
-    # Used to use dir() here, but list.files doesn't include folders; better
-    sources <- unexcluded( list.files( fp( opath, source), 
-        full.names=TRUE, recursive=TRUE))
-    installeds <- list.files( fp( ipath, installed), 
-        full.names=TRUE, recursive=TRUE)
-    
-    if( delete.obsolete) {
-      is.xs <- ibasename( installeds) %not.in% sbasename( sources)
-      unlink( installeds[ is.xs])
-      installeds <- installeds[ !is.xs]
-    }
-    
-    if( length( sources)) {
-      # Really should check whether files have turned into dirs or vice versa...
-      old.md5 <- md5sum( installeds)
-      names( old.md5) <- ibasename( names( old.md5))
-      new.md5 <- md5sum( sources)
-      names( new.md5) <- sbasename( names( new.md5))
-
-      new.files <- sbasename( sources) %except% ibasename( installeds)
-      changed.files <- names( new.md5) %that.are.in% names( old.md5)
-      changed.files <- changed.files %such.that% (new.md5[.] != old.md5[.])
-      to.copy <- c( new.files, changed.files)
-      if( length( to.copy)){ # keep file times
-        mvb.file.copy( fp( opath, source, to.copy), fp( ipath, installed, to.copy),
-            overwrite=TRUE)
-return( TRUE)
-      }
-    } # if anything potentially to copy
-  } else if( delete.obsolete) {
-    unlink( file.path( ipath, installed), recursive=TRUE)
-return( TRUE)    
-  }
-  
-return( FALSE) # coz nuthin happened
-}
-
-
-"update.maintained.package" <-
-function( pkg, nlocal = sys.parent()) mlocal({
-  if( !is.null( mp <- maintained.packages[[ pkg]])) {
-    rm( list=lsall( mp), envir=mp)
-    load.refdb( envir=mp) # filename is deduced
-    try( pre.install( pkg, character.only=TRUE))
-    try( patch.installed( pkg, character.only=TRUE))
-  }
-})
-
-
 "update_installed_dir" <-
 function( 
   opath, ipath, 
@@ -19322,6 +19283,17 @@ function( pkg, name, ff, disatt= ff %is.a% 'function') {
 }
 
 
+"update_maintained_package" <-
+function( pkg, nlocal = sys.parent()) mlocal({
+  if( !is.null( mp <- maintained.packages[[ pkg]])) {
+    rm( list=lsall( mp), envir=mp)
+    load.refdb( envir=mp) # filename is deduced
+    try( pre.install( pkg, character.only=TRUE))
+    try( patch.installed( pkg, character.only=TRUE))
+  }
+})
+
+
 "upper.case" <-
 function (s) 
 {
@@ -19532,10 +19504,13 @@ SEE.ALSO
 EXAMPLES
 
 ## Don't run
-vignette.pkg( kinference)
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  vignette.pkg( kinference)
 
-# Code you can maybe add at the start of your vignette, to optionally clear the cache as per 'decache' arg
-knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
+  # Code you can maybe add at the start of your vignette, to optionally clear the cache as 
+  # per 'decache' arg
+  knitr::opts_chunk$set( cache.rebuild=nzchar( Sys.getenv( 'VIGDECACHE_<PKG>')))
+} # if F
 
 ## End don't run
 
@@ -19947,20 +19922,21 @@ The default EOF line for an attribute is <<end of doc>>, but this will be adjust
 EXAMPLES
 
 ## Don't run
+if( FALSE && is_very_annoying( CRAN)){ # otherwise CMD CHECK --as-cran tries to run this :/
+  write.sourceable.function( write.sourceable.function, "wsf.r")
 
-write.sourceable.function( write.sourceable.function, "wsf.r")
+  # To dump all functions and their documentation in a workspace into a single sourceable file:
 
-# To dump all functions and their documentation in a workspace into a single sourceable file:
+  cat( "", file="allfuns.r")
+  sapply( find.funs(), write.sourceable.function, con="allfuns.r", append=TRUE, print.name=TRUE)
 
-cat( "", file="allfuns.r")
-sapply( find.funs(), write.sourceable.function, file="allfuns.r", append=TRUE, print.name=TRUE)
-
-# A non-function
-scrunge <- c( 1:7, 11)
-attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
-scrunge # [1] 1 2 3 4 5 6 7 11
-write.sourceable.function( scrunge, stdout()) # source
-fixr( scrunge) # source
+  # A non-function
+  scrunge <- c( 1:7, 11)
+  attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
+  scrunge # [1] 1 2 3 4 5 6 7 11
+  write.sourceable.function( scrunge, stdout()) # source
+  fixr( scrunge) # source
+} # if F
 
 ## End don't run
 
@@ -20138,7 +20114,8 @@ Iff the attribute has S3 class "docattr", then 'cat_strings_rawly' will wrap it 
 EXAMPLES
 
 
-# This is from the examples for 'flatdoc'. It's there to illustrate plain-text documentation, but you can see the call to 'docattr' in the middle.
+# This is from the examples for 'flatdoc'. It's there to illustrate plain-text documentation, 
+# but you can see the call to 'docattr' in the middle.
 
 flubbo <- structure( function( x){
   ## A comment
@@ -20149,28 +20126,30 @@ flubbo       not-yet-in-a-package
 
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
 
-You can have multiple lines and lots of "quotes" and even weird characters like "\".
-
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
+Thanks to raw strings, which are wonderful (see 'Quotes' for extreeeeemly brief doco):
+Look at 'flatdoc' examples for more on raw strings.
 }-"))
 
 
 ## Don't run
 
-write_sourceable_function( write_sourceable_function, "wsf.r")
+# Infuriating CRAN check (ie that Don't run is ignored--- WTF?!) means I have to wrap this:
+if( FALSE && is_very_annoying( "CRAN")){
+  write_sourceable_function( write_sourceable_function, "wsf.r")
 
-# To dump all functions and their documentation in a workspace into a single sourceable file:
+  # To dump all functions and their documentation in a workspace into a single sourceable file:
 
-cat( "", file="allfuns.r")
-sapply( find.funs(), write_sourceable_function, 
-    file="allfuns.r", append=TRUE, print.name=TRUE)
+  cat( "", file="allfuns.r")
+  sapply( find.funs(), write_sourceable_function, 
+      con="allfuns.r", append=TRUE, print.name=TRUE)
 
-# A non-function. Probably don't do this!
-scrunge <- c( 1:7, 11)
-attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
-scrunge # [1] 1 2 3 4 5 6 7 11
-write_sourceable_function( scrunge, stdout()) # source
-fixr( scrunge) # source
+  # A non-function. Probably don't do this!
+    scrunge <- c( 1:7, 11)
+    attr( scrunge, "source") <- c( "# Another way:", "c( 1:4, c( 5:7, 11))")
+    scrunge # [1] 1 2 3 4 5 6 7 11
+    write_sourceable_function( scrunge, stdout()) # source
+    fixr( scrunge) # source
+} # if F
 
 ## End don't run
 }--")

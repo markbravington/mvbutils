@@ -52,13 +52,15 @@ One piece of cleanup that I recommend, is to move any subtasks of "mypack" one l
 }
 \examples{
 \dontrun{
-# In your .First:
-library( mvbutils)
-maintain.packages( myfirstpack, mysecondpack, mythirdpack)
-# or...
-live.edit.list <- c( 'myfirstpack', 'mysecondpack', 'mythirdpack')
-maintain.packages( live.edit.list, character.only=TRUE)
-library( myfirstpack) # etc
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # In your .First:
+  library( mvbutils)
+  maintain.packages( myfirstpack, mysecondpack, mythirdpack)
+  # or...
+  live.edit.list <- c( 'myfirstpack', 'mysecondpack', 'mythirdpack')
+  maintain.packages( live.edit.list, character.only=TRUE)
+  library( myfirstpack) # etc
+\} # if F
 }
 }
 \keyword{misc}

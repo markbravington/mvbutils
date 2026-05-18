@@ -18,9 +18,11 @@ Add a \code{pattern} argument a la find.funs.
 }
 \examples{
 \dontrun{
-## Need to create backups and do some function editing first
-fix.order() # functions in .GlobalEnv
-fix.order( "ROOT") # functions in your startup task
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  ## Need to create backups and do some function editing first
+  fix.order() # functions in .GlobalEnv
+  fix.order( "ROOT") # functions in your startup task
+\} # if F
 }
 }
 \seealso{\code{\link{fixr}}

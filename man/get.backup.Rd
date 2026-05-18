@@ -39,39 +39,41 @@ The function \code{\link{fix.order}} uses the access dates of backup files to li
 }
 \examples{
 \dontrun{
-## Need some backups first
-# Restore a function:
-g1 <- get.backup( "myfun", "package:myfun")[[1]] # returns most recent backup only
-# To turn this into an actual function (with source attribute as per your formatting):
-myfun <- source.mvb( textConnection( g1)) # would be nice to have an self-closing t.c.
-cat( get.backup( "myfun", "package:myfun", zap=FALSE)[[1]][1])
-# shows "myfun" <- function...
-# Restore a character vector:
-mycharvec <- as.cat( get.backup( 'mycharvec', ..mypackage)[[1]]) # ready to roll
-# Restore most recent backup of everything... brave!
-# Will include functions & charvecs that have subsequently been deleted
-bks <- read.bkind() # in current task
-for( i in bks$object.names) \{
-  cat( "Restoring ", i, "...")
-  gb <- get.backup( i, unlength=FALSE)[[1]] # unlength F so we can check type
-  # Is it a charvec?
-  if( grepl( '^ *[0-9]+ *$', gb[1])) # could check length too
-    gb <- as.cat( gb[-1]) # remove line showing length and...
-    # ...set class to "cat" for nice printing, as per 'as.cat'
-  else \{
-    # Nope, so it's a function and needs to be sourced
-    tc <- textConnection( gb)
-    gbfun <- try( source.mvb( gb)) # will set source attribute, documentation etc.
-    close( tc)
-    if( gbfun \%is.a\% "try-error") \{
-      gbfun <- stop( function( ...) stop( ii \%&\% " failed to parse"), list( ii=i))
-      attr( gbfun, 'source') <- gb # still assign source attribute
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  ## Need some backups first
+  # Restore a function:
+  g1 <- get.backup( "myfun", "package:myfun")[[1]] # returns most recent backup only
+  # To turn this into an actual function (with source attribute as per your formatting):
+  myfun <- source.mvb( textConnection( g1)) # would be nice to have an self-closing t.c.
+  cat( get.backup( "myfun", "package:myfun", zap=FALSE)[[1]][1])
+  # shows "myfun" <- function...
+  # Restore a character vector:
+  mycharvec <- as.cat( get.backup( 'mycharvec', ..mypackage)[[1]]) # ready to roll
+  # Restore most recent backup of everything... brave!
+  # Will include functions & charvecs that have subsequently been deleted
+  bks <- read.bkind() # in current task
+  for( i in bks$object.names) \{
+    cat( "Restoring ", i, "...")
+    gb <- get.backup( i, unlength=FALSE)[[1]] # unlength F so we can check type
+    # Is it a charvec?
+    if( grepl( '^ *[0-9]+ *$', gb[1])) # could check length too
+      gb <- as.cat( gb[-1]) # remove line showing length and...
+      # ...set class to "cat" for nice printing, as per 'as.cat'
+    else \{
+      # Nope, so it's a function and needs to be sourced
+      tc <- textConnection( gb)
+      gbfun <- try( source.mvb( gb)) # will set source attribute, documentation etc.
+      close( tc)
+      if( gbfun \%is.a\% "try-error") \{
+        gbfun <- stop( function( ...) stop( ii \%&\% " failed to parse"), list( ii=i))
+        attr( gbfun, 'source') <- gb # still assign source attribute
+      \}
+      gb <- gbfun
     \}
-    gb <- gbfun
+    assign( i, gb)
+    cat( '\\n')
   \}
-  assign( i, gb)
-  cat( '\\n')
-\}
+\} # if F
 }
 }
 \seealso{\code{\link{fixr}}, \code{\link{cd}}, \code{\link{move}}

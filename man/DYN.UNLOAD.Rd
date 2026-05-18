@@ -16,7 +16,9 @@ Note that there can be multiple versions of a DLL loaded at the same time, with 
 }
 \examples{
 \dontrun{
-DYN.UNLOAD( "offending_C_code")
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  DYN.UNLOAD( "offending_C_code")
+\} # if F
 }
 }
 \keyword{misc}

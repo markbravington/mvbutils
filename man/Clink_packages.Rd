@@ -106,11 +106,13 @@ PIBH should return a list with these elements:
 \examples{
 # Setup in a helper-mini-package
 \dontrun{
-# In ADT:::._onLoad, where ADT:::ADT_PIBH is a PIBH; see main text
-  Clink_packages( ADT=ADT_PIBH)
-# Inside ADT:::ADT_PIBH <- function( dir, Rdir) \{...\}
-  redo <- mvbutils::src_changed( Rcpp_files, this_Cloader)
-  if( nzchar( redo)) \{ recompile() \}
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  # In ADT:::._onLoad, where ADT:::ADT_PIBH is a PIBH; see main text
+    Clink_packages( ADT=ADT_PIBH)
+  # Inside ADT:::ADT_PIBH <- function( dir, Rdir) \{...\}
+    redo <- mvbutils::src_changed( Rcpp_files, this_Cloader)
+    if( nzchar( redo)) \{ recompile() \}
+\} # if F
 }
 }
 \keyword{misc}

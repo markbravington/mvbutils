@@ -28,19 +28,21 @@ Note that finalization will only happen after \emph{all copies} of \code{keeper}
 }
 \examples{
 \dontrun{
-myfun <- function( ...) \{
-  ...0
-  # Create object, return pointer, and ensure safe disposal
-  keeper <- set.finalizer( .C( "create_thing", handle=integer(2), ...1)$handle,
-      "dispose_of_thing")
-  "cause" + "crash" # whoops, will cause crash: but finalizer will still be called
-  # "dispose_of_thing" had better be the name of a DLL routine that takes a...
-  # ... single integer argument, of length 1 or 2
-  # Intention was to use the object. First param of DLL routine "use_thing" should
-  # be pointer to thing.
-  .C( "use_thing", keeper$handle, ...2)
-\}
-myfun(...)
+if( FALSE && is_very_annoying( CRAN))\{ # otherwise CMD CHECK --as-cran tries to run this :/
+  myfun <- function( ...) \{
+    ...0
+    # Create object, return pointer, and ensure safe disposal
+    keeper <- set.finalizer( .C( "create_thing", handle=integer(2), ...1)$handle,
+        "dispose_of_thing")
+    "cause" + "crash" # whoops, will cause crash: but finalizer will still be called
+    # "dispose_of_thing" had better be the name of a DLL routine that takes a...
+    # ... single integer argument, of length 1 or 2
+    # Intention was to use the object. First param of DLL routine "use_thing" should
+    # be pointer to thing.
+    .C( "use_thing", keeper$handle, ...2)
+  \}
+  myfun(...)
+\} # if F
 }
 }
 \seealso{.C, .Call, reg.finalizer
