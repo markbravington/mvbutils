@@ -42,6 +42,7 @@ localfuncs                                      "Declare" child functions, allow
 lsize                                           Report objects and their memory sizes
 maintain.packages                               Set up task package for live editing
 make.NAMESPACE                                  Auto-create a NAMESPACE file
+make_CRANtidote                                 Suppress stupid CRAN notes
 make_dull                                       Hide dull columns in data frames
 max_pkg_ver                                     Max package version
 mcut                                            Put reals and integers into specified bins, returning factors.

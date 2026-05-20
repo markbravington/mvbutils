@@ -1,3 +1,6 @@
+2.12.97: 
+ - "fixed" completely artificial "problems" reported by R CMD CHECK ("no visible global..." stuff), solely to keep CRAN "happy". Then had to fix various side-effects of my fixes :/
+
 2.12.43:
  - tidied up for CRAN, who noticed that my ancient email address was borked
  - added 'if(FALSE...)' wrappers in many Examples, to prevent R CMD CHECK trying to run them _despite_ being marked "not run". Exasperating...

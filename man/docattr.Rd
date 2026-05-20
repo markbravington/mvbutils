@@ -4,7 +4,7 @@
 \alias{tidyup_docattr}
 \title{Flat-format documentation}
 \description{
-The \code{docattr} convention, and its obsolete ancestor \code{flatdoc}, lets you edit plain-text documentation in the same file as your function's source code. \code{docattr} and \code{flatdoc} are hardly ever called explicitly, but you will see them in text files produced by \code{\link{fixr}}; you can also add it to such files yourself. They are mostly used to write Rd-style help with almost no markup (\emph{much} cleaner than Roxygen!) that will be converted into Rd-format when building/exporting packages. However, \code{mvbutils} extends \code{\link{help}} so that \code{?myfunc} will display plain-text documentation for \code{myfunc}, even if \code{myfunc} isn't in a package. There are no restrictions on the format of informal-help documentation, so \code{docattr} is useful for adding quick simple help just for you or for colleagues. If your function is to be part of a maintained package (see \code{\link{mvbutils.packaging.tools}}), then the documentation should follow a slightly more formal structure; use \code{fixr( myfun, new.doc=T)} to set up the appropriate template.
+The \code{docattr} convention, and its obsolete ancestor \code{flatdoc}, lets you edit plain-text documentation (or other plain-text attributes) in the same file as your function's source code. You can add \code{docattr} yourself; in the full \code{mvbutils} scheme, that's rarely done explicitly, but you will see them in text files produced by \code{\link{fixr}}. They are mostly used to write Rd-style help with almost no markup (\emph{much} cleaner than Roxygen!) that will be converted into Rd-format when building/exporting packages. However, \code{mvbutils} extends \code{\link{help}} so that \code{?myfunc} will display plain-text documentation for \code{myfunc}, even if \code{myfunc} isn't in a package. There are no restrictions on the format of informal-help documentation, so \code{docattr} is useful for adding quick simple help just for you or for colleagues. If your function is to be part of a maintained package (see \code{\link{mvbutils.packaging.tools}}), then the documentation should follow a slightly more formal structure; use \code{fixr( myfun, new.doc=T)} to set up the appropriate template.
 
 A neat trick, for a function where you want "internal" documentation but not visible (yet), is to name the attribute "secret_doc" rather than "doc".
 
@@ -82,16 +82,27 @@ flubbo <- structure( function( x)\{
 ,doc=mvbutils::docattr( r"-{
 flubbo       not-yet-in-a-package
 'flubbo' is a function! And here is some informal doco for it. Whoop-de-doo!
-The next paragraphs will be truncated if you are reading the PDF manual, but that's OK.
-You can have multiple lines, lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\\\" is tickety-boo.
-And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
-\}-"))
-\dontrun{
+See "sample.fun.rrr" in the "demostuff" folder for a better example, with full paragraphs.
+I have had to shorten this one to appease the CRANia.
+}-")
+)
+# Here is one way to add a text attribute to a function:
+myfun <- structure( function( myname)\{
+  texto <- attr( sys.function(), 'text')
+  sprintf( texto, myname)
+\}
+, text= mvbutils::docattr( r"--{
+It's all about \%s!
+The "universe" 'revolves' around \%s!
+}--"))
+myfun( 'potatoes')
+## Don't run
+## OBSOLETE: 'flatdoc' itself is superceded by 'docattr'
 ## Put next lines up to "<<end of doc>>" into a text file <<your filename>>
 ## and remove the initial hashes
-#structure( function( x) {
+#structure( function( x) \{
 #  x*x
-#}
+#\}
 #,doc=flatdoc("<<end of doc>>"))
 #
 #Here is some informal documentation for the "SQUARE" function
@@ -100,9 +111,9 @@ And you can use the power of raw strings to r"{have a short one}" inside your fu
 ## Example with multiple attributes
 ## Put the next lines up to "<<end of part 2>>"
 ## into a text file, and remove the single hashes
-#myfun <- structure( function( attname) {
+#myfun <- structure( function( attname) \{
 #  attr( sys.function(), attname)
-#}
+#\}
 #,  att1=flatdoc( EOF="<<end of part 1>>")
 #,  att2=flatdoc( EOF="<<end of part 2>>"))
 #This goes into "att1"
@@ -112,7 +123,7 @@ And you can use the power of raw strings to r"{have a short one}" inside your fu
 ## Now "source.mvb" that file, to create "myfun"; then:
 # myfun( 'att1') # "This goes into \\\"att1\\\""
 # myfun( 'att2') # "and this goes into \\\"att2\\\""
-}
+## End don't run
 }
 \author{Mark Bravington}
 \keyword{documentation}

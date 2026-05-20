@@ -1,7 +1,7 @@
 structure( function( x, ...) {
   # just a comment
 }
-, doc =  mvbutils::docattr( r"{
+, doc =  mvbutils::docattr( r"---{
 some.functions package:mypack
 sample.fun
 another.fun
@@ -11,7 +11,11 @@ Showing doc2Rd documentation
 
 DESCRIPTION
 
-These functions exist solely to show what a 'doc2Rd'-ready file should look like. See DETAILS for details. Compare this file with the result of running it through 'doc2Rd'-- see the EXAMPLES section in the latter. This file is a bit old, certainly pre-R 2.10, and may be superceded by the help for 'doc2Rd'. 
+These functions exist solely to show what a 'doc2Rd'-ready file should look like. See DETAILS for details. Compare this file with the result of running it through 'doc2Rd'-- see the EXAMPLES section in the latter. This file is a bit old, certainly pre-R 2.10, and may be superceded by the help for 'doc2Rd'.
+
+The call to 'docattr' makes use of "new" (R >= 4.1) raw strings, so that this is all completely legit R syntax. See how good raw strings are! You can have multiple lines (ie no need to manually insert line-breaks into a paragraph), lots of "double" and 'single' quotes, and there's no need to escape weird characters, so "\" is perfectly OK.
+
+And you can use the power of raw strings to r"{have a short one}" inside your function. Just make sure your final closing "quote" matchs the number of dashes (0 or more) that follow the first r-double-quote, and exceeds the number in any r"{short quotelets}" inside the documentation. Usually there won't be any, so you won't need to add any dashes.
 
 
 USAGE
@@ -107,5 +111,5 @@ SEE.ALSO
 
 KEYWORDS
  IO; documentation
-}")
+}---")
 )

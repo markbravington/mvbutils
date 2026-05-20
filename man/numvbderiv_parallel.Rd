@@ -67,6 +67,7 @@ numvbderiv( function( x) x*x, complex( real=1, imaginary=3))
 # I have used the function 'get_ncores_CRANal' to try to get round this...
 if( require( 'doParallel') && require( 'foreach'))\{
   ncores <- parallel::detectCores( logical=FALSE)
+  scatn( '\%i cores really found', ncores)
   if( ncores > 2 )\{ # pointless otherwise
     # Need a slowish example. 1e5 is too small; 1e7 better,
     # ... but hard on auto builders eg R-universe
@@ -86,6 +87,7 @@ if( require( 'doParallel') && require( 'foreach'))\{
     # Anti CRANky: ignore on your own machine:
     # ncores_target should just work
     ncores_avail <- get_ncores_CRANal( ncores_target)
+    scatn( 'Using \%i cores eg cozza CRAN', ncores_avail)
     CLUSTO <- makeCluster( ncores_avail)
     registerDoParallel( CLUSTO, ncores_avail)
     # Next bit ensures slaves can find packages... sigh.
@@ -93,17 +95,22 @@ if( require( 'doParallel') && require( 'foreach'))\{
     # clusterCall does not work properly :/, so the "obvious" fails:
     # clusterCall( CLUSTO, .libPaths, .libPaths())
     # Instead, we are forced into this nonsense:
+    print( # for debuggery with as-CRAN
     eval( substitute(
         clusterEvalQ( CLUSTO, .libPaths( lb)),
         list( lb=.libPaths())))
+    )
     # Need 'mvbutils::sqr', hence '.packages' arg
-    system.time(
+    scatn( 'Starting parallel time test')
+    print( system.time(
       dpara <- numvbderiv_parallel( slowfun, parstart,
           BIGGO=BIGGOVAL, # named extra parameter
           FOREACH_ARGS=list( .packages= 'mvbutils')
         )
       )
-    rbind( dscalar, dpara)
+    )
+    scatn( 'Done')
+    print( rbind( dscalar, dpara))
     # To refer to other data (ie beside params)
     # best practice is to put it into function's environment
     # (generally true, not just for numvbderiv)
@@ -113,14 +120,17 @@ if( require( 'doParallel') && require( 'foreach'))\{
         sum( sqr( 1+1/outer( 1:1e3, pars+paroffset)))
       \}
     environment( fun2) <- e
-    numvbderiv( fun2, parstart)
+    scatn( 'Scalar, using extra data via environment')
+    print( numvbderiv( fun2, parstart))
     # Parallel version should still work, coz function's environment
     # is also passed to slaves
-    try(\{
+    scatn( 'Trying parallel version...')
+    print( try(\{
       numvbderiv_parallel( fun2, parstart,
           FOREACH_ARGS=list( .packages= 'mvbutils')
         )
       \})
+    )
     # Sometimes you do need to explicitly export stuff to the slave processes
     # Here's a version that will get paroffset from datenv
     # datenv must exist...
@@ -128,12 +138,14 @@ if( require( 'doParallel') && require( 'foreach'))\{
       environment( fun2) <- list2env( datenv)
       fun2( pars)
     \}
+    scatn( 'With explicit data (in parallel)')
     datenv <- as.list( e)
-    numvbderiv_parallel( alt_fun2, parstart,
+    print( numvbderiv_parallel( alt_fun2, parstart,
         FOREACH_ARGS=list(
           .packages= 'mvbutils',
           .export= cq( datenv, fun2) # stuff that alt_fun2 refers to
           )
+      )
     )
     # Always tidy up your clusters once you have finished playing
     stopImplicitCluster()

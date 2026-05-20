@@ -152,8 +152,9 @@ If you want to tinker with the underlying mechanisms: \code{\link{flatdoc}}, \co
 \examples{
 ## Needs a function with the right kind of "doc" attr
 ## Look at file "demostuff/sample.fun.rrr"
-sample.fun <- source.mvb( system.file( file.path(
-    'demostuff', 'sample.fun.rrr'), package='mvbutils'))
+# NB source.mvb() also works, _without_ the '$value', but obsolete from at least v2.12
+sample.fun <- source( system.file( file.path(
+    'demostuff', 'sample.fun.rrr'), package='mvbutils'))$value
 print( names( attributes( sample.fun)))
 cat( '***Original plain-text doco:***\\n')
 print( as.cat( attr( sample.fun, 'doc'))) # unescaped, ie what you'd actually edit

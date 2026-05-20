@@ -1,10 +1,11 @@
 \name{mvbutils-package}
 \alias{mvbutils}
 \alias{mvbutils-package}
+\alias{mvbutils}
 \docType{package}
 \title{How to use the mvbutils package}
 \description{
-Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2026?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part \code{mvbeautifuls} only for interactive use (and not on CRAN). The most up-to-date version can be found at \code{https://markbravington.r-universe.dev}; I rarely update the CRAN version.
+Package \pkg{mvbutils} is a collection of utilities, which eventually (?late 2026?) will be split into two parts: all-purpose routines that are usable in other packages and/or interactively, and an R-life-management part \code{mvbutifuls} only for interactive use (and not on CRAN). You should use the R-universe version of \code{mvbutils}, at \code{https://markbravington.r-universe.dev}; I rarely update the one on CRAN, which only exists because other people's packages depend on it. Personally I put all my packages on R-universe only, unless CRAN is unavoidable.
 
 For now (v2.12+), \code{mvbutils} offers the following main features:
 

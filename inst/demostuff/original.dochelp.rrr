@@ -1,3 +1,4 @@
+# OBSOLETE and DEPRECATED in mvbutils >= 2.12 (and R >= 4.1), thx2 'docattr'. You can now add plain-text doco with completely standard R syntax, but that didn't use to be the case; hence 'source.mvb' and this example.
 # This file is designed to be read in by 'source.mvb'-- see 'flatdocdemo.r'
 
 structure( function( topic, doc) {

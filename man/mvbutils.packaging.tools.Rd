@@ -141,6 +141,8 @@ It's rare to need to manually inspect either the source package or the installed
 \section{Distributing and checking}{
 \code{\link{build.pkg}} calls R{} CMD BUILD to create a "tarball" of the package (a ".tar.gz" file), which is the appropriate format for distribution to Unix folk and submission to CRAN. \code{\link{build.pkg.binary}} creates a binary package (a ".zip" file), suitable for Windows or Macs. \code{\link{check.pkg}} runs R{} CMD CHECK (but see next paragraph for a quicker alternative), which is required by CRAN and sometimes useful at other times. These \code{.pkg} functions are pretty simple wrappers to the R{} CMD tools with similar names. However, for those with imperfect memories and limited time, there are enough arcane and mutable nuances with the "raw" R{} CMD commands (including the risk of inadvertently deleting existing installations) to make the wrappers in \code{mvbutils} useful.
 
+You might find \code{\link{check.pkg}} reporting NOTEs along the lines of "no visible global...", especially for variables mentioned in \code{evalq}, \code{local}, \code{\link{mlocal}}, or \code{\link{cq}}. (It's not really an \code{mvbutils} thing since \code{evalq} and \code{local} are base-R, but I mention it here to show the workaround.) This is \emph{harmless} unless you are intent on submitting your package to CRAN, who will promptly reject it for the time-honoured rationale of "because I say so". If so, see \code{\link{make_CRANtidote}} for the workaround.
+
 Various functions in the \pkg{tools} package can be used to quickly check specific aspects of an \emph{installed} package, without needing a full-on, and slow, R{} CMD CHECK. In particular, I sometimes use
 
 \preformatted{
