@@ -526,7 +526,7 @@ return() # create only once per session
   # Remove for (better) non-CRAN versions on R-universe
   # Antidote for silliterate CRAN warnings about no-visible-globals
   # if( T) debugging!
-  if( F) sapply( c(
+  if( FALSE) sapply( c(
       '%dopar%', '.', '..', '.Depends', '.First.lib', '.Last.lib', '.required',
       '.Saved.plots', '.SavedPlots', '.Traceback', 'author', 'b', 'B', 'backup.fix',
       'binary', 'blah', 'bod', 'bug.position', 'Built', 'calc_xpos', 'ChangeLog', 'CHANGES',
